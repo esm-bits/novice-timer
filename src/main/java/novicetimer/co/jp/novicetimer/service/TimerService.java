@@ -6,22 +6,22 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Service;
 
-import novicetimer.co.jp.novicetimer.domain.TimerDomain;
+import novicetimer.co.jp.novicetimer.domain.TimeLimit;
 
 @Service
 public class TimerService {
-    public String timerStart(TimerDomain timerDomain) {
-        int time = timerDomain.getTimeSeconds();
+    public String startTimer(TimeLimit timeLimit) {
+        int seconds = timeLimit.getSeconds();
 
-        System.out.println("start:" + time + "秒");
+        System.out.println("start:" + seconds + "秒");
 
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                System.out.println("ピピピ" + time + "秒経ちました");
+                System.out.println("ピピピ" + seconds + "秒経ちました");
             }
-        }, TimeUnit.SECONDS.toMillis(time));
+        }, TimeUnit.SECONDS.toMillis(seconds));
 
-        return String.valueOf(time);
+        return String.valueOf(seconds);
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import novicetimer.co.jp.novicetimer.domain.TimerDomain;
+import novicetimer.co.jp.novicetimer.domain.TimeLimit;
 import novicetimer.co.jp.novicetimer.service.TimerService;
 
 @RestController
@@ -19,7 +19,7 @@ public class TimerRestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String postTimers(@RequestBody TimerDomain timerDomain) {
-        return timerService.timerStart(timerDomain);
+    public String postTimers(@RequestBody TimeLimit timeLimit) {
+        return timerService.startTimer(timeLimit);
     }
 }
