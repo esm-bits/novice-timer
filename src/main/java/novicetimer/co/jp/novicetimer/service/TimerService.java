@@ -1,17 +1,27 @@
 package novicetimer.co.jp.novicetimer.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.stereotype.Service;
 
 import novicetimer.co.jp.novicetimer.domain.TimerDomain;
-import novicetimer.co.jp.novicetimer.repository.TimerRepository;
 
 @Service
 public class TimerService {
-    @Autowired
-    TimerRepository timerRepository;
+    public String timerStart(TimerDomain timerDomain) {
+        int time = timerDomain.getTimeSeconds();
 
-    public String create(TimerDomain timerDomain) {
-        return timerRepository.timerStart(timerDomain);
+        System.out.println("start:" + time + "秒");
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                System.out.println("ピピピ" + time + "秒経ちました");
+            }
+        }, TimeUnit.SECONDS.toMillis(time));
+
+        return String.valueOf(time);
     }
 }

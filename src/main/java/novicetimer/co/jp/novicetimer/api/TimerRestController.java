@@ -20,6 +20,6 @@ public class TimerRestController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public String postTimers(@RequestBody TimerDomain timerDomain) {
-        return timerService.create(timerDomain);
+        return timerService.timerStart(timerDomain);
     }
 }

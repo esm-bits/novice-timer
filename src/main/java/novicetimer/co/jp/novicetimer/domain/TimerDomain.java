@@ -1,9 +1,9 @@
 package novicetimer.co.jp.novicetimer.domain;
 
 public class TimerDomain {
-    private int time; // 秒単位
+    private int timeSeconds; // timeSeconds秒の計測を表す
 
-    public int getTime() {
-        return time;
+    public int getTimeSeconds() {
+        return timeSeconds;
     }
 }
