@@ -1,4 +1,4 @@
-package novicetimer.co.jp.novicetimer.domain;
+package jp.co.esm.novicetimer.domain;
 
 public class TimeLimit {
     private int seconds; // 計測する秒数

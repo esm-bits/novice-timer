@@ -1,4 +1,4 @@
-package novicetimer.co.jp.novicetimer.service;
+package jp.co.esm.novicetimer.service;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -6,12 +6,12 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.stereotype.Service;
 
-import novicetimer.co.jp.novicetimer.domain.TimeLimit;
+import jp.co.esm.novicetimer.domain.TimeLimit;
 
 @Service
 public class TimerService {
-    public String startTimer(TimeLimit timeLimit) {
-        int seconds = timeLimit.getSeconds();
+    public String startTimer(TimeLimit timerLimit) {
+        int seconds = timerLimit.getSeconds();
 
         System.out.println("start:" + seconds + "秒");
 
