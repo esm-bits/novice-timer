@@ -1,4 +1,4 @@
-package novicetimer.co.jp.novicetimer.service;
+package jp.co.esm.novicetimer.service;
 
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 <<<<<<< HEAD
 import org.springframework.stereotype.Service;
 
-import novicetimer.co.jp.novicetimer.domain.TimeLimit;
+import jp.co.esm.novicetimer.domain.TimeLimit;
 
 @Service
 public class TimerService {
