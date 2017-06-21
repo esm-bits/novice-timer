@@ -1,4 +1,4 @@
-package novicetimer.co.jp.novicetimer;
+package jp.co.esm.novicetimer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

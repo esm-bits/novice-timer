@@ -1,4 +1,4 @@
-package novicetimer.co.jp.novicetimer;
+package jp.co.esm.novicetimer;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
