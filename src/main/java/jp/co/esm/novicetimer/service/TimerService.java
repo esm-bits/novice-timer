@@ -35,7 +35,9 @@ public class TimerService {
     }
 
     public void stopTimer() {
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
     }
 
 }
