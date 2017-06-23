@@ -19,19 +19,36 @@ public class TimerService {
     @Autowired
     private IdobataMessage idobataMessage;
 
+    private Timer timer;
+
     public String startTimer(TimeLimit timerLimit) {
         int seconds = timerLimit.getSeconds();
 
         sendMessage("start:" + seconds + "秒");
 
-        new Timer().schedule(new TimerTask() {
+        if (timer != null) {
+            timer.cancel();
+        }
+        timer = new Timer();
+
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 sendMessage("ピピピ" + seconds + "秒経ちました");
+                timer = null;
             }
         }, TimeUnit.SECONDS.toMillis(seconds));
 
         return String.valueOf(seconds);
+    }
+
+    public boolean stopTimer() {
+        if (timer == null) {
+            return false;
+        }
+        timer.cancel();
+        timer = null;
+        return true;
     }
 
     private void sendMessage(String source) {
