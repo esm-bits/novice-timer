@@ -13,21 +13,26 @@ public class TimerService {
 
     Timer timer;
 
+    boolean timerExists = false;
+
     public String startTimer(TimeLimit timerLimit) {
         int seconds = timerLimit.getSeconds();
 
         System.out.println("start:" + seconds + "秒");
 
-        if (timer != null) {
+        if (timer != null && timerExists) {
             timer.cancel();
         }
 
         timer = new Timer();
 
+        timerExists = true;
+
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 System.out.println("ピピピ" + seconds + "秒経ちました");
+                timerExists = false;
             }
         }, TimeUnit.SECONDS.toMillis(seconds));
 
@@ -35,9 +40,9 @@ public class TimerService {
     }
 
     public boolean stopTimer() {
-        if (timer != null) {
+        if (timerExists) {
             timer.cancel();
-            timer = null;
+            timerExists = false;
             return true;
         }
         return false;
