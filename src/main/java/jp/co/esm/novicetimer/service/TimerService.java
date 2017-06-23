@@ -34,10 +34,13 @@ public class TimerService {
         return String.valueOf(seconds);
     }
 
-    public void stopTimer() {
+    public boolean stopTimer() {
         if (timer != null) {
             timer.cancel();
+            timer = null;
+            return true;
         }
+        return false;
     }
 
 }
