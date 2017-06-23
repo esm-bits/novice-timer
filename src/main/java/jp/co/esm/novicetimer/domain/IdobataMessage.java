@@ -3,7 +3,7 @@ package jp.co.esm.novicetimer.domain;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Message {
+public class IdobataMessage {
     private String source = "null";
 
     public String getSource() {

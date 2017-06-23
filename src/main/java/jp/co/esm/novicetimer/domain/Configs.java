@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "configs")
 public class Configs {
-    private String url;
+    private String hookUrl;
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setHookUrl(String hookUrl) {
+        this.hookUrl = hookUrl;
     }
 
-    public String getUrl() {
-        return url;
+    public String getHookUrl() {
+        return hookUrl;
     }
 }

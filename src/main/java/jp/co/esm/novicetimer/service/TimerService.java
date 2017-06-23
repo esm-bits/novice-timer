@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import jp.co.esm.novicetimer.domain.Configs;
-import jp.co.esm.novicetimer.domain.Message;
+import jp.co.esm.novicetimer.domain.IdobataMessage;
 import jp.co.esm.novicetimer.domain.TimeLimit;
 
 @Service
@@ -17,7 +17,7 @@ public class TimerService {
     @Autowired
     private Configs config;
     @Autowired
-    private Message message;
+    private IdobataMessage idobataMessage;
 
     public String startTimer(TimeLimit timerLimit) {
         int seconds = timerLimit.getSeconds();
@@ -36,6 +36,6 @@ public class TimerService {
 
     private void sendMessage(String source) {
         message.setSource(source);
-        new RestTemplate().postForObject(config.getUrl(), message, String.class);
+        new RestTemplate().postForObject(config.getHookUrl(), idobataMessage, String.class);
     }
 }
