@@ -22,19 +22,19 @@ public class TimerService {
     public String startTimer(TimeLimit timerLimit) {
         int seconds = timerLimit.getSeconds();
 
-        noticeIdobata("start:" + seconds + "秒");
+        sendMessage("start:" + seconds + "秒");
 
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                noticeIdobata("ピピピ" + seconds + "秒経ちました");
+                sendMessage("ピピピ" + seconds + "秒経ちました");
             }
         }, TimeUnit.SECONDS.toMillis(seconds));
 
         return String.valueOf(seconds);
     }
 
-    private void noticeIdobata(String source) {
+    private void sendMessage(String source) {
         message.setSource(source);
         new RestTemplate().postForObject(config.getUrl(), message, String.class);
     }
