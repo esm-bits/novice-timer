@@ -36,12 +36,12 @@ public class TimerService {
     }
 
     public boolean stopTimer() {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-            return true;
+        if (timer == null) {
+            return false;
         }
-        return false;
+        timer.cancel();
+        timer = null;
+        return true;
     }
 
 }
