@@ -11,7 +11,7 @@ import jp.co.esm.novicetimer.domain.TimeLimit;
 @Service
 public class TimerService {
 
-    Timer timer;
+    private Timer timer;
 
     public String startTimer(TimeLimit timerLimit) {
         int seconds = timerLimit.getSeconds();
@@ -21,7 +21,6 @@ public class TimerService {
         if (timer != null) {
             timer.cancel();
         }
-
         timer = new Timer();
 
         timer.schedule(new TimerTask() {
