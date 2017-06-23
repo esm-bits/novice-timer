@@ -35,7 +35,7 @@ public class TimerService {
     }
 
     private void sendMessage(String source) {
-        message.setSource(source);
+        idobataMessage.setSource(source);
         new RestTemplate().postForObject(config.getHookUrl(), idobataMessage, String.class);
     }
 }
