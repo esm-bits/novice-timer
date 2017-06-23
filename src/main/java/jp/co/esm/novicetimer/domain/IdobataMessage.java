@@ -1,16 +1,14 @@
 package jp.co.esm.novicetimer.domain;
 
 public class IdobataMessage {
-    private static final IdobataMessage IDOBATA_MESSAGE = new IdobataMessage();
-
     public static IdobataMessage getInstance(String source) {
-        IDOBATA_MESSAGE.setSource(source);;
-        return IDOBATA_MESSAGE;
+        return new IdobataMessage(source);
     }
 
-    private String source = "null";
+    private String source;
 
-    private IdobataMessage() {
+    private IdobataMessage(String source) {
+        this.source = source;
     }
 
     public String getSource() {
