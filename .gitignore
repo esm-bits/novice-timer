@@ -2,6 +2,7 @@
 /build/
 !gradle/wrapper/gradle-wrapper.jar
 bin/
+src/main/resources/config/application-production.yml
 
 ### STS ###
 .apt_generated

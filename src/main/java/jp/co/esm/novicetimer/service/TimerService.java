@@ -4,24 +4,38 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import jp.co.esm.novicetimer.domain.Configs;
+import jp.co.esm.novicetimer.domain.Message;
 import jp.co.esm.novicetimer.domain.TimeLimit;
 
 @Service
 public class TimerService {
+    @Autowired
+    private Configs config;
+    @Autowired
+    private Message message;
+
     public String startTimer(TimeLimit timerLimit) {
         int seconds = timerLimit.getSeconds();
 
-        System.out.println("start:" + seconds + "秒");
+        noticeIdobata("start:" + seconds + "秒");
 
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                System.out.println("ピピピ" + seconds + "秒経ちました");
+                noticeIdobata("ピピピ" + seconds + "秒経ちました");
             }
         }, TimeUnit.SECONDS.toMillis(seconds));
 
         return String.valueOf(seconds);
+    }
+
+    private void noticeIdobata(String source) {
+        message.setSource(source);
+        new RestTemplate().postForObject(config.getUrl(), message, String.class);
     }
 }
