@@ -16,8 +16,6 @@ import jp.co.esm.novicetimer.domain.TimeLimit;
 public class TimerService {
     @Autowired
     private Configs config;
-    @Autowired
-    private IdobataMessage idobataMessage;
 
     private Timer timer;
 
@@ -52,7 +50,6 @@ public class TimerService {
     }
 
     private void sendMessage(String source) {
-        idobataMessage.setSource(source);
-        new RestTemplate().postForObject(config.getHookUrl(), idobataMessage, String.class);
+        new RestTemplate().postForObject(config.getHookUrl(), IdobataMessage.getInstance(source), String.class);
     }
 }
