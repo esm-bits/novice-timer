@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import jp.co.esm.novicetimer.domain.MultipleTimeLimit;
 import jp.co.esm.novicetimer.domain.TimeLimit;
 import jp.co.esm.novicetimer.service.TimerService;
 
@@ -25,10 +26,15 @@ public class TimerRestController {
         return timerService.startTimer(timeLimit);
     }
 
+    @PostMapping("multiple")
+    @ResponseStatus(HttpStatus.CREATED)
+    public MultipleTimeLimit postTimers(@RequestBody MultipleTimeLimit multipleTimeLimit) {
+        return timerService.create(multipleTimeLimit);
+    }
+
     @DeleteMapping
     public ResponseEntity<String> putTimers() {
         HttpStatus status = timerService.stopTimer() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
         return new ResponseEntity<>(status);
     }
-
 }

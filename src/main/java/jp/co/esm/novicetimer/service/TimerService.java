@@ -10,14 +10,22 @@ import org.springframework.web.client.RestTemplate;
 
 import jp.co.esm.novicetimer.domain.Configs;
 import jp.co.esm.novicetimer.domain.IdobataMessage;
+import jp.co.esm.novicetimer.domain.MultipleTimeLimit;
 import jp.co.esm.novicetimer.domain.TimeLimit;
+import jp.co.esm.novicetimer.repository.TimerRepository;
 
 @Service
 public class TimerService {
     @Autowired
     private Configs config;
+    @Autowired
+    private TimerRepository timerRepository;
 
     private Timer timer;
+
+    public MultipleTimeLimit create(MultipleTimeLimit multipleTimeLimit) {
+        return timerRepository.save(multipleTimeLimit);
+    }
 
     public String startTimer(TimeLimit timerLimit) {
         int seconds = timerLimit.getSeconds();
