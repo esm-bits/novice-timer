@@ -22,7 +22,7 @@ public class TimerService {
     public String startTimer(TimeLimit timerLimit) {
         int seconds = timerLimit.getSeconds();
 
-        String idobataUser = timerLimit.getIdobata_user();
+        String idobataUser = timerLimit.getIdobataUser();
 
         sendMessage(idobataUser, " start:" + seconds + "秒");
 
@@ -51,12 +51,16 @@ public class TimerService {
         return true;
     }
 
+    private void sendMessage(String source) {
+        new RestTemplate().postForObject(config.getHookUrl(), new IdobataMessage(source), String.class);
+    }
+
     private void sendMessage(String user, String source) {
-        if (user != null && user != "") {
+        if (user != null && !(user.isEmpty())) {
             new RestTemplate().postForObject(config.getHookUrl(), new IdobataMessage("@" + user + " " + source),
                     String.class);
         } else {
-            new RestTemplate().postForObject(config.getHookUrl(), new IdobataMessage(source), String.class);
+            sendMessage(source);
         }
     }
 }
