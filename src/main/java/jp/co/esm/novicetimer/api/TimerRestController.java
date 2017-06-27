@@ -20,13 +20,13 @@ public class TimerRestController {
     @Autowired
     TimerService timerService;
 
-    @PostMapping
+    @PostMapping(params = "!timeLimits")
     @ResponseStatus(HttpStatus.CREATED)
     public String postTimers(@RequestBody TimeLimit timeLimit) {
         return timerService.startTimer(timeLimit);
     }
 
-    @PostMapping("multiple")
+    @PostMapping(params = "timeLimits")
     @ResponseStatus(HttpStatus.CREATED)
     public MultipleTimeLimit postTimers(@RequestBody MultipleTimeLimit multipleTimeLimit) {
         return timerService.create(multipleTimeLimit);
