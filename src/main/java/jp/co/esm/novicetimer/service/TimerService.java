@@ -24,7 +24,7 @@ public class TimerService {
 
         String idobataUser = timerLimit.getIdobataUser();
 
-        sendMessage(idobataUser, " start:" + seconds + "秒");
+        sendMessage(" start:" + seconds + "秒");
 
         if (timer != null) {
             timer.cancel();
@@ -34,7 +34,7 @@ public class TimerService {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                sendMessage(idobataUser, " ピピピ" + seconds + "秒経ちました");
+                sendMessage(" ピピピ" + seconds + "秒経ちました", idobataUser);
                 timer = null;
             }
         }, TimeUnit.SECONDS.toMillis(seconds));
@@ -51,16 +51,54 @@ public class TimerService {
         return true;
     }
 
-    private void sendMessage(String source) {
-        new RestTemplate().postForObject(config.getHookUrl(), new IdobataMessage(source), String.class);
+    private void sendMessage(String message, String... users) {
+        new RestTemplate().postForObject(config.getHookUrl(),
+                new IdobataMessage(new MessageDirector(new MessageBuilder(message)).addUser(users).getResult()),
+                String.class);
+    }
+}
+
+interface IdobataMessageBuilder {
+    void makeUser(String[] users);
+
+    String getResult();
+}
+
+class MessageDirector {
+    private IdobataMessageBuilder builder;
+
+    MessageDirector(IdobataMessageBuilder builder) {
+        this.builder = builder;
     }
 
-    private void sendMessage(String user, String source) {
-        if (user != null && !(user.isEmpty())) {
-            new RestTemplate().postForObject(config.getHookUrl(), new IdobataMessage("@" + user + " " + source),
-                    String.class);
-        } else {
-            sendMessage(source);
+    IdobataMessageBuilder addUser(String... users) {
+        builder.makeUser(users);
+        return builder;
+    }
+}
+
+class MessageBuilder implements IdobataMessageBuilder {
+    private StringBuilder idobataMessage;
+    private String message;
+
+    MessageBuilder(String message) {
+        idobataMessage = new StringBuilder();
+        this.message = message;
+    }
+
+    @Override
+    public void makeUser(String[] users) {
+        for (String str : users) {
+            idobataMessage.append("@" + str + " ");
         }
+    }
+
+    @Override
+    public String getResult() {
+        if (message.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        idobataMessage.append(message);
+        return idobataMessage.toString();
     }
 }
