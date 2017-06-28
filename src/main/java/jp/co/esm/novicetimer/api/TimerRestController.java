@@ -19,7 +19,7 @@ public class TimerRestController {
     @Autowired
     TimerService timerService;
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public String postTimers(@RequestBody TimeLimit timeLimit) {
         return timerService.startTimer(timeLimit);
