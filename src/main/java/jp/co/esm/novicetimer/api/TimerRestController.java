@@ -30,4 +30,5 @@ public class TimerRestController {
         HttpStatus status = timerService.stopTimer() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
         return new ResponseEntity<>(status);
     }
+
 }

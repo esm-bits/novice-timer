@@ -19,8 +19,8 @@ public class TimerService {
 
     private Timer timer;
 
-    public String startTimer(TimeLimit timeLimit) {
-        int minutes = timeLimit.getMinutes();
+    public String startTimer(TimeLimit timerLimit) {
+        int minutes = timerLimit.getMinutes();
 
         sendMessage("start:" + minutes + "分");
 
@@ -35,7 +35,7 @@ public class TimerService {
                 sendMessage("ピピピ" + minutes + "分経ちました");
                 timer = null;
             }
-        }, TimeUnit.SECONDS.toMillis(minutes)); // テストを容易にするため秒とする、実際にはTimeUnit.MIMUTESで計る
+        }, TimeUnit.MINUTES.toMillis(minutes));
 
         return String.valueOf(minutes);
     }
