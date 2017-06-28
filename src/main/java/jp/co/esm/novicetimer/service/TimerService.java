@@ -34,7 +34,12 @@ public class TimerService {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                sendMessage(new IdobataMessage.Builder(" ピピピ" + seconds + "秒経ちました").users(idobataUser).build());
+                sendMessage(
+                        new IdobataMessage.Builder(" ピピピ" + seconds + "秒経ちました")
+                                .users(idobataUser)
+                                .build()
+                            );
+
                 timer = null;
             }
         }, TimeUnit.SECONDS.toMillis(seconds));
@@ -52,10 +57,12 @@ public class TimerService {
     }
 
     private void sendMessage(IdobataMessage message) {
+
         new RestTemplate().postForObject(
                 config.getHookUrl(),
                 message,
                 String.class);
 
+        //System.out.println(message.getSource());//テスト用
     }
 }

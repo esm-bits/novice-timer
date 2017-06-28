@@ -1,5 +1,7 @@
 package jp.co.esm.novicetimer.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class IdobataMessage {
@@ -7,12 +9,11 @@ public class IdobataMessage {
 
     private IdobataMessage(Builder builder) {
         StringBuilder str = new StringBuilder();
-        Stream<String> users = Stream.of(builder.users);
 
-        users.forEach(user -> str.append("@" + user + " "));
+        //builder.userList.stream().distinct().map(user -> "@" + user + " ").forEach(user -> str.append(user));
+        str.append(String.join(" ", builder.userList.stream().distinct().map(user -> "@" + user)));
 
         str.append(builder.message);
-
         this.source = str.toString();
     }
 
@@ -26,7 +27,7 @@ public class IdobataMessage {
 
     public static class Builder {
         private String message;
-        private String[] users;
+        private List<String> userList;
 
         public Builder(String message) {
             this.message = message;
@@ -34,14 +35,14 @@ public class IdobataMessage {
                 throw new IllegalArgumentException();
             }
 
-            this.users = new String[0];
+            this.userList = new ArrayList<>();
         }
 
         public Builder users(String... users) {
-            if (users[0] == null) {
+            if (users == null) {
                 return this;
             }
-            this.users = users;
+            Stream.of(users).filter(user -> user != null).forEach(user -> this.userList.add(user));
             return this;
         }
 
