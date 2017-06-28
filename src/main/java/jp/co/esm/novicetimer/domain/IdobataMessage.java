@@ -1,14 +1,15 @@
 package jp.co.esm.novicetimer.domain;
 
+import java.util.stream.Stream;
+
 public class IdobataMessage {
     private String source;
 
     private IdobataMessage(Builder builder) {
         StringBuilder str = new StringBuilder();
+        Stream<String> users = Stream.of(builder.users);
 
-        for (String user : builder.users) {
-            str.append("@" + user + " ");
-        }
+        users.forEach(user -> str.append("@" + user + " "));
 
         str.append(builder.message);
 
@@ -29,18 +30,22 @@ public class IdobataMessage {
 
         public Builder(String message) {
             this.message = message;
+            if (message.isEmpty()) {
+                throw new IllegalArgumentException();
+            }
+
             this.users = new String[0];
         }
 
         public Builder users(String... users) {
+            if (users[0] == null) {
+                return this;
+            }
             this.users = users;
             return this;
         }
 
         public IdobataMessage build() {
-            if (message.isEmpty()) {
-                throw new IllegalArgumentException();
-            }
             return new IdobataMessage(this);
         }
     }
