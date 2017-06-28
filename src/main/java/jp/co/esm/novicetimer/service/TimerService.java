@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 import jp.co.esm.novicetimer.domain.Configs;
 import jp.co.esm.novicetimer.domain.IdobataMessage;
-import jp.co.esm.novicetimer.domain.Subject;
+import jp.co.esm.novicetimer.domain.TimeLimit;
 
 @Service
 public class TimerService {
@@ -19,8 +19,8 @@ public class TimerService {
 
     private Timer timer;
 
-    public String startTimer(Subject subject) {
-        int minutes = subject.getMinutes();
+    public String startTimer(TimeLimit timeLimit) {
+        int minutes = timeLimit.getMinutes();
 
         sendMessage("start:" + minutes + "分");
 
