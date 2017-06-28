@@ -2,17 +2,23 @@ package jp.co.esm.novicetimer.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class TimeLimit {
-    private int seconds; // 計測する秒数
+public class Subject {
+    private String title;
 
     @JsonProperty("idobata_user")
     private String idobataUser;
 
-    public int getSeconds() {
-        return seconds;
+    private int minutes; // 計測する分数
+
+    public String getTitle() {
+        return title;
     }
 
     public String getIdobataUser() {
         return idobataUser;
+    }
+
+    public int getMinutes() {
+        return minutes;
     }
 }

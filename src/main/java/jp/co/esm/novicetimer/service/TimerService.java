@@ -10,27 +10,19 @@ import org.springframework.web.client.RestTemplate;
 
 import jp.co.esm.novicetimer.domain.Configs;
 import jp.co.esm.novicetimer.domain.IdobataMessage;
-import jp.co.esm.novicetimer.domain.MultipleTimeLimit;
-import jp.co.esm.novicetimer.domain.TimeLimit;
-import jp.co.esm.novicetimer.repository.TimerRepository;
+import jp.co.esm.novicetimer.domain.Subject;
 
 @Service
 public class TimerService {
     @Autowired
     private Configs config;
-    @Autowired
-    private TimerRepository timerRepository;
 
     private Timer timer;
 
-    public MultipleTimeLimit create(MultipleTimeLimit multipleTimeLimit) {
-        return timerRepository.save(multipleTimeLimit);
-    }
+    public String startTimer(Subject subject) {
+        int minutes = subject.getMinutes();
 
-    public String startTimer(TimeLimit timerLimit) {
-        int seconds = timerLimit.getSeconds();
-
-        sendMessage("start:" + seconds + "秒");
+        sendMessage("start:" + minutes + "分");
 
         if (timer != null) {
             timer.cancel();
@@ -40,12 +32,12 @@ public class TimerService {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                sendMessage("ピピピ" + seconds + "秒経ちました");
+                sendMessage("ピピピ" + minutes + "分経ちました");
                 timer = null;
             }
-        }, TimeUnit.SECONDS.toMillis(seconds));
+        }, TimeUnit.SECONDS.toMillis(minutes)); // テストを容易にするため秒とする、実際にはTimeUnit.MIMUTESで計る
 
-        return String.valueOf(seconds);
+        return String.valueOf(minutes);
     }
 
     public boolean stopTimer() {

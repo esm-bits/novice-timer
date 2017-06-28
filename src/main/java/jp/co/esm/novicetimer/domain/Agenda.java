@@ -2,9 +2,9 @@ package jp.co.esm.novicetimer.domain;
 
 import java.util.List;
 
-public class MultipleTimeLimit {
+public class Agenda {
     private int id;
-    private List<TimeLimit> timeLimits;
+    private List<Subject> subjects;
 
     public int getId() {
         return id;
@@ -14,7 +14,7 @@ public class MultipleTimeLimit {
         this.id = id;
     }
 
-    public List<TimeLimit> getTimeLimits() {
-        return timeLimits;
+    public List<Subject> getSubjects() {
+        return subjects;
     }
 }

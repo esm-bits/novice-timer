@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import jp.co.esm.novicetimer.domain.MultipleTimeLimit;
-import jp.co.esm.novicetimer.domain.TimeLimit;
+import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.service.TimerService;
 
 @RestController
@@ -20,16 +19,10 @@ public class TimerRestController {
     @Autowired
     TimerService timerService;
 
-    @PostMapping(params = "!timeLimits")
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public String postTimers(@RequestBody TimeLimit timeLimit) {
-        return timerService.startTimer(timeLimit);
-    }
-
-    @PostMapping(params = "timeLimits")
-    @ResponseStatus(HttpStatus.CREATED)
-    public MultipleTimeLimit postTimers(@RequestBody MultipleTimeLimit multipleTimeLimit) {
-        return timerService.create(multipleTimeLimit);
+    public String postTimers(@RequestBody Subject subject) {
+        return timerService.startTimer(subject);
     }
 
     @DeleteMapping
