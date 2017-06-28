@@ -2,6 +2,7 @@ package jp.co.esm.novicetimer.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class IdobataMessage {
@@ -10,8 +11,9 @@ public class IdobataMessage {
     private IdobataMessage(Builder builder) {
         StringBuilder str = new StringBuilder();
 
-        //builder.userList.stream().distinct().map(user -> "@" + user + " ").forEach(user -> str.append(user));
-        str.append(String.join(" ", builder.userList.stream().distinct().map(user -> "@" + user)));
+        str.append(String.join(
+                " ",
+                builder.userList.stream().distinct().map(user -> "@" + user).collect(Collectors.toList())));
 
         str.append(builder.message);
         this.source = str.toString();
