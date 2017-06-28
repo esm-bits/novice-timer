@@ -24,7 +24,7 @@ public class TimerService {
 
         String idobataUser = timerLimit.getIdobataUser();
 
-        sendMessage(" start:" + seconds + "秒");
+        sendMessage(new IdobataMessage.Builder(" start:" + seconds + "秒").build());
 
         if (timer != null) {
             timer.cancel();
@@ -34,7 +34,7 @@ public class TimerService {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                sendMessage(" ピピピ" + seconds + "秒経ちました", idobataUser);
+                sendMessage(new IdobataMessage.Builder(" ピピピ" + seconds + "秒経ちました").users(idobataUser).build());
                 timer = null;
             }
         }, TimeUnit.SECONDS.toMillis(seconds));
@@ -51,54 +51,9 @@ public class TimerService {
         return true;
     }
 
-    private void sendMessage(String message, String... users) {
+    private void sendMessage(IdobataMessage message) {
         new RestTemplate().postForObject(config.getHookUrl(),
-                new IdobataMessage(new MessageDirector(new MessageBuilder(message)).addUser(users).getResult()),
+                message,
                 String.class);
-    }
-}
-
-interface IdobataMessageBuilder {
-    void makeUser(String[] users);
-
-    String getResult();
-}
-
-class MessageDirector {
-    private IdobataMessageBuilder builder;
-
-    MessageDirector(IdobataMessageBuilder builder) {
-        this.builder = builder;
-    }
-
-    IdobataMessageBuilder addUser(String... users) {
-        builder.makeUser(users);
-        return builder;
-    }
-}
-
-class MessageBuilder implements IdobataMessageBuilder {
-    private StringBuilder idobataMessage;
-    private String message;
-
-    MessageBuilder(String message) {
-        idobataMessage = new StringBuilder();
-        this.message = message;
-    }
-
-    @Override
-    public void makeUser(String[] users) {
-        for (String str : users) {
-            idobataMessage.append("@" + str + " ");
-        }
-    }
-
-    @Override
-    public String getResult() {
-        if (message.isEmpty()) {
-            throw new IllegalArgumentException();
-        }
-        idobataMessage.append(message);
-        return idobataMessage.toString();
     }
 }
