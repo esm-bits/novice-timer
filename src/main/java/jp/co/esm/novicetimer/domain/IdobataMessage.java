@@ -10,9 +10,9 @@ public class IdobataMessage {
 
     private IdobataMessage(Builder builder) {
         this.source = String.join(
-                                "",
-                                builder.userList.stream().distinct().map(user -> "@" + user + " ").collect(Collectors.toList()))
-                        + builder.message;
+                "",
+                builder.userList.stream().distinct().map(user -> "@" + user + " ").collect(Collectors.toList()))
+                + builder.message;
     }
 
     public String getSource() {
@@ -28,11 +28,10 @@ public class IdobataMessage {
         private List<String> userList;
 
         public Builder(String message) {
-            this.message = message;
             if (message == null || message.isEmpty()) {
                 throw new IllegalArgumentException();
             }
-
+            this.message = message;
             this.userList = new ArrayList<>();
         }
 
