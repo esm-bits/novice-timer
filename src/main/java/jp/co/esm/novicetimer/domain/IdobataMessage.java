@@ -29,7 +29,7 @@ public class IdobataMessage {
 
         public Builder(String message) {
             this.message = message;
-            if (message.isEmpty()) {
+            if (message == null || message.isEmpty()) {
                 throw new IllegalArgumentException();
             }
 

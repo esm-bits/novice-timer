@@ -30,6 +30,11 @@ public class IdobataMessageTest {
         new IdobataMessage.Builder("").build();
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void Builderのコンストラクタにnullを渡すとIllegalArgmentExceptionになること() {
+        new IdobataMessage.Builder(null).build();
+    }
+
     @Test
     public void Builderのusersにnullや空文字を渡してもスルーされること() {
         IdobataMessage message1 = new IdobataMessage.Builder("message").users(null).build();
