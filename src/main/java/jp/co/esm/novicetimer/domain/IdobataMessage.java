@@ -9,10 +9,9 @@ public class IdobataMessage {
     private String source;
 
     private IdobataMessage(Builder builder) {
-        this.source = (String.join(
-                                " ",
-                                builder.userList.stream().distinct().map(user -> "@" + user).collect(Collectors.toList())))
-                        + " "
+        this.source = String.join(
+                                "",
+                                builder.userList.stream().distinct().map(user -> "@" + user + " ").collect(Collectors.toList()))
                         + builder.message;
     }
 
@@ -41,7 +40,7 @@ public class IdobataMessage {
             if (users == null) {
                 return this;
             }
-            Stream.of(users).filter(user -> user != null).forEach(user -> this.userList.add(user));
+            Stream.of(users).filter(user -> !(user.isEmpty()) && user != null).forEach(user -> this.userList.add(user));
             return this;
         }
 
