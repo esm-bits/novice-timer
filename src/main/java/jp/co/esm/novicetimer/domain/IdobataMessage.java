@@ -9,14 +9,12 @@ public class IdobataMessage {
     private String source;
 
     private IdobataMessage(Builder builder) {
-        StringBuilder str = new StringBuilder();
 
-        str.append(String.join(
+        this.source = (String.join(
                 " ",
-                builder.userList.stream().distinct().map(user -> "@" + user).collect(Collectors.toList())));
-
-        str.append(builder.message);
-        this.source = str.toString();
+                builder.userList.stream().distinct().map(user -> "@" + user).collect(Collectors.toList())))
+                + " "
+                + builder.message;
     }
 
     public String getSource() {
