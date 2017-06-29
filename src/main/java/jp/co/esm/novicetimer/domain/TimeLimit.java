@@ -3,13 +3,13 @@ package jp.co.esm.novicetimer.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TimeLimit {
-    private int seconds; // 計測する秒数
+    private int minutes; // 計測する分数
 
     @JsonProperty("idobata_user")
     private String idobataUser;//idobataのアカウント名
 
-    public int getSeconds() {
-        return seconds;
+    public int getMinutes() {
+        return minutes;
     }
 
     public String getIdobataUser() {

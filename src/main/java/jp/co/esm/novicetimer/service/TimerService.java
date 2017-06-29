@@ -20,11 +20,11 @@ public class TimerService {
     private Timer timer;
 
     public String startTimer(TimeLimit timerLimit) {
-        int seconds = timerLimit.getSeconds();
+        int minutes = timerLimit.getMinutes();
 
         String idobataUser = timerLimit.getIdobataUser();
 
-        sendMessage(new IdobataMessage.Builder(" start:" + seconds + "秒").build());
+        sendMessage(new IdobataMessage.Builder("start:" + minutes + "分").build());
 
         if (timer != null) {
             timer.cancel();
@@ -35,16 +35,16 @@ public class TimerService {
             @Override
             public void run() {
                 sendMessage(
-                        new IdobataMessage.Builder(" ピピピ" + seconds + "秒経ちました")
+                        new IdobataMessage.Builder("ピピピ" + minutes + "分経ちました")
                                 .users(idobataUser)
                                 .build()
                             );
 
                 timer = null;
             }
-        }, TimeUnit.SECONDS.toMillis(seconds));
+        }, TimeUnit.MINUTES.toMillis(minutes));
 
-        return String.valueOf(seconds);
+        return String.valueOf(minutes);
     }
 
     public boolean stopTimer() {
