@@ -20,9 +20,9 @@ public class TimerService {
     private Timer timer;
 
     public String startTimer(TimeLimit timerLimit) {
-        int seconds = timerLimit.getSeconds();
+        int minutes = timerLimit.getMinutes();
 
-        sendMessage("start:" + seconds + "秒");
+        sendMessage("start:" + minutes + "分");
 
         if (timer != null) {
             timer.cancel();
@@ -32,12 +32,12 @@ public class TimerService {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                sendMessage("ピピピ" + seconds + "秒経ちました");
+                sendMessage("ピピピ" + minutes + "分経ちました");
                 timer = null;
             }
-        }, TimeUnit.SECONDS.toMillis(seconds));
+        }, TimeUnit.MINUTES.toMillis(minutes));
 
-        return String.valueOf(seconds);
+        return String.valueOf(minutes);
     }
 
     public boolean stopTimer() {
