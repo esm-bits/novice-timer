@@ -5,22 +5,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import lombok.Data;
+
+@Data
 public class IdobataMessage {
     private String source;
 
     private IdobataMessage(Builder builder) {
         this.source = String.join(
-                "",
-                builder.userList.stream().distinct().map(user -> "@" + user + " ").collect(Collectors.toList()))
-                + builder.message;
-    }
-
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
+                                "",
+                                builder.userList.stream().distinct().map(user -> "@" + user + " ").collect(Collectors.toList()))
+                        + builder.message;
     }
 
     public static class Builder {
