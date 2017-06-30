@@ -22,7 +22,9 @@ public class TimerService {
     public String startTimer(TimeLimit timerLimit) {
         int minutes = timerLimit.getMinutes();
 
-        sendMessage("start:" + minutes + "分");
+        String idobataUser = timerLimit.getIdobataUser();
+
+        sendMessage(new IdobataMessage.Builder("start:" + minutes + "分").build());
 
         if (timer != null) {
             timer.cancel();
@@ -32,7 +34,12 @@ public class TimerService {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                sendMessage("ピピピ" + minutes + "分経ちました");
+                sendMessage(
+                        new IdobataMessage.Builder("ピピピ" + minutes + "分経ちました")
+                                .users(idobataUser)
+                                .build()
+                            );
+
                 timer = null;
             }
         }, TimeUnit.MINUTES.toMillis(minutes));
@@ -49,7 +56,10 @@ public class TimerService {
         return true;
     }
 
-    private void sendMessage(String source) {
-        new RestTemplate().postForObject(config.getHookUrl(), new IdobataMessage(source), String.class);
+    private void sendMessage(IdobataMessage message) {
+        new RestTemplate().postForObject(
+                config.getHookUrl(),
+                message,
+                String.class);
     }
 }
