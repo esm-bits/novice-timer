@@ -3,6 +3,7 @@
 !gradle/wrapper/gradle-wrapper.jar
 bin/
 src/main/resources/config/application-production.yml
+.env
 
 ### STS ###
 .apt_generated
