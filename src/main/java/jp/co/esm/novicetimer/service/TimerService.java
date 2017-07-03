@@ -37,8 +37,7 @@ public class TimerService {
                 sendMessage(
                         new IdobataMessage.Builder("ピピピ" + minutes + "分経ちました")
                                 .users(idobataUser)
-                                .build()
-                            );
+                                .build());
 
                 timer = null;
             }

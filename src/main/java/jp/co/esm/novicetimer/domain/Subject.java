@@ -9,4 +9,9 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 public class Subject extends TimeLimit {
     private String title;
+
+    public Subject (String title, int minutes, String user) {
+        super(minutes, user);
+        this.title = title;
+    }
 }
