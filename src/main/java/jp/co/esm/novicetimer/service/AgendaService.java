@@ -22,7 +22,7 @@ public class AgendaService {
         Agenda agenda = agendaRepository.getAgenda(id);
         if(agenda == null) {//アジェンダが無かった場合
             return false;
-        }else if (number >= agenda.getSubjects().size()) {//numberがsubjectの大きさを超えていた場合
+        }else if (number >= agenda.getSubjects().size() || number < 0) {//numberがsubjectの大きさを超えていた場合
             return false;
         }
         //もうちょっとfalseを返す条件を増やすと思った
