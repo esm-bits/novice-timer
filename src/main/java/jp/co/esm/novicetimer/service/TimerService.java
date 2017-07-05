@@ -21,7 +21,6 @@ public class TimerService {
 
     public String startTimer(Subject subject) {
         int minutes = subject.getMinutes();
-        int seconds = (int) TimeUnit.MINUTES.toSeconds(minutes);
 
         String idobataUser = subject.getIdobataUser();
         String title = subject.getTitle();
@@ -33,6 +32,8 @@ public class TimerService {
             timer.cancel();
         }
         timer = new Timer();
+
+        int seconds = (int) TimeUnit.MINUTES.toSeconds(minutes);
 
         // 終了時間半分の通知
         startTimer(newTimerTask("予定時間の半分が経過しました。", idobataUser), TimeUnit.SECONDS.toMillis(seconds / 2));
