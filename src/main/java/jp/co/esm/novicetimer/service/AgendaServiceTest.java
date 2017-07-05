@@ -1,5 +1,6 @@
 package jp.co.esm.novicetimer.service;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import jp.co.esm.novicetimer.domain.Agenda;
+import jp.co.esm.novicetimer.domain.StatusCode;
 import jp.co.esm.novicetimer.domain.Subject;
 
 @RunWith(SpringRunner.class)
@@ -32,33 +34,33 @@ public class AgendaServiceTest {
     }
 
     @Test
-    public void タイマーが正常にスタートしてtrueが返ってくる() {
-        assertTrue(agendaService.changeTimerState(1, 0, "start"));
+    public void タイマーが正常にスタートしてOKが返ってくる() {
+        assertThat(agendaService.changeTimerState(1, 0, "start"), is(StatusCode.OK));
     }
 
     @Test
-    public void タイマーを正常にstopしてtrueが返ってくる() {
+    public void タイマーを正常にstopしてOKが返ってくる() {
         agendaService.changeTimerState(1, 0, "start");
-        assertTrue(agendaService.changeTimerState(1, 0, "stop"));
+        assertThat(agendaService.changeTimerState(1, 0, "stop"), is(StatusCode.OK));
     }
 
     @Test
-    public void 登録されていないidを渡すとfalseが返ってくる() {
-        assertFalse(agendaService.changeTimerState(-1, 0, "start"));
+    public void 登録されていないidを渡すとNOT_FOUNDが返ってくる() {
+        assertThat(agendaService.changeTimerState(-1, 0, "start"), is(StatusCode.NOT_FOUND));
     }
 
     @Test
-    public void 登録されていないsubjectを渡すとfalseが返ってくる() {
-        assertFalse(agendaService.changeTimerState(1, 1, "start"));
+    public void 登録されていないsubjectを渡すとNOT_FOUNDが返ってくる() {
+        assertThat(agendaService.changeTimerState(1, 1, "start"), is(StatusCode.NOT_FOUND));
     }
 
     @Test
-    public void stateがstartかstop以外を渡すとfalseが返ってくる() {
-        assertFalse(agendaService.changeTimerState(1, 0, "crate"));
+    public void stateがstartかstop以外を渡すとBAD_REQUESTが返ってくる() {
+        assertThat(agendaService.changeTimerState(1, 0, "crate"), is(StatusCode.BAD_REQUEST));
     }
 
     @Test
-    public void stateにnullを渡すとfalseが返ってくる() {
-        assertFalse(agendaService.changeTimerState(1, 0, null));
+    public void stateにnullを渡すとBAD_REQUESTが返ってくる() {
+        assertThat(agendaService.changeTimerState(1, 0, null), is(StatusCode.BAD_REQUEST));
     }
 }

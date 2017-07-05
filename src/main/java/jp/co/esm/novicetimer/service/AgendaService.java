@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jp.co.esm.novicetimer.domain.Agenda;
+import jp.co.esm.novicetimer.domain.StatusCode;
 import jp.co.esm.novicetimer.repository.AgendaRepository;
 
 @Service
@@ -11,28 +12,27 @@ public class AgendaService {
     @Autowired
     private AgendaRepository agendaRepository;
 
-    private TimerService timerService = new TimerService();
+    @Autowired
+    private TimerService timerService;
 
     public Agenda create(Agenda agenda) {
         return agendaRepository.save(agenda);
     }
 
-    //ここでタイマーの開始、停止を行う？
-    public boolean changeTimerState(int id, int number, String state) {
+    public StatusCode changeTimerState(int id, int number, String state) {
         Agenda agenda = agendaRepository.getAgenda(id);
-        if(agenda == null) {//アジェンダが無かった場合
-            return false;
-        }else if (number >= agenda.getSubjects().size() || number < 0) {//numberがsubjectの大きさを超えていた場合
-            return false;
+        if (agenda == null) {
+            return StatusCode.NOT_FOUND;
+        } else if (number >= agenda.getSubjects().size() || number < 0) {
+            return StatusCode.NOT_FOUND;
         }
-        //もうちょっとfalseを返す条件を増やすと思った
 
-        if (("start").equals(state)) {//stateがスタートだった場合
+        if (("start").equals(state)) {
             timerService.startTimer(agenda.getSubjects().get(number));
-            return true;
-        } else if (("stop").equals(state)) {//stateがストップだった場合
-            return timerService.stopTimer();
+            return StatusCode.OK;
+        } else if (("stop").equals(state)) {
+            return timerService.stopTimer() ? StatusCode.OK : StatusCode.NOT_FOUND;
         }
-        return false;//どちらでもなかった場合
+        return StatusCode.BAD_REQUEST;
     }
 }
