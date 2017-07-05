@@ -21,12 +21,12 @@ public class TimerRestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String postTimers(@RequestBody TimeLimit timeLimit) {
+    public String creatTimers(@RequestBody TimeLimit timeLimit) {
         return timerService.startTimer(timeLimit);
     }
 
     @DeleteMapping
-    public ResponseEntity<String> putTimers() {
+    public ResponseEntity<String> stopTimers() {
         HttpStatus status = timerService.stopTimer() ? HttpStatus.OK : HttpStatus.NOT_FOUND;
         return new ResponseEntity<>(status);
     }

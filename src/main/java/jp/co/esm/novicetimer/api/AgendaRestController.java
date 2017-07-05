@@ -23,17 +23,31 @@ public class AgendaRestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Agenda postAgendas(@RequestBody Agenda agenda) {
+    public Agenda creatAgendas(@RequestBody Agenda agenda) {
         return agendaService.create(agenda);
     }
 
     @PutMapping("{id}/subjects/{number}")
-    public ResponseEntity<String> putTimers(@PathVariable Integer id,
+    public ResponseEntity<String> Timers(@PathVariable Integer id,
                                             @PathVariable Integer number,
                                             @RequestBody TimerState timerState) {
 
-        HttpStatus status = agendaService.changeTimerState(id, number, timerState.getState())
-                            ? HttpStatus.OK : HttpStatus.NOT_FOUND;
+        HttpStatus status = null;
+        switch (agendaService.changeTimerState(id, number, timerState.getState())) {
+        case OK:
+            status = HttpStatus.OK;
+            break;
+        case BAD_REQUEST:
+            status = HttpStatus.BAD_REQUEST;
+            break;
+        case NOT_FOUND:
+            status = HttpStatus.NOT_FOUND;
+            break;
+        default:
+            status = HttpStatus.NOT_FOUND;
+            break;
+        }
+
         return new ResponseEntity<>(status);
     }
 }
