@@ -24,11 +24,12 @@ public class TimerService {
 
         String idobataUser = timerLimit.getIdobataUser();
 
+        if (timer != null) {
+            return String.valueOf(0);
+        }
+
         sendMessage(new IdobataMessage.Builder("start:" + minutes + "分").build());
 
-        if (timer != null) {
-            timer.cancel();
-        }
         timer = new Timer();
 
         timer.schedule(new TimerTask() {
