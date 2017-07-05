@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import jp.co.esm.novicetimer.domain.Agenda;
 import jp.co.esm.novicetimer.domain.StatusCode;
+import jp.co.esm.novicetimer.domain.TimerStateCode;
 import jp.co.esm.novicetimer.repository.AgendaRepository;
 
 @Service
@@ -19,20 +20,24 @@ public class AgendaService {
         return agendaRepository.save(agenda);
     }
 
-    public StatusCode changeTimerState(int id, int number, String state) {
+    public StatusCode changeTimerState(int id, int number, TimerStateCode state) {
         Agenda agenda = agendaRepository.getAgenda(id);
         if (agenda == null) {
             return StatusCode.NOT_FOUND;
         } else if (number >= agenda.getSubjects().size() || number < 0) {
             return StatusCode.NOT_FOUND;
+        } else if(state == null) {
+            return StatusCode.BAD_REQUEST;
         }
 
-        if (("start").equals(state)) {
+        switch (state) {
+        case START:
             timerService.startTimer(agenda.getSubjects().get(number));
             return StatusCode.OK;
-        } else if (("stop").equals(state)) {
+        case STOP:
             return timerService.stopTimer() ? StatusCode.OK : StatusCode.NOT_FOUND;
+        default:
+            return StatusCode.BAD_REQUEST;
         }
-        return StatusCode.BAD_REQUEST;
     }
 }

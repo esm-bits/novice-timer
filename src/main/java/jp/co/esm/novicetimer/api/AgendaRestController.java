@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jp.co.esm.novicetimer.domain.Agenda;
 import jp.co.esm.novicetimer.domain.TimerState;
+import jp.co.esm.novicetimer.domain.TimerStateCode;
 import jp.co.esm.novicetimer.service.AgendaService;
 
 @RestController
@@ -28,12 +29,24 @@ public class AgendaRestController {
     }
 
     @PutMapping("{id}/subjects/{number}")
-    public ResponseEntity<String> Timers(@PathVariable Integer id,
-                                            @PathVariable Integer number,
-                                            @RequestBody TimerState timerState) {
+    public ResponseEntity<String> operateTimers(@PathVariable Integer id,
+                                                @PathVariable Integer number,
+                                                @RequestBody TimerState timerState) {
+        TimerStateCode state;
+        switch (timerState.getState()) {
+        case "start":
+            state = TimerStateCode.START;
+            break;
+        case "stop":
+            state = TimerStateCode.STOP;
+            break;
+        default:
+            state = null;
+            break;
+        }
 
         HttpStatus status = null;
-        switch (agendaService.changeTimerState(id, number, timerState.getState())) {
+        switch (agendaService.changeTimerState(id, number, state)) {
         case OK:
             status = HttpStatus.OK;
             break;
