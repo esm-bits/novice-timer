@@ -12,7 +12,6 @@ import org.springframework.web.client.RestTemplate;
 import jp.co.esm.novicetimer.domain.Configs;
 import jp.co.esm.novicetimer.domain.IdobataMessage;
 import jp.co.esm.novicetimer.domain.Subject;
-import jp.co.esm.novicetimer.domain.TimeLimit;
 
 @Service
 public class TimerService {
@@ -21,22 +20,15 @@ public class TimerService {
 
     private Timer timer;
 
-    public String startTimer(TimeLimit timerLimit) {
-        int minutes = timerLimit.getMinutes();
-        int seconds = (int) TimeUnit.MINUTES.toSeconds(timerLimit.getMinutes());
+    public String startTimer(Subject subject) {
+        int minutes = subject.getMinutes();
+        int seconds = (int) TimeUnit.MINUTES.toSeconds(minutes);
 
-        String idobataUser = timerLimit.getIdobataUser();
-        String title = null;
-        if (timerLimit instanceof Subject) {
-            title = ((Subject) timerLimit).getTitle();
-        }
+        String idobataUser = subject.getIdobataUser();
+        String title = subject.getTitle();
 
-        if (title != null) {
-            sendMessage(new IdobataMessage.Builder(
-                    "タイトル：" + title + "\n発表者：" + idobataUser + "\n予定時間：" + minutes + "分").build());
-        } else {
-            sendMessage(new IdobataMessage.Builder("予定時間：" + minutes + "分").users(idobataUser).build());
-        }
+        sendMessage(new IdobataMessage.Builder(
+                "タイトル：" + title + "\n発表者：" + idobataUser + "\n予定時間：" + minutes + "分").build());
 
         if (timer != null) {
             timer.cancel();

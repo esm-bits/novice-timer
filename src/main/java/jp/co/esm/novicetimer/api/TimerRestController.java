@@ -21,8 +21,8 @@ public class TimerRestController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public String postTimers(@RequestBody Subject timeLimit) {
-        return timerService.startTimer(timeLimit);
+    public String postTimers(@RequestBody Subject subject) {
+        return timerService.startTimer(subject);
     }
 
     @DeleteMapping
