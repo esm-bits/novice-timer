@@ -26,7 +26,7 @@ public class AgendaService {
             return StatusCode.NOT_FOUND;
         } else if (number >= agenda.getSubjects().size() || number < 0) {
             return StatusCode.NOT_FOUND;
-        } else if(state == null) {
+        } else if (state == null) {
             return StatusCode.BAD_REQUEST;
         }
 

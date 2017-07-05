@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class TimerState {
-    private String state;
+    private TimerStateCode state;
 }
