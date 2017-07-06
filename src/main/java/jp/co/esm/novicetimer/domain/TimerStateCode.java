@@ -4,7 +4,7 @@ import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-@JsonDeserialize(using = TimerStateCodeDeserializer.class)
+@JsonDeserialize(using = ConstantsDeserializer.TimerStateCodeDeserializer.class)
 public enum TimerStateCode {
     START("start"),
     STOP("stop"),
