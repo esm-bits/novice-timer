@@ -36,11 +36,11 @@ public class TimerService {
         int seconds = (int) TimeUnit.MINUTES.toSeconds(minutes);
 
         // 終了時間半分の通知
-        startTimer(newTimerTask("予定時間の半分が経過しました。", idobataUser), TimeUnit.SECONDS.toMillis(seconds / 2));
+        startTimer(newTimerTask("予定時間の半分が経過しました。", idobataUser), seconds / 2);
 
         // 終了1分前の通知（1分は開始時、2分は半分経過、の通知と重なるので除外する）
         if (minutes > 2) {
-            startTimer(newTimerTask("残り1分です。", idobataUser), TimeUnit.SECONDS.toMillis(seconds - 60));
+            startTimer(newTimerTask("残り1分です。", idobataUser), seconds - 60);
         }
 
         // 終了時間と1分超過ごとの通知
@@ -55,7 +55,7 @@ public class TimerService {
                 }
                 overMinutes++;
             }
-        }, TimeUnit.SECONDS.toMillis(seconds), TimeUnit.SECONDS.toMillis(60));
+        }, seconds, 60);
 
         return String.valueOf(minutes);
     }
@@ -71,13 +71,13 @@ public class TimerService {
 
     private void startTimer(TimerTask task, long startSeconds) {
         if (timer != null) {
-            timer.schedule(task, startSeconds);
+            timer.schedule(task, TimeUnit.SECONDS.toMillis(startSeconds));
         }
     }
 
     private void startTimer(TimerTask task, long startSeconds, long periodSeconds) {
         if (timer != null) {
-            timer.schedule(task, startSeconds, periodSeconds);
+            timer.schedule(task, TimeUnit.SECONDS.toMillis(startSeconds), TimeUnit.SECONDS.toMillis(periodSeconds));
         }
     }
 
