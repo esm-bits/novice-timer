@@ -2,7 +2,6 @@ package jp.co.esm.novicetimer.service;
 
 import static org.junit.Assert.*;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,18 +43,13 @@ public class AgendaServiceTest {
         assertTrue(agendaService.changeTimerState(1, 0, TimerStateCode.STOP));
     }
 
-    @Test(expected = FileNotFoundException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void 登録されていないidを渡すとFileNotFoundExceptionがスローされる() throws Exception {
         agendaService.changeTimerState(-1, 0, TimerStateCode.START);
     }
 
-    @Test(expected = FileNotFoundException.class)
+    @Test(expected = IndexOutOfBoundsException.class)
     public void 登録されていないsubjectを渡すとFileNotFoundExceptionがスローされる() throws Exception {
         agendaService.changeTimerState(1, 1, TimerStateCode.START);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void stateにnullを渡すとIllegalArgumentExceptionがスローされる() throws Exception {
-        agendaService.changeTimerState(1, 0, null);
     }
 }

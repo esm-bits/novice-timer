@@ -22,11 +22,9 @@ public class AgendaService {
     public boolean changeTimerState(int id, int number, TimerStateCode state) throws Exception {
         Agenda agenda = agendaRepository.getAgenda(id);
         if (agenda == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException();
         } else if (number >= agenda.getSubjects().size() || number < 0) {
             throw new IndexOutOfBoundsException();
-        } else if (state == null) {
-            throw new IllegalArgumentException();
         }
 
         switch (state) {
