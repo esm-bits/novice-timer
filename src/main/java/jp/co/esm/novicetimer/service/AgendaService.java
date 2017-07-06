@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jp.co.esm.novicetimer.domain.Agenda;
-import jp.co.esm.novicetimer.domain.StatusCode;
 import jp.co.esm.novicetimer.domain.TimerStateCode;
 import jp.co.esm.novicetimer.repository.AgendaRepository;
 
@@ -20,24 +19,25 @@ public class AgendaService {
         return agendaRepository.save(agenda);
     }
 
-    public StatusCode changeTimerState(int id, int number, TimerStateCode state) {
+    public boolean changeTimerState(int id, int number, TimerStateCode state) throws Exception {
         Agenda agenda = agendaRepository.getAgenda(id);
         if (agenda == null) {
-            return StatusCode.NOT_FOUND;
+            throw new NullPointerException();
         } else if (number >= agenda.getSubjects().size() || number < 0) {
-            return StatusCode.NOT_FOUND;
+            throw new IndexOutOfBoundsException();
         } else if (state == null) {
-            return StatusCode.BAD_REQUEST;
+            throw new IllegalArgumentException();
         }
 
         switch (state) {
         case START:
             timerService.startTimer(agenda.getSubjects().get(number));
-            return StatusCode.OK;
+            return true;
         case STOP:
-            return timerService.stopTimer() ? StatusCode.OK : StatusCode.NOT_FOUND;
+            timerService.stopTimer();
+            return true;
         default:
-            return StatusCode.BAD_REQUEST;
+            throw new IllegalArgumentException();
         }
     }
 }

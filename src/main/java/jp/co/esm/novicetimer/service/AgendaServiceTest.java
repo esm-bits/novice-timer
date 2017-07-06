@@ -1,8 +1,8 @@
 package jp.co.esm.novicetimer.service;
 
-import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import jp.co.esm.novicetimer.domain.Agenda;
-import jp.co.esm.novicetimer.domain.StatusCode;
 import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.domain.TimerStateCode;
 
@@ -35,28 +34,28 @@ public class AgendaServiceTest {
     }
 
     @Test
-    public void タイマーが正常にスタートしてOKが返ってくる() {
-        assertThat(agendaService.changeTimerState(1, 0, TimerStateCode.START), is(StatusCode.OK));
+    public void タイマーが正常にstartするとtrueが返ってくる() throws Exception {
+        assertTrue(agendaService.changeTimerState(1, 0, TimerStateCode.START));
     }
 
     @Test
-    public void タイマーを正常にstopしてOKが返ってくる() {
+    public void タイマーを正常にstopするとtrueが返ってくる() throws Exception {
         agendaService.changeTimerState(1, 0, TimerStateCode.START);
-        assertThat(agendaService.changeTimerState(1, 0, TimerStateCode.STOP), is(StatusCode.OK));
+        assertTrue(agendaService.changeTimerState(1, 0, TimerStateCode.STOP));
     }
 
-    @Test
-    public void 登録されていないidを渡すとNOT_FOUNDが返ってくる() {
-        assertThat(agendaService.changeTimerState(-1, 0, TimerStateCode.START), is(StatusCode.NOT_FOUND));
+    @Test(expected = FileNotFoundException.class)
+    public void 登録されていないidを渡すとFileNotFoundExceptionがスローされる() throws Exception {
+        agendaService.changeTimerState(-1, 0, TimerStateCode.START);
     }
 
-    @Test
-    public void 登録されていないsubjectを渡すとNOT_FOUNDが返ってくる() {
-        assertThat(agendaService.changeTimerState(1, 1, TimerStateCode.START), is(StatusCode.NOT_FOUND));
+    @Test(expected = FileNotFoundException.class)
+    public void 登録されていないsubjectを渡すとFileNotFoundExceptionがスローされる() throws Exception {
+        agendaService.changeTimerState(1, 1, TimerStateCode.START);
     }
 
-    @Test
-    public void stateにnullを渡すとBAD_REQUESTが返ってくる() {
-        assertThat(agendaService.changeTimerState(1, 0, null), is(StatusCode.BAD_REQUEST));
+    @Test(expected = IllegalArgumentException.class)
+    public void stateにnullを渡すとIllegalArgumentExceptionがスローされる() throws Exception {
+        agendaService.changeTimerState(1, 0, null);
     }
 }
