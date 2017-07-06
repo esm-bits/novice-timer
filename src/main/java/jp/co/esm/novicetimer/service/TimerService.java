@@ -20,65 +20,47 @@ public class TimerService {
     private Timer timer;
 
     public String startTimer(Subject subject) {
-        int minutes = subject.getMinutes();
-
         String idobataUser = subject.getIdobataUser();
         String title = subject.getTitle();
+        int endMinutes = subject.getMinutes();
 
         sendMessage(new IdobataMessage.Builder(
-                "タイトル：" + title + "\n発表者：" + idobataUser + "\n予定時間：" + minutes + "分").build());
+                "タイトル：" + title + "\n発表者：" + idobataUser + "\n予定時間：" + endMinutes + "分").build());
 
         if (timer != null) {
             timer.cancel();
         }
         timer = new Timer();
 
-        int seconds = (int) TimeUnit.MINUTES.toSeconds(minutes);
+        int endSeconds = (int) TimeUnit.MINUTES.toSeconds(endMinutes);
 
-        // 終了時間半分の通知
-        startTimer(newTimerTask("予定時間の半分が経過しました。", idobataUser), seconds / 2);
-
-        // 終了1分前の通知（1分は開始時、2分は半分経過、の通知と重なるので除外する）
-        if (minutes > 2) {
-            startTimer(newTimerTask("残り1分です。", idobataUser), seconds - 60);
-        }
-
-        // 終了時間と1分超過ごとの通知
-        startTimer(new TimerTask() {
-            private int overMinutes = 0;
+        int periodSeconds = 30;
+        timer.schedule(new TimerTask() {
+            private int count = 0;
             @Override
             public void run() {
-                if (overMinutes == 0) {
+                count++;
+                int elapsedSeconds = periodSeconds * count;
+
+                if (elapsedSeconds == endSeconds / 2) {
+                    // 終了時間半分の通知
+                    sendMessage(new IdobataMessage.Builder("予定時間の半分が経過しました。").users(idobataUser).build());
+                } else if (elapsedSeconds == endSeconds - 60) {
+                    // 終了1分前の通知
+                    if (endMinutes > 2) { // 1分は開始時、2分は半分経過、の通知と重なるので除外する
+                        sendMessage(new IdobataMessage.Builder("残り1分です。").users(idobataUser).build());
+                    }
+                } else if (elapsedSeconds == endSeconds) {
+                    // 終了時間の通知
                     sendMessage(new IdobataMessage.Builder("終了時間です。").users(idobataUser).build());
-                } else {
-                    sendMessage(new IdobataMessage.Builder(overMinutes + "分超過しました。").users(idobataUser).build());
+                } else if (elapsedSeconds > endSeconds && count % 2 == 0) {
+                    // 1分超過ごとの通知
+                    sendMessage(new IdobataMessage.Builder(((elapsedSeconds - endSeconds) / 60) + "分超過しました。").users(idobataUser).build());
                 }
-                overMinutes++;
             }
-        }, seconds, 60);
+        }, TimeUnit.SECONDS.toMillis(periodSeconds), TimeUnit.SECONDS.toMillis(periodSeconds));
 
-        return String.valueOf(minutes);
-    }
-
-    private TimerTask newTimerTask(String message, String idobataUser) {
-        return new TimerTask()  {
-            @Override
-            public void run() {
-                sendMessage(new IdobataMessage.Builder(message).users(idobataUser).build());
-            }
-        };
-    }
-
-    private void startTimer(TimerTask task, long startSeconds) {
-        if (timer != null) {
-            timer.schedule(task, TimeUnit.SECONDS.toMillis(startSeconds));
-        }
-    }
-
-    private void startTimer(TimerTask task, long startSeconds, long periodSeconds) {
-        if (timer != null) {
-            timer.schedule(task, TimeUnit.SECONDS.toMillis(startSeconds), TimeUnit.SECONDS.toMillis(periodSeconds));
-        }
+        return String.valueOf(endMinutes);
     }
 
     public boolean stopTimer() {
