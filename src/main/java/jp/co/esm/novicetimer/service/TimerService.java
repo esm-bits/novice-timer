@@ -14,6 +14,8 @@ import jp.co.esm.novicetimer.domain.Subject;
 
 @Service
 public class TimerService {
+    private static final int PERIOD_SECONDS = 30;
+
     @Autowired
     private Configs config;
 
@@ -34,13 +36,12 @@ public class TimerService {
 
         int endSeconds = (int) TimeUnit.MINUTES.toSeconds(endMinutes);
 
-        int periodSeconds = 30;
         timer.schedule(new TimerTask() {
             private int count = 0;
             @Override
             public void run() {
                 count++;
-                int elapsedSeconds = periodSeconds * count;
+                int elapsedSeconds = PERIOD_SECONDS * count;
 
                 if (elapsedSeconds == endSeconds / 2) {
                     // 終了時間半分の通知
@@ -58,7 +59,7 @@ public class TimerService {
                     sendMessage(new IdobataMessage.Builder(((elapsedSeconds - endSeconds) / 60) + "分超過しました。").users(idobataUser).build());
                 }
             }
-        }, TimeUnit.SECONDS.toMillis(periodSeconds), TimeUnit.SECONDS.toMillis(periodSeconds));
+        }, TimeUnit.SECONDS.toMillis(PERIOD_SECONDS), TimeUnit.SECONDS.toMillis(PERIOD_SECONDS));
 
         return String.valueOf(endMinutes);
     }
