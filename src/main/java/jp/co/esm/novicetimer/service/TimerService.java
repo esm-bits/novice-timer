@@ -44,16 +44,16 @@ public class TimerService {
         }
 
         // 終了時間と1分超過ごとの通知
-        int[] count = {0}; // 匿名クラスからはfinalしかアクセスできないので配列を使用
         startTimer(new TimerTask() {
+            private int overMinutes = 0;
             @Override
             public void run() {
-                if (count[0] == 0) {
+                if (overMinutes == 0) {
                     sendMessage(new IdobataMessage.Builder("終了時間です。").users(idobataUser).build());
                 } else {
-                    sendMessage(new IdobataMessage.Builder(count[0] + "分超過しました。").users(idobataUser).build());
+                    sendMessage(new IdobataMessage.Builder(overMinutes + "分超過しました。").users(idobataUser).build());
                 }
-                count[0]++;
+                overMinutes++;
             }
         }, TimeUnit.SECONDS.toMillis(seconds), TimeUnit.SECONDS.toMillis(60));
 
