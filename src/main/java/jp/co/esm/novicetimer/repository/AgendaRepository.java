@@ -19,4 +19,8 @@ public class AgendaRepository {
         agendaMap.put(agenda.getId(), agenda);
         return agenda;
     }
+
+    public Agenda getAgenda(int id) {
+        return agendaMap.get(id);
+    }
 }

@@ -23,8 +23,9 @@ public class TimerService {
 
     public String startTimer(Subject subject) {
         if (timer != null) {
-            timer.cancel();
+            return String.valueOf(0);
         }
+
         timer = new Timer();
 
         timer.schedule(new NoticeTimerTask(subject, config.getHookUrl()), 0, TimeUnit.SECONDS.toMillis(PERIOD_SECONDS));

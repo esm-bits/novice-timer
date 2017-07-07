@@ -34,7 +34,7 @@ public class IdobataMessage {
             if (users == null) {
                 return this;
             }
-            Stream.of(users).filter(user -> !(user.isEmpty()) && user != null).forEach(user -> this.userList.add(user));
+            Stream.of(users).filter(user -> !(user != null && user.isEmpty())).forEach(user -> this.userList.add(user));
             return this;
         }
 
