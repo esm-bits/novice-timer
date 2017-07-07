@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import jp.co.esm.novicetimer.domain.Configs;
 import jp.co.esm.novicetimer.domain.IdobataMessage;
@@ -88,12 +89,10 @@ public class TimerService {
         }
 
         private void sendMessage(IdobataMessage message) {
-            /*
             new RestTemplate().postForObject(
                     hookUrl,
                     message,
                     String.class);
-                    */System.out.println(message.getSource());
         }
     }
 }
