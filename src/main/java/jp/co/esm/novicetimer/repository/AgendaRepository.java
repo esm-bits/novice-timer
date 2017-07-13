@@ -27,6 +27,6 @@ public class AgendaRepository {
     }
 
     public List<Agenda> getAgendas() {
-        return new ArrayList<Agenda>(agendaMap.values());
+        return new ArrayList<>(agendaMap.values());
     }
 }

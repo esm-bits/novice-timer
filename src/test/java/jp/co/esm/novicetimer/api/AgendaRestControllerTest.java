@@ -24,7 +24,7 @@ import jp.co.esm.novicetimer.repository.AgendaRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class AgendaRestControllerGetTest {
+public class AgendaRestControllerTest {
     @Autowired
     AgendaRepository agendaRepository;
     @Autowired
