@@ -12,9 +12,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -25,8 +25,8 @@ import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.domain.TimerStateCode;
 import jp.co.esm.novicetimer.service.AgendaService;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AgendaRestControllerTest {
     private MockMvc mvc;
 
@@ -47,15 +47,15 @@ public class AgendaRestControllerTest {
         agenda = new Agenda();
         agenda.setId(1);
         List<Subject> subjects = new ArrayList<>();
-        subjects.add(new Subject("タイトル", 5, "uesr1"));
+        subjects.add(new Subject("タイトル", 5, "user1"));
         agenda.setSubjects(subjects);
     }
 
     @Test
     public void api_agendasにGETリクエストすると_200OKとアジェンダのリストが返される() throws Exception {
-        when(this.agendaService.findAll()).thenReturn(new ArrayList<Agenda>());
+        when(this.agendaService.findAll()).thenReturn(new ArrayList<>());
         mvc.perform(get("/api/agendas")).andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(new ArrayList<Agenda>())));
+                .andExpect(content().json(mapper.writeValueAsString(new ArrayList<>())));
     }
 
     @Test
