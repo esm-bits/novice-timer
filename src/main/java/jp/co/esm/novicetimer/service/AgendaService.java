@@ -1,5 +1,7 @@
 package jp.co.esm.novicetimer.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +16,18 @@ public class AgendaService {
 
     @Autowired
     private TimerService timerService;
+
+    public List<Agenda> findAll() {
+        return agendaRepository.getAgendas();
+    }
+
+    public Agenda findOne(Integer id) {
+        Agenda agenda = agendaRepository.getAgenda(id);
+        if (agenda == null) {
+            throw new IllegalArgumentException();
+        }
+        return agenda;
+    }
 
     public Agenda create(Agenda agenda) {
         return agendaRepository.save(agenda);
