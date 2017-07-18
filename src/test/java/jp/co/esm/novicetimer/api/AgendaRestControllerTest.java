@@ -82,8 +82,8 @@ public class AgendaRestControllerTest {
         when(this.agendaService.create(agenda)).thenReturn(agenda);
         mvc
             .perform(post("/api/agendas")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(mapper.writeValueAsString(agenda)))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(agenda)))
             .andExpect(status().isCreated())
             .andExpect(content().json(mapper.writeValueAsString(agenda)));
     }
@@ -93,8 +93,8 @@ public class AgendaRestControllerTest {
         doThrow(new IllegalArgumentException()).when(this.agendaService).changeTimerState(1, 0, TimerStateCode.START);
         mvc
             .perform(put("/api/agendas/1/subjects/0")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("{\"state\": \"start\"}"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"state\": \"start\"}"))
             .andExpect(status().isBadRequest());
     }
 
@@ -103,8 +103,8 @@ public class AgendaRestControllerTest {
         doThrow(new IndexOutOfBoundsException()).when(this.agendaService).changeTimerState(1, 0, TimerStateCode.START);
         mvc
             .perform(put("/api/agendas/1/subjects/0")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("{\"state\": \"start\"}"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"state\": \"start\"}"))
             .andExpect(status().isNotFound());
     }
 
@@ -113,8 +113,8 @@ public class AgendaRestControllerTest {
         when(this.agendaService.changeTimerState(1, 0, TimerStateCode.START)).thenReturn(true);
         mvc
             .perform(put("/api/agendas/1/subjects/0")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("{\"state\": \"start\"}"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"state\": \"start\"}"))
             .andExpect(status().isOk());
     }
 }
