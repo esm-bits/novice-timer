@@ -54,48 +54,59 @@ public class AgendaRestControllerTest {
     @Test
     public void api_agendasにGETリクエストすると_200OKとアジェンダのリストが返される() throws Exception {
         when(this.agendaService.findAll()).thenReturn(new ArrayList<>());
-        mvc.perform(get("/api/agendas")).andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(new ArrayList<>())));
+        mvc
+            .perform(get("/api/agendas"))
+            .andExpect(status().isOk())
+            .andExpect(content().json(mapper.writeValueAsString(new ArrayList<>())));
     }
 
     @Test
     public void api_agendas_idにGETリクエストし_対応するアジェンダが返された場合_200OKとアジェンダが返される() throws Exception {
         when(this.agendaService.findOne(1)).thenReturn(agenda);
-        mvc.perform(get("/api/agendas/1")).andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(agenda)));
+        mvc
+            .perform(get("/api/agendas/1"))
+            .andExpect(status().isOk())
+            .andExpect(content().json(mapper.writeValueAsString(agenda)));
     }
 
     @Test
     public void api_agendas_idにGETリクエストし_IllegalArgumentExceptionが投げられた場合_404NotFoundが返される() throws Exception {
         doThrow(new IllegalArgumentException()).when(this.agendaService).findOne(1);
-        mvc.perform(get("/api/agendas/1")).andExpect(status().isNotFound());
+        mvc
+            .perform(get("/api/agendas/1"))
+            .andExpect(status().isNotFound());
     }
 
     @Test
     public void api_agendasにPOSTリクエストし_ボディにアジェンダを持たせた場合_201Createdとアジェンダが返される() throws Exception {
         when(this.agendaService.create(agenda)).thenReturn(agenda);
-        mvc.perform(post("/api/agendas").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(agenda)))
-            .andExpect(status().isCreated()).andExpect(content().json(mapper.writeValueAsString(agenda)));
+        mvc
+            .perform(post("/api/agendas").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(agenda)))
+            .andExpect(status().isCreated())
+            .andExpect(content().json(mapper.writeValueAsString(agenda)));
     }
 
     @Test
     public void api_agendas_id_subjects_numberにPUTリクエストし_IllegalArgumentExceptionが投げられた場合_400BadRequestが返される() throws Exception {
         doThrow(new IllegalArgumentException()).when(this.agendaService).changeTimerState(1, 0, TimerStateCode.START);
-        mvc.perform(put("/api/agendas/1/subjects/0").contentType(MediaType.APPLICATION_JSON).content("{\"state\": \"start\"}"))
+        mvc
+            .perform(put("/api/agendas/1/subjects/0").contentType(MediaType.APPLICATION_JSON).content("{\"state\": \"start\"}"))
             .andExpect(status().isBadRequest());
     }
 
     @Test
     public void api_agendas_id_subjects_numberにPUTリクエストし_IndexOutOfBoundsExceptionが投げられた場合_404NotFoundが返される() throws Exception {
         doThrow(new IndexOutOfBoundsException()).when(this.agendaService).changeTimerState(1, 0, TimerStateCode.START);
-        mvc.perform(put("/api/agendas/1/subjects/0").contentType(MediaType.APPLICATION_JSON).content("{\"state\": \"start\"}"))
+        mvc
+            .perform(put("/api/agendas/1/subjects/0").contentType(MediaType.APPLICATION_JSON).content("{\"state\": \"start\"}"))
             .andExpect(status().isNotFound());
     }
 
     @Test
     public void api_agendas_id_subjects_numberにPUTリクエストし_ボディに適切なTimerStateを持たせた場合_200OKが返される() throws Exception {
         when(this.agendaService.changeTimerState(1, 0, TimerStateCode.START)).thenReturn(true);
-        mvc.perform(put("/api/agendas/1/subjects/0").contentType(MediaType.APPLICATION_JSON).content("{\"state\": \"start\"}"))
+        mvc
+            .perform(put("/api/agendas/1/subjects/0").contentType(MediaType.APPLICATION_JSON).content("{\"state\": \"start\"}"))
             .andExpect(status().isOk());
     }
 }
