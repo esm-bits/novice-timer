@@ -81,7 +81,9 @@ public class AgendaRestControllerTest {
     public void api_agendasにPOSTリクエストし_ボディにアジェンダを持たせた場合_201Createdとアジェンダが返される() throws Exception {
         when(this.agendaService.create(agenda)).thenReturn(agenda);
         mvc
-            .perform(post("/api/agendas").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(agenda)))
+            .perform(post("/api/agendas")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(mapper.writeValueAsString(agenda)))
             .andExpect(status().isCreated())
             .andExpect(content().json(mapper.writeValueAsString(agenda)));
     }
@@ -90,7 +92,9 @@ public class AgendaRestControllerTest {
     public void api_agendas_id_subjects_numberにPUTリクエストし_IllegalArgumentExceptionが投げられた場合_400BadRequestが返される() throws Exception {
         doThrow(new IllegalArgumentException()).when(this.agendaService).changeTimerState(1, 0, TimerStateCode.START);
         mvc
-            .perform(put("/api/agendas/1/subjects/0").contentType(MediaType.APPLICATION_JSON).content("{\"state\": \"start\"}"))
+            .perform(put("/api/agendas/1/subjects/0")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"state\": \"start\"}"))
             .andExpect(status().isBadRequest());
     }
 
@@ -98,7 +102,9 @@ public class AgendaRestControllerTest {
     public void api_agendas_id_subjects_numberにPUTリクエストし_IndexOutOfBoundsExceptionが投げられた場合_404NotFoundが返される() throws Exception {
         doThrow(new IndexOutOfBoundsException()).when(this.agendaService).changeTimerState(1, 0, TimerStateCode.START);
         mvc
-            .perform(put("/api/agendas/1/subjects/0").contentType(MediaType.APPLICATION_JSON).content("{\"state\": \"start\"}"))
+            .perform(put("/api/agendas/1/subjects/0")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"state\": \"start\"}"))
             .andExpect(status().isNotFound());
     }
 
@@ -106,7 +112,9 @@ public class AgendaRestControllerTest {
     public void api_agendas_id_subjects_numberにPUTリクエストし_ボディに適切なTimerStateを持たせた場合_200OKが返される() throws Exception {
         when(this.agendaService.changeTimerState(1, 0, TimerStateCode.START)).thenReturn(true);
         mvc
-            .perform(put("/api/agendas/1/subjects/0").contentType(MediaType.APPLICATION_JSON).content("{\"state\": \"start\"}"))
+            .perform(put("/api/agendas/1/subjects/0")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("{\"state\": \"start\"}"))
             .andExpect(status().isOk());
     }
 }
