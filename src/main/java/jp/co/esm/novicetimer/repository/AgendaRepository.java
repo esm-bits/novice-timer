@@ -1,5 +1,7 @@
 package jp.co.esm.novicetimer.repository;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,5 +24,9 @@ public class AgendaRepository {
 
     public Agenda getAgenda(int id) {
         return agendaMap.get(id);
+    }
+
+    public List<Agenda> getAgendas() {
+        return new ArrayList<>(agendaMap.values());
     }
 }
