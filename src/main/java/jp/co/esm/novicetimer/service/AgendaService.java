@@ -52,4 +52,15 @@ public class AgendaService {
             throw new IllegalArgumentException();
         }
     }
+
+    public boolean deleteAgendaProcess(int id) {
+        timerService.stopTimer();
+        return agendaRepository.deleteAgenda(id);
+    }
+
+    public void deleteAgendasProcess() {
+        timerService.stopTimer();
+        agendaRepository.deleteAgendas();
+    }
+
 }

@@ -22,11 +22,27 @@ public class AgendaRepository {
         return agenda;
     }
 
+    private void resetId() {
+        id = 1;
+    }
+
     public Agenda getAgenda(int id) {
         return agendaMap.get(id);
     }
 
     public List<Agenda> getAgendas() {
         return new ArrayList<>(agendaMap.values());
+    }
+
+    public boolean deleteAgenda(int id) {
+        if(agendaMap.remove(id) == null) {
+            return false;
+        }
+        return true;
+    }
+
+    public void deleteAgendas() {
+        resetId();
+        agendaMap.clear();
     }
 }
