@@ -44,8 +44,8 @@ public class AgendaRestController {
 
     @PutMapping("{id}/subjects/{number}")
     public ResponseEntity<String> operateTimer(@PathVariable Integer id,
-            @PathVariable Integer number,
-            @RequestBody TimerState timerState) {
+        @PathVariable Integer number,
+        @RequestBody TimerState timerState) {
 
         try {
             agendaService.changeTimerState(id, number, timerState.getState());

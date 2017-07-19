@@ -47,22 +47,25 @@ public class TimerRestControllerTest {
         Subject subject = new Subject(title, minutes, idobataUser);
 
         when(this.timerService.startTimer(subject)).thenReturn(String.valueOf(subject.getMinutes()));
-        mvc.perform(post("/api/timers/").contentType(MediaType.APPLICATION_JSON)
+        mvc
+            .perform(post("/api/timers/").contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(subject)))
-                .andExpect(status().isCreated());
+            .andExpect(status().isCreated());
     }
 
     @Test
     public void タイマー動作中にDELETEリクエストを受けると200を返すこと() throws Exception {
         when(this.timerService.stopTimer()).thenReturn(true);
-        mvc.perform(delete("/api/timers/"))
-                .andExpect(status().isOk());
+        mvc
+            .perform(delete("/api/timers/"))
+            .andExpect(status().isOk());
     }
 
     @Test
     public void タイマーが動作していないときにDELETEリクエストを受けると404を返すこと() throws Exception {
         when(this.timerService.stopTimer()).thenReturn(false);
-        mvc.perform(delete("/api/timers/"))
-                .andExpect(status().isNotFound());
+        mvc
+            .perform(delete("/api/timers/"))
+            .andExpect(status().isNotFound());
     }
 }
