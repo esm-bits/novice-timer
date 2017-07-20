@@ -14,6 +14,7 @@ public class AgendaRepository {
     private Map<Integer, Agenda> agendaMap = new ConcurrentHashMap<>();
     private int id = 1;
 
+    /**@return 割り振られたidを持つagendaが返る*/
     public Agenda save(Agenda agenda) {
         agenda.setId(id);
         id++;
@@ -22,6 +23,7 @@ public class AgendaRepository {
         return agenda;
     }
 
+    /**@return idと一致したアジェンダor無かった場合はnull*/
     public Agenda getAgenda(int id) {
         return agendaMap.get(id);
     }

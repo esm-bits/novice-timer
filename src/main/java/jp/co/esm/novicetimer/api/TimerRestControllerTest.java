@@ -41,10 +41,7 @@ public class TimerRestControllerTest {
     public void subjectをリクエストボディにしたPOSTリクエストを受けると201を返すこと() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
 
-        String title = "テスト";
-        int minutes = 1;
-        String idobataUser = "hironoriohashi";
-        Subject subject = new Subject(title, minutes, idobataUser);
+        Subject subject = new Subject("test", 1, "user");
 
         when(this.timerService.startTimer(subject)).thenReturn(String.valueOf(subject.getMinutes()));
         mvc.perform(post("/api/timers/").contentType(MediaType.APPLICATION_JSON)

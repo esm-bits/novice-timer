@@ -21,6 +21,7 @@ public class AgendaService {
         return agendaRepository.getAgendas();
     }
 
+    /**@throws 対応したアジェンダがなければ IllegalArgmentException*/
     public Agenda findOne(Integer id) {
         Agenda agenda = agendaRepository.getAgenda(id);
         if (agenda == null) {
@@ -29,10 +30,17 @@ public class AgendaService {
         return agenda;
     }
 
+    /**@return idを割り振られたagendaが返る*/
     public Agenda create(Agenda agenda) {
         return agendaRepository.save(agenda);
     }
 
+    /**
+     * @throws 指定したidが見つからなければ IllegalArgumentException
+     * @throws TimerStateCodeが(START or STOP)以外だったら IllegalArgumentException
+     * @throws subjectが見つからないかnumberが範囲外なら IndexOutOfBoundsException
+     * @return 戻り値はtrueのみ
+     * */
     public boolean changeTimerState(int id, int number, TimerStateCode state) throws Exception {
         Agenda agenda = agendaRepository.getAgenda(id);
         if (agenda == null) {

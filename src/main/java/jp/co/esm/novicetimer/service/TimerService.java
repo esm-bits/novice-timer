@@ -21,6 +21,9 @@ public class TimerService {
 
     private Timer timer;
 
+    /**@return 設定時間を文字列で返す
+     * タイマーが動いていた場合はタイマーの上書きをせずに 0 を返す
+     * */
     public String startTimer(Subject subject) {
         if (timer != null) {
             return String.valueOf(0);

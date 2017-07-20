@@ -30,6 +30,7 @@ public class IdobataMessage {
             this.userList = new ArrayList<>();
         }
 
+        /**@param メンションするユーザ 複数指定可能*/
         public Builder users(String... users) {
             if (users == null) {
                 return this;
