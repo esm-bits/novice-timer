@@ -8,8 +8,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Subject {
-
-
     private String title;
 
     private int minutes; // 計測する分数
