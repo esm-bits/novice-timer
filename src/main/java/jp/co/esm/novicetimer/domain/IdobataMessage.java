@@ -14,8 +14,8 @@ public class IdobataMessage {
     private IdobataMessage(Builder builder) {
         this.source = String.join(
             "",
-            builder.userList.stream().distinct().map(user -> "@" + user + " ").collect(Collectors.toList()))
-            + builder.message;
+            builder.userList.stream().distinct().map(user -> "@" + user + " ").collect(Collectors.toList())
+        ) + builder.message;
     }
 
     public static class Builder {
