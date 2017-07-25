@@ -32,8 +32,6 @@ public class TimerRestControllerTest {
     @Mock
     private TimerService timerService;
 
-    private ObjectMapper mapper = new ObjectMapper();
-
     @Before
     public void setup() throws Exception {
         mvc = MockMvcBuilders.standaloneSetup(this.timerRestController).build();
@@ -41,6 +39,8 @@ public class TimerRestControllerTest {
 
     @Test
     public void subjectをリクエストボディにしたPOSTリクエストを受けると201を返すこと() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+
         String title = "テスト";
         int minutes = 1;
         String idobataUser = "hironoriohashi";

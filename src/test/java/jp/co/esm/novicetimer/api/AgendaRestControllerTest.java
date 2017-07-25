@@ -1,7 +1,8 @@
 package jp.co.esm.novicetimer.api;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,114 +10,111 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jp.co.esm.novicetimer.domain.Agenda;
 import jp.co.esm.novicetimer.domain.Subject;
-import jp.co.esm.novicetimer.repository.AgendaRepository;
+import jp.co.esm.novicetimer.domain.TimerStateCode;
+import jp.co.esm.novicetimer.service.AgendaService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AgendaRestControllerTest {
-    @Autowired
-    AgendaRepository agendaRepository;
-    @Autowired
-    TestRestTemplate restTemplate;
-    Agenda agenda1;
-    Agenda agenda2;
+    private MockMvc mvc;
+
+    @InjectMocks
+    private AgendaRestController agendaRestController;
+
+    @Mock
+    private AgendaService agendaService;
+
+    private ObjectMapper mapper = new ObjectMapper();
+
+    private Agenda agenda;
 
     @Before
-    public void テスト準備() {
-        List<Subject> subjects1 = new ArrayList<>();
-        subjects1.add(new Subject("subject1", 11, "user1"));
-        subjects1.add(new Subject("subject2", 12, "user2"));
-        agenda1 = new Agenda();
-        agenda1.setSubjects(subjects1);
+    public void setup() {
+        mvc = MockMvcBuilders.standaloneSetup(this.agendaRestController).build();
 
-        List<Subject> subjects2 = new ArrayList<>();
-        subjects2.add(new Subject("サブジェクト", 13, "ユーザー"));
-        agenda2 = new Agenda();
-        agenda2.setSubjects(subjects2);
-
-        if (agendaRepository.getAgendas().size() == 0) {
-            // agendaRepositoryへの登録はテストごとにリセットされないので最初だけ行う
-            agendaRepository.save(agenda1);
-            agendaRepository.save(agenda2);
-        } else {
-            // agendaRepositoryへ登録しない場合、idが自動付与されないので直接セット
-            agenda1.setId(1);
-            agenda2.setId(2);
-        }
+        agenda = new Agenda();
+        agenda.setId(1);
+        List<Subject> subjects = new ArrayList<>();
+        subjects.add(new Subject("タイトル", 5, "user1"));
+        agenda.setSubjects(subjects);
     }
 
     @Test
-    public void api_agendasにGETでリクエストするとAgendaのリストを取得できる() {
-        ResponseEntity<List<Agenda>> response = restTemplate.exchange(
-                "/api/agendas", HttpMethod.GET, null, new ParameterizedTypeReference<List<Agenda>>(){});
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().size(), is(2));
-
-        Agenda getAgenda1 = response.getBody().get(0);
-        assertThat(getAgenda1.getId(), is(agenda1.getId()));
-        assertThat(getAgenda1.getSubjects().size(), is(agenda1.getSubjects().size()));
-        assertThat(getAgenda1.getSubjects().get(0).getTitle(), is(agenda1.getSubjects().get(0).getTitle()));
-        assertThat(getAgenda1.getSubjects().get(0).getMinutes(), is(agenda1.getSubjects().get(0).getMinutes()));
-        assertThat(getAgenda1.getSubjects().get(0).getIdobataUser(), is(agenda1.getSubjects().get(0).getIdobataUser()));
-        assertThat(getAgenda1.getSubjects().get(1).getTitle(), is(agenda1.getSubjects().get(1).getTitle()));
-        assertThat(getAgenda1.getSubjects().get(1).getMinutes(), is(agenda1.getSubjects().get(1).getMinutes()));
-        assertThat(getAgenda1.getSubjects().get(1).getIdobataUser(), is(agenda1.getSubjects().get(1).getIdobataUser()));
-
-        Agenda getAgenda2 = response.getBody().get(1);
-        assertThat(getAgenda2.getId(), is(agenda2.getId()));
-        assertThat(getAgenda2.getSubjects().size(), is(agenda2.getSubjects().size()));
-        assertThat(getAgenda2.getSubjects().get(0).getTitle(), is(agenda2.getSubjects().get(0).getTitle()));
-        assertThat(getAgenda2.getSubjects().get(0).getMinutes(), is(agenda2.getSubjects().get(0).getMinutes()));
-        assertThat(getAgenda2.getSubjects().get(0).getIdobataUser(), is(agenda2.getSubjects().get(0).getIdobataUser()));
+    public void api_agendasにGETリクエストすると_200OKとアジェンダのリストが返される() throws Exception {
+        when(this.agendaService.findAll()).thenReturn(new ArrayList<>());
+        mvc
+            .perform(get("/api/agendas"))
+            .andExpect(status().isOk())
+            .andExpect(content().json(mapper.writeValueAsString(new ArrayList<>())));
     }
 
     @Test
-    public void api_agendas_1にGETリクエストするとidが1のアジェンダを取得できる() {
-        ResponseEntity<Agenda> response = restTemplate.exchange(
-                "/api/agendas/1", HttpMethod.GET, null, new ParameterizedTypeReference<Agenda>(){});
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-
-        Agenda getAgenda = response.getBody();
-        assertThat(getAgenda.getId(),
-                is(agenda1.getId()));
-        assertThat(getAgenda.getSubjects().size(), is(agenda1.getSubjects().size()));
-        assertThat(getAgenda.getSubjects().get(0).getTitle(), is(agenda1.getSubjects().get(0).getTitle()));
-        assertThat(getAgenda.getSubjects().get(0).getMinutes(), is(agenda1.getSubjects().get(0).getMinutes()));
-        assertThat(getAgenda.getSubjects().get(0).getIdobataUser(), is(agenda1.getSubjects().get(0).getIdobataUser()));
-        assertThat(getAgenda.getSubjects().get(1).getTitle(), is(agenda1.getSubjects().get(1).getTitle()));
-        assertThat(getAgenda.getSubjects().get(1).getMinutes(), is(agenda1.getSubjects().get(1).getMinutes()));
-        assertThat(getAgenda.getSubjects().get(1).getIdobataUser(), is(agenda1.getSubjects().get(1).getIdobataUser()));
+    public void api_agendas_idにGETリクエストし_対応するアジェンダが返された場合_200OKとアジェンダが返される() throws Exception {
+        when(this.agendaService.findOne(1)).thenReturn(agenda);
+        mvc
+            .perform(get("/api/agendas/1"))
+            .andExpect(status().isOk())
+            .andExpect(content().json(mapper.writeValueAsString(agenda)));
     }
 
     @Test
-    public void api_agendas_2にGETリクエストするとidが2のアジェンダを取得できる() {
-        ResponseEntity<Agenda> response = restTemplate.exchange(
-                "/api/agendas/2", HttpMethod.GET, null, new ParameterizedTypeReference<Agenda>(){});
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-
-        Agenda getAgenda = response.getBody();
-        assertThat(getAgenda.getId(), is(agenda2.getId()));
-        assertThat(getAgenda.getSubjects().size(), is(agenda2.getSubjects().size()));
-        assertThat(getAgenda.getSubjects().get(0).getTitle(), is(agenda2.getSubjects().get(0).getTitle()));
-        assertThat(getAgenda.getSubjects().get(0).getMinutes(), is(agenda2.getSubjects().get(0).getMinutes()));
-        assertThat(getAgenda.getSubjects().get(0).getIdobataUser(), is(agenda2.getSubjects().get(0).getIdobataUser()));
+    public void api_agendas_idにGETリクエストし_IllegalArgumentExceptionが投げられた場合_404NotFoundが返される() throws Exception {
+        doThrow(new IllegalArgumentException()).when(this.agendaService).findOne(1);
+        mvc
+            .perform(get("/api/agendas/1"))
+            .andExpect(status().isNotFound());
     }
 
     @Test
-    public void api_agendas_3にGETリクエストすると404NotFoundが返される() {
-        ResponseEntity<Agenda> response = restTemplate.exchange(
-                "/api/agendas/3", HttpMethod.GET, null, new ParameterizedTypeReference<Agenda>(){});
-        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+    public void api_agendasにPOSTリクエストし_ボディにアジェンダを持たせた場合_201Createdとアジェンダが返される() throws Exception {
+        when(this.agendaService.create(agenda)).thenReturn(agenda);
+        mvc
+            .perform(post("/api/agendas")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(mapper.writeValueAsString(agenda)))
+            .andExpect(status().isCreated())
+            .andExpect(content().json(mapper.writeValueAsString(agenda)));
+    }
+
+    @Test
+    public void api_agendas_id_subjects_numberにPUTリクエストし_IllegalArgumentExceptionが投げられた場合_400BadRequestが返される() throws Exception {
+        doThrow(new IllegalArgumentException()).when(this.agendaService).changeTimerState(1, 0, TimerStateCode.START);
+        mvc
+            .perform(put("/api/agendas/1/subjects/0")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"state\": \"start\"}"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void api_agendas_id_subjects_numberにPUTリクエストし_IndexOutOfBoundsExceptionが投げられた場合_404NotFoundが返される() throws Exception {
+        doThrow(new IndexOutOfBoundsException()).when(this.agendaService).changeTimerState(1, 0, TimerStateCode.START);
+        mvc
+            .perform(put("/api/agendas/1/subjects/0")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"state\": \"start\"}"))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void api_agendas_id_subjects_numberにPUTリクエストし_ボディに適切なTimerStateを持たせた場合_200OKが返される() throws Exception {
+        when(this.agendaService.changeTimerState(1, 0, TimerStateCode.START)).thenReturn(true);
+        mvc
+            .perform(put("/api/agendas/1/subjects/0")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"state\": \"start\"}"))
+            .andExpect(status().isOk());
     }
 }
