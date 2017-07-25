@@ -15,8 +15,10 @@ public class AgendaRepository {
     private int id = 1;
 
     public Agenda save(Agenda agenda) {
-        agenda.setId(id);
-        id++;
+        if (agenda.getId() == 0) {
+            agenda.setId(id);
+            id++;
+        }
 
         agendaMap.put(agenda.getId(), agenda);
         return agenda;

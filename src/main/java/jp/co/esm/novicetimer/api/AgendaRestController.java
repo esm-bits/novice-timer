@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import jp.co.esm.novicetimer.domain.Agenda;
+import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.domain.TimerState;
 import jp.co.esm.novicetimer.service.AgendaService;
 
@@ -42,7 +43,21 @@ public class AgendaRestController {
         return agendaService.create(agenda);
     }
 
+    @PutMapping("{id}")
+    public Agenda editAgenda(@PathVariable Integer id, @RequestBody Agenda agenda) {
+        agenda.setId(id);
+        return agendaService.update(agenda);
+    }
+
     @PutMapping("{id}/subjects/{number}")
+    public Agenda editSubject(@PathVariable Integer id,
+        @PathVariable Integer number,
+        @RequestBody Subject subject) {
+
+        return agendaService.updateSubject(id, number, subject);
+    }
+
+    @PutMapping("{id}/subjects/{number}/timers")
     public ResponseEntity<String> operateTimer(@PathVariable Integer id,
             @PathVariable Integer number,
             @RequestBody TimerState timerState) {

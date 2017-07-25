@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jp.co.esm.novicetimer.domain.Agenda;
+import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.domain.TimerStateCode;
 import jp.co.esm.novicetimer.repository.AgendaRepository;
 
@@ -21,7 +22,7 @@ public class AgendaService {
         return agendaRepository.getAgendas();
     }
 
-    public Agenda findOne(Integer id) {
+    public Agenda findOne(Integer id) throws IllegalArgumentException {
         Agenda agenda = agendaRepository.getAgenda(id);
         if (agenda == null) {
             throw new IllegalArgumentException();
@@ -30,6 +31,21 @@ public class AgendaService {
     }
 
     public Agenda create(Agenda agenda) {
+        return agendaRepository.save(agenda);
+    }
+
+    public Agenda update(Agenda agenda) throws IllegalArgumentException {
+        findOne(agenda.getId());
+        return agendaRepository.save(agenda);
+    }
+
+    public Agenda updateSubject(int id, int number, Subject subject) throws IllegalArgumentException {
+        Agenda agenda = findOne(id);
+        if (number < 0 || agenda.getSubjects().size() <= number) {
+            throw new IllegalArgumentException();
+        }
+
+        agenda.getSubjects().set(number, subject);
         return agendaRepository.save(agenda);
     }
 
