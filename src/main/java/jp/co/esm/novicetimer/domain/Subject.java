@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+/**
+ * フィールドにタイトル、制限時間、メンションするアカウント名を持つクラスです
+ */
 @Data
 @AllArgsConstructor
 public class Subject {

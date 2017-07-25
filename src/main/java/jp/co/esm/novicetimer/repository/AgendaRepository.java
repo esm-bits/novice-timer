@@ -9,12 +9,23 @@ import org.springframework.stereotype.Repository;
 
 import jp.co.esm.novicetimer.domain.Agenda;
 
+/**
+ * アジェンダを複数保持するクラス。<p>
+ * アジェンダを登録してidを割り振ったり
+ * idからアジェンダを探すメソッドがあります
+ */
 @Repository
 public class AgendaRepository {
     private Map<Integer, Agenda> agendaMap = new ConcurrentHashMap<>();
     private int id = 1;
 
-    /**@return 割り振られたidを持つagendaが返る*/
+    /**
+     * アジェンダの登録。
+     * <p>
+     * 登録したいアジェンダを受け取り、インスタンスの保持するMapに登録する。その際、割り振ったidをkeyとします。
+     * @param agenda 登録したいアジェンダ
+     * @return 割り振られたidを持つagenda
+     */
     public Agenda save(Agenda agenda) {
         agenda.setId(id);
         id++;
@@ -23,11 +34,23 @@ public class AgendaRepository {
         return agenda;
     }
 
-    /**@return idと一致したアジェンダor無かった場合はnull*/
+    /**
+     * 単一のアジェンダの取得。
+     * <p>
+     * 引数で受け取ったidがMapにあるかを走査して返します。
+     * @param id 取得したいアジェンダのid
+     * @return idと一致したアジェンダor無かった場合はnull
+     */
     public Agenda getAgenda(int id) {
         return agendaMap.get(id);
     }
 
+    /**
+     * 全アジェンダの取得。
+     * <p>
+     * Mapに登録されているアジェンダをListにして返します。
+     * @return agendaのList
+     */
     public List<Agenda> getAgendas() {
         return new ArrayList<>(agendaMap.values());
     }

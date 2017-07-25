@@ -12,6 +12,11 @@ import jp.co.esm.novicetimer.domain.Configs;
 import jp.co.esm.novicetimer.domain.IdobataMessage;
 import jp.co.esm.novicetimer.domain.Subject;
 
+/**
+ * タイマーを操作するクラスです。<p>
+ * タイマーのスタート、ストップが行えます。
+ */
+
 @Service
 public class TimerService {
     private static final int PERIOD_SECONDS = 30;
@@ -21,9 +26,15 @@ public class TimerService {
 
     private Timer timer;
 
-    /**@return 設定時間を文字列で返す
-     * タイマーが動いていた場合はタイマーの上書きをせずに 0 を返す
-     * */
+    /**
+     * タイマーを開始します。
+     * <p>
+     * 与えられたSubject情報に沿った設定のタイマーを開始します。
+     * 既にタイマーが開始されていた場合は何もせずreturnします。
+     * @param subject startしたいsubjectを受け取る
+     * @return 設定時間を表した文字列<br>
+     * 既にタイマーが動いていた場合は "0" の文字列
+     */
     public String startTimer(Subject subject) {
         if (timer != null) {
             return String.valueOf(0);
@@ -36,6 +47,14 @@ public class TimerService {
         return String.valueOf(subject.getMinutes());
     }
 
+    /**
+     * タイマーを止めます。
+     * <p>
+     * タイマーを止めます。タイマーは1つしか存在できないので複数回呼び出す必要はありません。
+     * @return タイマーを止める時に<br>
+     * タイマーが動いていた場合はtrue<br>
+     * タイマーが動いていなかった場合はfalse<br>
+     */
     public boolean stopTimer() {
         if (timer == null) {
             return false;
@@ -45,6 +64,11 @@ public class TimerService {
         return true;
     }
 
+    /**
+     * タイマーをThreadとして生成し、指定条件でidobataへメッセージを送信する処理を行うクラス<br>
+     * TimerServiceの内部クラス
+     *
+     */
     public static class NoticeTimerTask extends TimerTask {
         private String hookUrl;
         private int count;
@@ -91,6 +115,12 @@ public class TimerService {
             count++;
         }
 
+        /**
+         * idobataへメッセージを送る。<br>
+         * <p>
+         * 送り先のURLを.ymlファイルに記述している必要がある
+         * @param message idobataへ送信するメッセージ{@link IdobataMessage}
+         */
         private void sendMessage(IdobataMessage message) {
             new RestTemplate().postForObject(
                     hookUrl,
