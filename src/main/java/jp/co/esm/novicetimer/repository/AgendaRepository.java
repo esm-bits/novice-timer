@@ -41,7 +41,7 @@ public class AgendaRepository {
      * false:削除できなかった場合
      */
     public boolean deleteAgenda(int id) {
-        if(agendaMap.remove(id) == null) {
+        if (agendaMap.remove(id) == null) {
             return false;
         }
         return true;

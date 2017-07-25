@@ -45,8 +45,8 @@ public class AgendaRestController {
 
     @PutMapping("{id}/subjects/{number}")
     public ResponseEntity<String> operateTimer(@PathVariable Integer id,
-            @PathVariable Integer number,
-            @RequestBody TimerState timerState) {
+        @PathVariable Integer number,
+        @RequestBody TimerState timerState) {
 
         try {
             agendaService.changeTimerState(id, number, timerState.getState());
@@ -69,7 +69,7 @@ public class AgendaRestController {
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteAgenda(@PathVariable Integer id) {
         return agendaService.deleteAgendaProcess(id)
-                ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -82,7 +82,6 @@ public class AgendaRestController {
     public void deleteAgendas() {
         agendaService.deleteAgendasProcess();
     }
-
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({ IllegalArgumentException.class })
