@@ -34,6 +34,12 @@ public class AgendaRepository {
         return new ArrayList<>(agendaMap.values());
     }
 
+    /**
+     * 1つのアジェンダを削除する
+     * @param id 削除するアジェンダのid
+     * @return true;削除できた場合
+     * false:削除できなかった場合
+     */
     public boolean deleteAgenda(int id) {
         if(agendaMap.remove(id) == null) {
             return false;
@@ -41,6 +47,11 @@ public class AgendaRepository {
         return true;
     }
 
+    /**
+     * 全アジェンダを削除する。
+     * <p>
+     * 全てのアジェンダを削除する。
+     */
     public void deleteAgendas() {
         resetId();
         agendaMap.clear();

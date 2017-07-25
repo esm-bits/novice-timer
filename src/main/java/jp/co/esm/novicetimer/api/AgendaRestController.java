@@ -58,12 +58,25 @@ public class AgendaRestController {
         }
     }
 
+    /**
+     * アジェンダを1つ削除する。
+     * <p>
+     * リクエストボディから受け取ったidのアジェンダを削除する。
+     * HTTPステータスは削除できた場合に200、削除できなかった場合に404が返される
+     * @param id 削除するアジェンダのid
+     * @return HTTPステータス
+     */
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteAgenda(@PathVariable Integer id) {
         return agendaService.deleteAgendaProcess(id)
                 ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * アジェンダを全削除する。
+     * <p>
+     * 登録しているアジェンダを全て削除する。HTTPステータスは200が返される
+     */
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     public void deleteAgendas() {
