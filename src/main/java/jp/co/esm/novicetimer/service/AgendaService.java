@@ -34,11 +34,31 @@ public class AgendaService {
         return agendaRepository.save(agenda);
     }
 
+    /**
+     * アジェンダの更新を行います。
+     * <p>
+     * アジェンダをagendaRepositoryに登録することで置き換え、置き換えた後のagendaを返します。
+     *
+     * @param agenda 更新するアジェンダ
+     * @return 更新された後のアジェンダ
+     * @throws IllegalArgumentException 更新されるアジェンダが無い場合に投げられます
+     */
     public Agenda update(Agenda agenda) throws IllegalArgumentException {
         findOne(agenda.getId());
         return agendaRepository.save(agenda);
     }
 
+    /**
+     * サブジェクトの更新を行います。
+     * <p>
+     * idが対応するアジェンダのnumber番目のサブジェクトを置き換え、置き換えた後のagendaを返します。
+     *
+     * @param id サブジェクトの更新を行うアジェンダのid
+     * @param number 更新されるサブジェクトの番目
+     * @param subject 更新するサブジェクト
+     * @return サブジェクトを更新した後のアジェンダ
+     * @throws IllegalArgumentException idが対応するアジェンダがない場合、number番目のサブジェクトがない場合に投げられます
+     */
     public Agenda updateSubject(int id, int number, Subject subject) throws IllegalArgumentException {
         Agenda agenda = findOne(id);
         if (number < 0 || agenda.getSubjects().size() <= number) {

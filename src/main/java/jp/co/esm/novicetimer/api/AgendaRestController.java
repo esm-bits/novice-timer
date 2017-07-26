@@ -43,12 +43,33 @@ public class AgendaRestController {
         return agendaService.create(agenda);
     }
 
+    /**
+     * PUTリクエストを受けてアジェンダを更新する。
+     * <p>
+     * idに対応するアジェンダを、リクエストボディに渡されたアジェンダに変更する。<br>
+     * HTTPステータスは、更新された場合は201を返す。idが不正の場合は404を返す。
+     *
+     * @param agenda 更新するアジェンダの内容
+     * @param id 更新されるアジェンダのid
+     * @return 更新後のアジェンダ
+     */
     @PutMapping("{id}")
     public Agenda editAgenda(@PathVariable Integer id, @RequestBody Agenda agenda) {
         agenda.setId(id);
         return agendaService.update(agenda);
     }
 
+    /**
+     * PUTリクエストを受けてアジェンダのサブジェクトを1つ更新する。
+     * <p>
+     * idに対応するアジェンダのnumber番目のサブジェクトを、リクエストボディに渡されたサブジェクトに変更する。<br>
+     * HTTPステータスは、更新された場合は201を返す。idが不正の場合と、numberが不正の場合は404を返す。
+     *　
+     * @param subject 更新するサブジェクトの内容
+     * @param id 更新されるアジェンダのid
+     * @param number 更新されるサブジェクトの番目
+     * @return 更新後のアジェンダ
+     */
     @PutMapping("{id}/subjects/{number}")
     public Agenda editSubject(@PathVariable Integer id,
         @PathVariable Integer number,
