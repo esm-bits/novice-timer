@@ -37,14 +37,11 @@ public class AgendaRepository {
     /**
      * 1つのアジェンダを削除する
      * @param id 削除するアジェンダのid
-     * @return true;削除できた場合
+     * @return true:削除できた場合
      * false:削除できなかった場合
      */
     public boolean deleteAgenda(int id) {
-        if (agendaMap.remove(id) == null) {
-            return false;
-        }
-        return true;
+        return agendaMap.remove(id) != null;
     }
 
     /**

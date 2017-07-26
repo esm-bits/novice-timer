@@ -73,7 +73,6 @@ public class AgendaServiceTest {
             Agenda agenda = new Agenda();
             agenda.setSubjects(subject);
             agendaService.create(agenda);
-
         }
 
         @Test
