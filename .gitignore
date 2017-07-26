@@ -4,6 +4,7 @@
 bin/
 src/main/resources/config/application-production.yml
 .env
+doc/
 
 ### STS ###
 .apt_generated
