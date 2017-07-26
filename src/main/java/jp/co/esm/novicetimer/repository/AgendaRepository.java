@@ -12,7 +12,11 @@ import jp.co.esm.novicetimer.domain.Agenda;
 @Repository
 public class AgendaRepository {
     private Map<Integer, Agenda> agendaMap = new ConcurrentHashMap<>();
-    private int id = 1;
+    private int id;
+
+    AgendaRepository() {
+        resetId();
+    }
 
     public Agenda save(Agenda agenda) {
         agenda.setId(id);
@@ -50,7 +54,7 @@ public class AgendaRepository {
      * 全てのアジェンダを削除する。
      */
     public void deleteAgendas() {
-        resetId();
         agendaMap.clear();
+        resetId();
     }
 }
