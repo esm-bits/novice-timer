@@ -18,7 +18,6 @@ import jp.co.esm.novicetimer.domain.Agenda;
 import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.domain.TimerStateCode;
 
-//@RunWith(SpringRunner.class)
 @RunWith(Enclosed.class)
 @SpringBootTest
 public class AgendaServiceTest {
@@ -31,10 +30,10 @@ public class AgendaServiceTest {
 
         @Before
         public void setup() {
-            List<Subject> subject = new ArrayList<>();
-            subject.add(new Subject("test", 1, "user"));
+            List<Subject> subjects = new ArrayList<>();
+            subjects.add(new Subject("test", 1, "user"));
             Agenda agenda = new Agenda();
-            agenda.setSubjects(subject);
+            agenda.setSubjects(subjects);
             agendaService.create(agenda);
         }
 
@@ -68,10 +67,10 @@ public class AgendaServiceTest {
 
         @Before
         public void setup() {
-            List<Subject> subject = new ArrayList<>();
-            subject.add(new Subject("test", 1, "user"));
+            List<Subject> subjects = new ArrayList<>();
+            subjects.add(new Subject("test", 1, "user"));
             Agenda agenda = new Agenda();
-            agenda.setSubjects(subject);
+            agenda.setSubjects(subjects);
             agendaService.create(agenda);
         }
 
