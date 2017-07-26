@@ -1,5 +1,6 @@
 package jp.co.esm.novicetimer.api;
 
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,11 +54,19 @@ public class AgendaRestControllerTest {
 
     @Test
     public void api_agendasにGETリクエストすると_200OKとアジェンダのリストが返される() throws Exception {
-        when(this.agendaService.findAll()).thenReturn(new ArrayList<>());
+        List<Agenda> agendas = new ArrayList<>();
+        agendas.add(agenda);
+
+        when(this.agendaService.findAll()).thenReturn(agendas);
         mvc
             .perform(get("/api/agendas"))
             .andExpect(status().isOk())
-            .andExpect(content().json(mapper.writeValueAsString(new ArrayList<>())));
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$", hasSize(1)))
+            .andExpect(jsonPath("$[0].id").value(agenda.getId()))
+            .andExpect(jsonPath("$[0].subjects[0].title").value(agenda.getSubjects().get(0).getTitle()))
+            .andExpect(jsonPath("$[0].subjects[0].idobata_user").value(agenda.getSubjects().get(0).getIdobataUser()))
+            .andExpect(jsonPath("$[0].subjects[0].minutes").value(agenda.getSubjects().get(0).getMinutes()));
     }
 
     @Test
@@ -66,7 +75,11 @@ public class AgendaRestControllerTest {
         mvc
             .perform(get("/api/agendas/1"))
             .andExpect(status().isOk())
-            .andExpect(content().json(mapper.writeValueAsString(agenda)));
+            .andExpect(jsonPath("$").exists())
+            .andExpect(jsonPath("$.id").value(agenda.getId()))
+            .andExpect(jsonPath("$.subjects[0].title").value(agenda.getSubjects().get(0).getTitle()))
+            .andExpect(jsonPath("$.subjects[0].idobata_user").value(agenda.getSubjects().get(0).getIdobataUser()))
+            .andExpect(jsonPath("$.subjects[0].minutes").value(agenda.getSubjects().get(0).getMinutes()));
     }
 
     @Test
@@ -74,7 +87,8 @@ public class AgendaRestControllerTest {
         doThrow(new IllegalArgumentException()).when(this.agendaService).findOne(1);
         mvc
             .perform(get("/api/agendas/1"))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$").doesNotExist());
     }
 
     @Test
@@ -85,7 +99,11 @@ public class AgendaRestControllerTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(mapper.writeValueAsString(agenda)))
             .andExpect(status().isCreated())
-            .andExpect(content().json(mapper.writeValueAsString(agenda)));
+            .andExpect(jsonPath("$").exists())
+            .andExpect(jsonPath("$.id").value(agenda.getId()))
+            .andExpect(jsonPath("$.subjects[0].title").value(agenda.getSubjects().get(0).getTitle()))
+            .andExpect(jsonPath("$.subjects[0].idobata_user").value(agenda.getSubjects().get(0).getIdobataUser()))
+            .andExpect(jsonPath("$.subjects[0].minutes").value(agenda.getSubjects().get(0).getMinutes()));
     }
 
     @Test
@@ -96,7 +114,11 @@ public class AgendaRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(agenda)))
             .andExpect(status().isOk())
-            .andExpect(content().json(mapper.writeValueAsString(agenda)));
+            .andExpect(jsonPath("$").exists())
+            .andExpect(jsonPath("$.id").value(agenda.getId()))
+            .andExpect(jsonPath("$.subjects[0].title").value(agenda.getSubjects().get(0).getTitle()))
+            .andExpect(jsonPath("$.subjects[0].idobata_user").value(agenda.getSubjects().get(0).getIdobataUser()))
+            .andExpect(jsonPath("$.subjects[0].minutes").value(agenda.getSubjects().get(0).getMinutes()));
     }
 
     @Test
@@ -106,7 +128,8 @@ public class AgendaRestControllerTest {
             .perform(put("/api/agendas/1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(agenda)))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$").doesNotExist());
     }
 
     @Test
@@ -118,20 +141,31 @@ public class AgendaRestControllerTest {
             .perform(put("/api/agendas/1/subjects/0")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(subject)))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$").doesNotExist());
     }
 
     @Test
     public void api_agendas_id_subjects_numberにPUTリクエストし_ボディにSubjectを持たせ_アジェンダが返された場合_200OKと更新されたアジェンダが返される() throws Exception {
-        Subject subject =  new Subject("title", 5, "user");
+        Subject newSubject =  new Subject("title", 5, "user");
 
-        when(this.agendaService.updateSubject(1, 0, subject)).thenReturn(agenda);
+        Agenda newAgenda = new Agenda();
+        newAgenda.setId(1);
+        List<Subject> subjects = new ArrayList<>();
+        subjects.add(newSubject);
+        newAgenda.setSubjects(subjects);
+
+        when(this.agendaService.updateSubject(1, 0, newSubject)).thenReturn(newAgenda);
         mvc
             .perform(put("/api/agendas/1/subjects/0")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(subject)))
+                .content(mapper.writeValueAsString(newSubject)))
             .andExpect(status().isOk())
-            .andExpect(content().json(mapper.writeValueAsString(agenda)));
+            .andExpect(jsonPath("$").exists())
+            .andExpect(jsonPath("$.id").value(newAgenda.getId()))
+            .andExpect(jsonPath("$.subjects[0].title").value(newAgenda.getSubjects().get(0).getTitle()))
+            .andExpect(jsonPath("$.subjects[0].idobata_user").value(newAgenda.getSubjects().get(0).getIdobataUser()))
+            .andExpect(jsonPath("$.subjects[0].minutes").value(newAgenda.getSubjects().get(0).getMinutes()));
     }
 
     @Test
@@ -141,7 +175,8 @@ public class AgendaRestControllerTest {
             .perform(put("/api/agendas/1/subjects/0/timers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"state\": \"start\"}"))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$").doesNotExist());
     }
 
     @Test
@@ -151,7 +186,8 @@ public class AgendaRestControllerTest {
             .perform(put("/api/agendas/1/subjects/0/timers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"state\": \"start\"}"))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$").doesNotExist());
     }
 
     @Test
@@ -161,6 +197,7 @@ public class AgendaRestControllerTest {
             .perform(put("/api/agendas/1/subjects/0/timers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"state\": \"start\"}"))
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").doesNotExist());
     }
 }

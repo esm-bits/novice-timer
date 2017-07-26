@@ -28,10 +28,10 @@ public class AgendaServiceTest {
 
         @Before
         public void setup() {
-            List<Subject> subject = new ArrayList<>();
-            subject.add(new Subject("test", 1, "user"));
+            List<Subject> subjects = new ArrayList<>();
+            subjects.add(new Subject("test", 1, "user"));
             Agenda agenda = new Agenda();
-            agenda.setSubjects(subject);
+            agenda.setSubjects(subjects);
             agendaService.create(agenda);
         }
 
@@ -47,12 +47,12 @@ public class AgendaServiceTest {
         }
 
         @Test(expected = IllegalArgumentException.class)
-        public void 登録されていないidを渡すとFileNotFoundExceptionがスローされる() throws Exception {
+        public void 登録されていないidを渡すとIllegalArgumentExceptionがスローされる() throws Exception {
             agendaService.changeTimerState(-1, 0, TimerStateCode.START);
         }
 
         @Test(expected = IndexOutOfBoundsException.class)
-        public void 登録されていないsubjectを渡すとFileNotFoundExceptionがスローされる() throws Exception {
+        public void 登録されていないsubjectを渡すとIllegalArgumentExceptionがスローされる() throws Exception {
             agendaService.changeTimerState(1, 1, TimerStateCode.START);
         }
     }
@@ -67,16 +67,16 @@ public class AgendaServiceTest {
 
         @Before
         public void setup() {
-            List<Subject> subject = new ArrayList<>();
-            subject.add(new Subject("test", 1, "user"));
+            List<Subject> subjects = new ArrayList<>();
+            subjects.add(new Subject("test", 1, "user"));
             Agenda agenda = new Agenda();
-            agenda.setSubjects(subject);
+            agenda.setSubjects(subjects);
             agendaService.create(agenda);
 
-            List<Subject> newSubject = new ArrayList<>();
-            newSubject.add(new Subject("new_test", 3, "new_user"));
+            List<Subject> newSubjects = new ArrayList<>();
+            newSubjects.add(new Subject("new_test", 3, "new_user"));
             newAgenda = new Agenda();
-            newAgenda.setSubjects(newSubject);
+            newAgenda.setSubjects(newSubjects);
         }
 
         @Test
@@ -98,38 +98,38 @@ public class AgendaServiceTest {
         @Autowired
         AgendaService agendaService;
 
-        Subject newSubject;
+        Subject newSubjects;
 
         @Before
         public void setup() {
-            List<Subject> subject = new ArrayList<>();
-            subject.add(new Subject("test", 1, "user"));
+            List<Subject> subjects = new ArrayList<>();
+            subjects.add(new Subject("test", 1, "user"));
             Agenda agenda = new Agenda();
-            agenda.setSubjects(subject);
+            agenda.setSubjects(subjects);
             agendaService.create(agenda);
 
-            newSubject = new Subject("new_test", 3, "new_user");
+            newSubjects = new Subject("new_test", 3, "new_user");
         }
 
         @Test
         public void updateSubjectを呼び出した場合_idに対応するアジェンダのnumber番目のサブジェクトが更新され_更新後のアジェンダが返される() {
-            List<Subject> subject = new ArrayList<>();
-            subject.add(newSubject);
+            List<Subject> subjects = new ArrayList<>();
+            subjects.add(newSubjects);
             Agenda agenda = new Agenda();
-            agenda.setSubjects(subject);
+            agenda.setSubjects(subjects);
             agenda.setId(1);
 
-            assertThat(agendaService.updateSubject(1, 0, newSubject), is(agenda));
+            assertThat(agendaService.updateSubject(1, 0, newSubjects), is(agenda));
         }
 
         @Test(expected = IllegalArgumentException.class)
         public void updateSubjectを呼び出し_idに対応するアジェンダがない場合_IllegalArgumentExceptionがスローされる() throws Exception {
-            agendaService.updateSubject(0, 0, newSubject);
+            agendaService.updateSubject(0, 0, newSubjects);
         }
 
         @Test(expected = IllegalArgumentException.class)
         public void updateSubjectを呼び出し_numberが不適切な場合_IllegalArgumentExceptionがスローされる() throws Exception {
-            agendaService.updateSubject(1, 1, newSubject);
+            agendaService.updateSubject(1, 1, newSubjects);
         }
     }
 }
