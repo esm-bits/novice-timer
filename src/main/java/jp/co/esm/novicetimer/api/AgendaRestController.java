@@ -64,7 +64,7 @@ public class AgendaRestController {
      * <p>
      * idに対応するアジェンダのnumber番目のサブジェクトを、リクエストボディに渡されたサブジェクトに変更する。<br>
      * HTTPステータスは、更新された場合は201を返す。idが不正の場合と、numberが不正の場合は404を返す。
-     *　
+     *
      * @param subject 更新するサブジェクトの内容
      * @param id 更新されるアジェンダのid
      * @param number 更新されるサブジェクトの番目
