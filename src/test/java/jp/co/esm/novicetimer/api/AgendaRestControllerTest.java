@@ -96,8 +96,8 @@ public class AgendaRestControllerTest {
         when(this.agendaService.create(agenda)).thenReturn(agenda);
         mvc
             .perform(post("/api/agendas")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(agenda)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(agenda)))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$").exists())
             .andExpect(jsonPath("$.id").value(agenda.getId()))
