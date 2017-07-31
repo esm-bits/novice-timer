@@ -82,29 +82,31 @@ public class AgendaRestControllerTest {
         when(this.agendaService.create(agenda)).thenReturn(agenda);
         mvc
             .perform(post("/api/agendas")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(agenda)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(agenda)))
             .andExpect(status().isCreated())
             .andExpect(content().json(mapper.writeValueAsString(agenda)));
     }
 
     @Test
-    public void api_agendas_id_subjects_numberにPUTリクエストし_IllegalArgumentExceptionが投げられた場合_400BadRequestが返される() throws Exception {
+    public void api_agendas_id_subjects_numberにPUTリクエストし_IllegalArgumentExceptionが投げられた場合_400BadRequestが返される()
+        throws Exception {
         doThrow(new IllegalArgumentException()).when(this.agendaService).changeTimerState(1, 0, TimerStateCode.START);
         mvc
             .perform(put("/api/agendas/1/subjects/0")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"state\": \"start\"}"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"state\": \"start\"}"))
             .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void api_agendas_id_subjects_numberにPUTリクエストし_IndexOutOfBoundsExceptionが投げられた場合_404NotFoundが返される() throws Exception {
+    public void api_agendas_id_subjects_numberにPUTリクエストし_IndexOutOfBoundsExceptionが投げられた場合_404NotFoundが返される()
+        throws Exception {
         doThrow(new IndexOutOfBoundsException()).when(this.agendaService).changeTimerState(1, 0, TimerStateCode.START);
         mvc
             .perform(put("/api/agendas/1/subjects/0")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"state\": \"start\"}"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"state\": \"start\"}"))
             .andExpect(status().isNotFound());
     }
 
@@ -113,8 +115,32 @@ public class AgendaRestControllerTest {
         when(this.agendaService.changeTimerState(1, 0, TimerStateCode.START)).thenReturn(true);
         mvc
             .perform(put("/api/agendas/1/subjects/0")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .content("{\"state\": \"start\"}"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"state\": \"start\"}"))
             .andExpect(status().isOk());
     }
+
+    @Test
+    public void api_agendas_idにDELETEリクエストをし_agendaの削除ができた場合_200OKが返される() throws Exception {
+        when(this.agendaService.deleteAgendaProcess(1)).thenReturn(true);
+        mvc
+            .perform(delete("/api/agendas/1"))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void api_agendas_idにDELETEリクエストをし_agendaの削除ができなかった場合_404NotFoundが返される() throws Exception {
+        when(this.agendaService.changeTimerState(1, 0, TimerStateCode.START)).thenReturn(true);
+        mvc
+            .perform(delete("/api/agendas/0"))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void api_agendasにDELETEリクエストをした場合_200OKが返される() throws Exception {
+        mvc
+            .perform(delete("/api/agendas"))
+            .andExpect(status().isOk());
+    }
+
 }
