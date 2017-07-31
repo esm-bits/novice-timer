@@ -14,6 +14,7 @@ import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.service.TimerService;
 
 /**
+ *Timerに関するControllerクラス。<p>
  *
  *
  */

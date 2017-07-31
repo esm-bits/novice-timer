@@ -21,9 +21,8 @@ import jp.co.esm.novicetimer.domain.TimerState;
 import jp.co.esm.novicetimer.service.AgendaService;
 
 /**
- * Agendaに関するControllerクラス<p>
+ * Agendaに関するControllerクラス。<p>
  * HTTPからリクエストを受けてレスポンスを返すクラス
- *
  */
 @RestController
 @RequestMapping("api/agendas")
@@ -34,7 +33,6 @@ public class AgendaRestController {
     /**
      * GETリクエストを受けて登録されてるアジェンダを全て取得する。
      * <p>
-     *
      * GETリクエストにパス変数がなければアジェンダの全取得を行う。
      * @return 登録されているアジェンダのList
      */
@@ -46,7 +44,6 @@ public class AgendaRestController {
     /**
      * GETリクエストを受けて登録されているアジェンダを取得する。
      * <p>
-     *
      * GETリクエストにパス変数があればそのidのアジェンダを探す。
      * @param id 探すアジェンダのid
      * @return アジェンダがあった場合はアジェンダを
