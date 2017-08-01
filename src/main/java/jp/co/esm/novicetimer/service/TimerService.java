@@ -13,8 +13,8 @@ import jp.co.esm.novicetimer.domain.IdobataMessage;
 import jp.co.esm.novicetimer.domain.Subject;
 
 /**
- * タイマーを操作するクラスです。<p>
- * タイマーのスタート、ストップが行えます。
+ * タイマーを操作するクラス。<p>
+ * タイマーのスタート、ストップが行える。
  */
 
 @Service
@@ -27,10 +27,10 @@ public class TimerService {
     private Timer timer;
 
     /**
-     * タイマーを開始します。
+     * タイマーを開始するメソッド。
      * <p>
-     * 与えられたSubject情報に沿った設定のタイマーを開始します。
-     * 既にタイマーが開始されていた場合は何もせずreturnします。
+     * 与えられたSubject情報に沿った設定のタイマーを開始する。
+     * 既にタイマーが開始されていた場合は何もせずreturnする。
      * @param subject startしたいsubjectを受け取る
      * @return 設定時間を表した文字列<br>
      * 既にタイマーが動いていた場合は "0" の文字列
@@ -48,9 +48,9 @@ public class TimerService {
     }
 
     /**
-     * タイマーを止めます。
+     * タイマーを止めるメソッド。
      * <p>
-     * タイマーを止めます。タイマーは1つしか存在できないので複数回呼び出す必要はありません。
+     * タイマーを止める。タイマーは1つしか存在できないので複数回呼び出す必要はない。
      * @return タイマーを止める時に<br>
      * タイマーが動いていた場合はtrue<br>
      * タイマーが動いていなかった場合はfalse<br>

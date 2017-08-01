@@ -11,7 +11,7 @@ import jp.co.esm.novicetimer.repository.AgendaRepository;
 
 /**
  * アジェンダの操作を行うクラス<p>
- * アジェンダの登録、取得、タイマーの状態の変更を行えます。
+ * アジェンダの登録、取得、タイマーの状態の変更を行える。
  */
 @Service
 public class AgendaService {
@@ -32,13 +32,13 @@ public class AgendaService {
     }
 
     /**
-     * 単一のアジェンダを検索します。
+     * 指定した1つのアジェンダを取得する。
      * <p>
-     * 検索したいアジェンダのidを受け取り、見つかった場合はアジェンダを返し、
-     * 見つからなかった場合は例外を投げます。
+     * 取得したいアジェンダのidを受け取り、見つかった場合はアジェンダを返し、
+     * 見つからなかった場合は例外を投げる。
      * @param id 検索したいアジェンダのid
      * @return idと対応したアジェンダ
-     * @throws java.lang.IllegalArgumentException 対応したアジェンダが無かった場合に投げられます。
+     * @throws java.lang.IllegalArgumentException 対応したアジェンダが無かった場合に投げられる。
      *  */
     public Agenda findOne(Integer id) throws IllegalArgumentException {
         Agenda agenda = agendaRepository.getAgenda(id);
@@ -49,9 +49,9 @@ public class AgendaService {
     }
 
     /**
-     * アジェンダの登録を行います。
+     * アジェンダの登録を行う。
      * <p>
-     * アジェンダをagendaRepositoryに登録し、登録されたagendaを返します。
+     * アジェンダをagendaRepositoryに登録し、登録されたagendaを返す。
      * @param agenda 登録したいアジェンダ
      * @return idを割り振られたagenda
      * */
@@ -60,16 +60,16 @@ public class AgendaService {
     }
 
     /**
-     * タイマーの状態を変更します。
+     * タイマーの状態を変更する。
      * <p>
      * アジェンダのid,Subjectのindex,タイマーのstateを指定して
-     * タイマーを任意の状態に移行させます。
+     * タイマーを任意の状態に移行させる。
      * @param id 利用するsubjectを持つアジェンダのid
      * @param number 利用するsujectの番号
      * @param state タイマーをどの状態に遷移させるかのステータス
-     * @throws java.lang.IllegalArgumentException 指定したidが見つからなかった場合に投げられます
-     * @throws java.lang.IllegalArgumentException TimerStateCodeが(START or STOP)以外だった場合に投げられます
-     * @throws java.lang.IndexOutOfBoundsException subjectが見つからないかnumberが範囲外だった場合に投げられます
+     * @throws java.lang.IllegalArgumentException 指定したidが見つからなかった場合に投げられる
+     * @throws java.lang.IllegalArgumentException TimerStateCodeが(START or STOP)以外だった場合に投げられる
+     * @throws java.lang.IndexOutOfBoundsException subjectが見つからないかnumberが範囲外だった場合に投げられる
      * @throws java.lang.Exception 上記以外の例外だった場合に投げられます
      * @return true
      * */

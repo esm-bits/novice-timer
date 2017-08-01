@@ -12,7 +12,7 @@ import jp.co.esm.novicetimer.domain.Agenda;
 /**
  * アジェンダを複数保持するクラス。<p>
  * アジェンダを登録してidを割り振ったり
- * idからアジェンダを探すメソッドがあります
+ * idからアジェンダを探すメソッドがある
  */
 @Repository
 public class AgendaRepository {
@@ -22,7 +22,7 @@ public class AgendaRepository {
     /**
      * アジェンダの登録。
      * <p>
-     * 登録したいアジェンダを受け取り、インスタンスの保持するMapに登録する。その際、割り振ったidをkeyとします。
+     * 登録したいアジェンダを受け取り、インスタンスの保持するMapに登録する。その際、割り振ったidをkeyとする。
      * @param agenda 登録したいアジェンダ
      * @return 割り振られたidを持つagenda
      */
@@ -37,7 +37,7 @@ public class AgendaRepository {
     /**
      * 単一のアジェンダの取得。
      * <p>
-     * 引数で受け取ったidがMapにあるかを走査して返します。
+     * 引数で受け取ったidがMapにあるかを走査して返す。
      * @param id 取得したいアジェンダのid
      * @return idと一致したアジェンダor無かった場合はnull
      */
@@ -48,7 +48,7 @@ public class AgendaRepository {
     /**
      * 全アジェンダの取得。
      * <p>
-     * Mapに登録されているアジェンダをListにして返します。
+     * Mapに登録されているアジェンダをListにして返す。
      * @return agendaのList
      */
     public List<Agenda> getAgendas() {

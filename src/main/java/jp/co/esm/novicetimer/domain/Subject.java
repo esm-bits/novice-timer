@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * フィールドにタイトル、制限時間、メンションするアカウント名を持つクラスです
+ * フィールドにタイトル、制限時間、メンションするアカウント名を持つクラス。
  */
 @Data
 @AllArgsConstructor

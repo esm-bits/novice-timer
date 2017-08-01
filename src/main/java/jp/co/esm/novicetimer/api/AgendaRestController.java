@@ -20,22 +20,13 @@ import jp.co.esm.novicetimer.domain.Agenda;
 import jp.co.esm.novicetimer.domain.TimerState;
 import jp.co.esm.novicetimer.service.AgendaService;
 
-/**
- * Agendaに関するControllerクラス。<p>
- * HTTPからリクエストを受けてレスポンスを返すクラス
- */
+
 @RestController
 @RequestMapping("api/agendas")
 public class AgendaRestController {
     @Autowired
     private AgendaService agendaService;
 
-    /**
-     * GETリクエストを受けて登録されてるアジェンダを全て取得する。
-     * <p>
-     * GETリクエストにパス変数がなければアジェンダの全取得を行う。
-     * @return 登録されているアジェンダのList
-     */
     @GetMapping
     public List<Agenda> getAgendas() {
         return agendaService.findAll();
@@ -44,7 +35,7 @@ public class AgendaRestController {
     /**
      * GETリクエストを受けて登録されているアジェンダを取得する。
      * <p>
-     * GETリクエストにパス変数があればそのidのアジェンダを探す。
+     * パス変数から受け取ったidのアジェンダを取得する。
      * @param id 探すアジェンダのid
      * @return アジェンダがあった場合はアジェンダを
      * 無かった場合はnullを返す
@@ -72,10 +63,10 @@ public class AgendaRestController {
      * タイマーの操作。
      * <p>
      * アジェンダに登録したデータを使ってタイマーを動作させたり、
-     * タイマーを停止したりすることができます。
+     * タイマーを停止したりする。
      * @param id 使用するアジェンダのid
      * @param number 使用するsubjectの番号
-     * @param timerState タイマーを遷移させたい状態
+     * @param timerState 遷移させたいタイマーの状態
      * @return タイマーの状態を正しく変更できた場合はHTTPステータスの200を返す。
      * アジェンダの情報が無かったりtimerStateの内容が不正だった場合は400を返す。
      * subjectの値が登録されている範囲外の場合は404を返す。
@@ -95,9 +86,6 @@ public class AgendaRestController {
         }
     }
 
-    /**
-     *
-     */
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({ IllegalArgumentException.class })
     @ResponseBody
