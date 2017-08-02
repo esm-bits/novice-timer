@@ -21,12 +21,6 @@ public class AgendaService {
     @Autowired
     private TimerService timerService;
 
-    /**
-     * アジェンダの全取得を行います。
-     * <p>
-     * 登録されているアジェンダをListにして返します。
-     * @return {@literal List<Agenda>}
-     */
     public List<Agenda> findAll() {
         return agendaRepository.getAgendas();
     }
@@ -70,7 +64,7 @@ public class AgendaService {
      * @throws java.lang.IllegalArgumentException 指定したidが見つからなかった場合に投げられる
      * @throws java.lang.IllegalArgumentException TimerStateCodeが(START or STOP)以外だった場合に投げられる
      * @throws java.lang.IndexOutOfBoundsException subjectが見つからないかnumberが範囲外だった場合に投げられる
-     * @throws java.lang.Exception 上記以外の例外だった場合に投げられます
+     * @throws java.lang.Exception 上記以外の例外だった場合に投げられる
      * @return true
      * */
     public boolean changeTimerState(int id, int number, TimerStateCode state) throws Exception {
