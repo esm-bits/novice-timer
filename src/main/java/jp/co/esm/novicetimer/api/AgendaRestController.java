@@ -20,13 +20,18 @@ import jp.co.esm.novicetimer.domain.Agenda;
 import jp.co.esm.novicetimer.domain.TimerState;
 import jp.co.esm.novicetimer.service.AgendaService;
 
-
 @RestController
 @RequestMapping("api/agendas")
 public class AgendaRestController {
     @Autowired
     private AgendaService agendaService;
 
+    /**
+     * GETリクエストを受けて登録されているアジェンダを全て取得する。
+     * <p>
+     * 登録されているアジェンダを全て取得する。
+     * @return List型で全アジェンダを返す
+     */
     @GetMapping
     public List<Agenda> getAgendas() {
         return agendaService.findAll();
@@ -62,8 +67,7 @@ public class AgendaRestController {
     /**
      * タイマーの操作。
      * <p>
-     * アジェンダに登録したデータを使ってタイマーを動作させたり、
-     * タイマーを停止したりする。
+     * アジェンダに登録したデータを使ってタイマーを開始・停止する
      * @param id 使用するアジェンダのid
      * @param number 使用するsubjectの番号
      * @param timerState 遷移させたいタイマーの状態

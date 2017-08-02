@@ -45,6 +45,12 @@ public class AgendaRepository {
         return agendaMap.get(id);
     }
 
+    /**
+     * 登録されているアジェンダを全て取得する。
+     * <p>
+     * 登録されているアジェンダを全て取得する。
+     * @return List型で全アジェンダを返す
+     */
     public List<Agenda> getAgendas() {
         return new ArrayList<>(agendaMap.values());
     }

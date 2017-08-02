@@ -9,7 +9,7 @@ import lombok.Data;
 
 /**
  * idobataに送るメッセージを構成するクラス<br>
- * 生成時、最初にBuilderメソッドを、最後にbuiodメソッドを呼び出さなければならない<br>
+ * 生成時、最初にBuilderメソッドを、最後にbuildメソッドを呼び出さなければならない<br>
  * 使用例:{@code IdobataMessage message = new IdobataMessage.Builder("message").users("user").build();}
  */
 @Data

@@ -14,9 +14,8 @@ import jp.co.esm.novicetimer.domain.Subject;
 
 /**
  * タイマーを操作するクラス。<p>
- * タイマーのスタート、ストップが行える。
+ * タイマーの開始、停止が行える。
  */
-
 @Service
 public class TimerService {
     private static final int PERIOD_SECONDS = 30;
@@ -67,7 +66,6 @@ public class TimerService {
     /**
      * タイマーをThreadとして生成し、指定条件でidobataへメッセージを送信する処理を行うクラス<br>
      * TimerServiceの内部クラス
-     *
      */
     public static class NoticeTimerTask extends TimerTask {
         private String hookUrl;

@@ -21,6 +21,12 @@ public class AgendaService {
     @Autowired
     private TimerService timerService;
 
+    /**
+     * 登録されているアジェンダを全て取得する。
+     * <p>
+     * 登録されているアジェンダを全て取得する。
+     * @return List型で全アジェンダを返す
+     */
     public List<Agenda> findAll() {
         return agendaRepository.getAgendas();
     }
