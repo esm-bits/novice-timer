@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- *json形式で受け取ったタイマーのステータスを保持するクラス。
+ * タイマーのステータスを保持するクラス。
  */
 @Data
 @AllArgsConstructor
