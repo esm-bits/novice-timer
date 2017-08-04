@@ -8,6 +8,9 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 
+/**
+ * jsonを列挙型にデシリアライズするためのクラス
+ */
 @JsonComponent
 public class ConstantsDeserializer {
     public static class TimerStateCodeDeserializer extends JsonDeserializer<Object> {
