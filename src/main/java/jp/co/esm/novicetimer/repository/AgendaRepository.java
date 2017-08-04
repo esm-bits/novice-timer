@@ -17,7 +17,11 @@ import jp.co.esm.novicetimer.domain.Agenda;
 @Repository
 public class AgendaRepository {
     private Map<Integer, Agenda> agendaMap = new ConcurrentHashMap<>();
-    private int id = 1;
+    private int id;
+
+    AgendaRepository() {
+        resetId();
+    }
 
     /**
      * アジェンダの登録。
@@ -32,6 +36,10 @@ public class AgendaRepository {
 
         agendaMap.put(agenda.getId(), agenda);
         return agenda;
+    }
+
+    private void resetId() {
+        id = 1;
     }
 
     /**
@@ -53,5 +61,25 @@ public class AgendaRepository {
      */
     public List<Agenda> getAgendas() {
         return new ArrayList<>(agendaMap.values());
+    }
+
+    /**
+     * 1つのアジェンダを削除する
+     * @param id 削除するアジェンダのid
+     * @return true:削除できた場合
+     * false:削除できなかった場合
+     */
+    public boolean deleteAgenda(int id) {
+        return agendaMap.remove(id) != null;
+    }
+
+    /**
+     * 全アジェンダを削除する。
+     * <p>
+     * 全てのアジェンダを削除する。
+     */
+    public void deleteAgendas() {
+        agendaMap.clear();
+        resetId();
     }
 }
