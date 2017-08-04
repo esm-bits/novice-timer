@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.service.TimerService;
 
-
 @RestController
 @RequestMapping("api/timers")
 public class TimerRestController {

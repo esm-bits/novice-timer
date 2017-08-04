@@ -3,6 +3,7 @@ package jp.co.esm.novicetimer.domain;
 import java.util.List;
 
 import lombok.Data;
+
 /**
  * アジェンダの登録や、保持に使われるクラス。<br>
  */
