@@ -93,7 +93,7 @@ public class TimerService {
             if (elapsedSeconds == 0) {
                 // 開始時の通知
                 sendMessage(new IdobataMessage.Builder(
-                        "タイトル：" + title + "\n発表者：" + idobataUser + "\n予定時間：" + endMinutes + "分").build());
+                    "タイトル：" + title + "\n発表者：" + idobataUser + "\n予定時間：" + endMinutes + "分").build());
             } else if (elapsedSeconds == endSeconds / 2) {
                 // 終了時間半分の通知
                 sendMessage(new IdobataMessage.Builder("予定時間の半分が経過しました。").users(idobataUser).build());
@@ -121,9 +121,9 @@ public class TimerService {
          */
         private void sendMessage(IdobataMessage message) {
             new RestTemplate().postForObject(
-                    hookUrl,
-                    message,
-                    String.class);
+                hookUrl,
+                message,
+                String.class);
         }
     }
 }
