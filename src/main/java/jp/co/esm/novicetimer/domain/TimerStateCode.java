@@ -4,6 +4,9 @@ import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+/**
+ * タイマーの状態を示すステータスの定義。<br>
+ */
 @JsonDeserialize(using = ConstantsDeserializer.TimerStateCodeDeserializer.class)
 public enum TimerStateCode {
     START("start"),
