@@ -132,4 +132,30 @@ public class AgendaServiceTest {
             agendaService.updateSubject(1, 1, newSubjects);
         }
     }
+
+    @RunWith(SpringRunner.class)
+    @SpringBootTest
+    public static class deleteAgendaProcessのテスト {
+        @Autowired
+        AgendaService agendaService;
+
+        @Before
+        public void setup() {
+            List<Subject> subjects = new ArrayList<>();
+            subjects.add(new Subject("test", 1, "user"));
+            Agenda agenda = new Agenda();
+            agenda.setSubjects(subjects);
+            agendaService.create(agenda);
+        }
+
+        @Test
+        public void id指定でアジェンダを削除できたときtrueが返ってくる() {
+            assertThat(agendaService.deleteAgendaProcess(1), is(true));
+        }
+
+        @Test
+        public void id指定でidのアジェンダがなかったときfalseが返ってくる() {
+            assertThat(agendaService.deleteAgendaProcess(0), is(false));
+        }
+    }
 }

@@ -126,4 +126,28 @@ public class AgendaService {
             throw new IllegalArgumentException();
         }
     }
+
+    /**
+     * 1つのアジェンダを削除する。
+     * <p>
+     * 引数で指定されたidのアジェンダを削除する。
+     * @param id 削除するアジェンダ
+     * @return true:削除できた場合
+     * false:削除できなかった場合
+     */
+    public boolean deleteAgendaProcess(int id) {
+        timerService.stopTimer();
+        return agendaRepository.deleteAgenda(id);
+    }
+
+    /**
+     * 全てのアジェンダを削除する。
+     * <p>
+     * 全てのアジェンダを削除する。
+     */
+    public void deleteAgendasProcess() {
+        timerService.stopTimer();
+        agendaRepository.deleteAgendas();
+    }
+
 }

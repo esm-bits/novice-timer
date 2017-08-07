@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -122,6 +123,31 @@ public class AgendaRestController {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    /**
+     * アジェンダを1つ削除する。
+     * <p>
+     * パス変数から受け取ったidのアジェンダを削除する。
+     * HTTPステータスは削除できた場合に200、削除できなかった場合に404が返される
+     * @param id 削除するアジェンダのid
+     * @return HTTPステータス
+     */
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteAgenda(@PathVariable Integer id) {
+        return agendaService.deleteAgendaProcess(id)
+            ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * アジェンダを全削除する。
+     * <p>
+     * 登録しているアジェンダを全て削除する。HTTPステータスは200が返される
+     */
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteAgendas() {
+        agendaService.deleteAgendasProcess();
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

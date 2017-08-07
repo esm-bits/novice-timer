@@ -200,4 +200,28 @@ public class AgendaRestControllerTest {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$").doesNotExist());
     }
+
+    @Test
+    public void api_agendas_idにDELETEリクエストをし_agendaの削除ができた場合_200OKが返される() throws Exception {
+        when(this.agendaService.deleteAgendaProcess(1)).thenReturn(true);
+        mvc
+            .perform(delete("/api/agendas/1"))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    public void api_agendas_idにDELETEリクエストをし_agendaの削除ができなかった場合_404NotFoundが返される() throws Exception {
+        when(this.agendaService.changeTimerState(1, 0, TimerStateCode.START)).thenReturn(true);
+        mvc
+            .perform(delete("/api/agendas/0"))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void api_agendasにDELETEリクエストをした場合_200OKが返される() throws Exception {
+        mvc
+            .perform(delete("/api/agendas"))
+            .andExpect(status().isOk());
+    }
+
 }
