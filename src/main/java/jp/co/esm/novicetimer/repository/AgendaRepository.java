@@ -51,7 +51,7 @@ public class AgendaRepository {
      * false:存在しない場合
      */
     public boolean isExist(int id) {
-        return agendaMap.get(id) != null;
+        return agendaMap.containsKey(id);
     }
 
     /**
