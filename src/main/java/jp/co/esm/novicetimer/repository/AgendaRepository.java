@@ -45,6 +45,16 @@ public class AgendaRepository {
     }
 
     /**
+     * 特定idのアジェンダが存在するか確認。
+     * @param id 確認したいアジェンダのid
+     * @return true:存在する場合
+     * false:存在しない場合
+     */
+    public boolean isExist(int id) {
+        return agendaMap.get(id) != null;
+    }
+
+    /**
      * 単一のアジェンダの取得。
      * <p>
      * 引数で受け取ったidがMapにあるかを走査して返す。

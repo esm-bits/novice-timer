@@ -69,9 +69,9 @@ public class AgendaService {
      * @throws IllegalArgumentException 更新されるアジェンダが無い場合に投げられます
      */
     public Agenda update(Agenda agenda) throws IllegalArgumentException {
-        // 更新されるアジェンダが存在するか、アジェンダ取得メソッドを使用して確認する
-        // ない場合はIllegalArgumentExceptionが投げられる
-        findOne(agenda.getId());
+        if (!agendaRepository.isExist(agenda.getId())) {
+            throw new IllegalArgumentException();
+        }
 
         return agendaRepository.save(agenda);
     }
