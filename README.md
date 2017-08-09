@@ -11,13 +11,17 @@
 
 ### 導入方法（Eclipse）
 1. gitでmasterブランチをclone
-2. Eclipseで、ファイル→インポート→Gradleプロジェクト、を選択してインポート
+2. Eclipseで、ファイル→インポート→Gradle/Gradleプロジェクト、を選択してインポート
 3. プロジェクトを右クリックし、Gradle→Gradleプロジェクトのリフレッシュ、を選択
 
+- インポートにGradleプロジェクトがない場合、Eclipseに`BuildShip`をインストールする必要がある
+    * Eclipseのメニューバーからヘルプ→Eclipseマーケットプレイス→`BuildShip`で検索しインストール
 
-- インポートにGradleプロジェクトがない場合、Eclipseに`Gradle IDE Pack`をインストールする必要がある
-    * Eclipseのメニューバーからヘルプ→Eclipseマーケットプレイス→`Gradle`で検索→`Gradle IDE Pack`をインストール
-
+- Gradleプラグインとして`Gradle IDE Pack`を使用している場合
+    * `BuildShip`をインストール
+    * Gradle（STS）/Gradle（STS）Projectを選択してインポートすることも可能だが、`BuildShip`を使用するので上記の方法でインポートする
+    * 参考
+        * [Migration guide from STS Gradle to Buildship](https://github.com/eclipse/buildship/wiki/Migration-guide-from-STS-Gradle-to-Buildship)
 
 - Lombokを使用しているため、EclipseへのLombokのインストールが必要である
     * Lombokのjarファイルを[ダウンロード](https://projectlombok.org/download)して実行
@@ -60,8 +64,10 @@
     * `heroku keys`コマンドでキーが追加されたか確認する。ない場合は`heroku keys:add`コマンドで追加する
 
 - Herokuへデプロイ
+    * `./gradlew build`コマンド（windowsは`gradlew.bat build`）でビルドを実行し、生成された実行可能jar（build/libs/novice-timer-0.0.1-SNAPSHOT.jar）が問題なく実行できるか確認する
     * `heroku login`コマンドを使用してログイン
     * `heroku create`コマンドで新しいHerokuアプリをプロビジョニング
+    * `heroku config:set BUILDPACK_URL=https://github.com/marcoVermeulen/heroku-buildpack-gradlew.git`コマンドを実行し、使用するBuildpackを変更
     * `git push heroku master`コマンドで作成したアプリをHerokuへプッシュ
     * `heroku open`コマンドでアプリをブラウザで実行できる
 
@@ -70,31 +76,10 @@
     * 初回はHerokuにmasterがないので`git push heroku master:master`でプッシュする
     * アプリの名前は`heroku create`時に適当に決められるが、`heroku apps:rename`コマンドで任意の名前に変更できる
     * Herokuでの環境変数は、`heroku config:set`コマンドで登録できる
+    * Heroku標準のBuildpackでは、SpringBootアプリを`gradle wrapper`でうまくビルドできない。そのためカスタムのBuildpackを利用するために`heroku config:set BUILDPACK_URL=https://github.com/marcoVermeulen/heroku-buildpack-gradlew.git`コマンドを実行する
 
 - 参考
     * [Deploying Spring Boot Applications to Heroku](https://devcenter.heroku.com/articles/deploying-spring-boot-apps-to-heroku)
-
-### HerokuにGradleAppsをデプロイする準備
-
-1. `build.gradle`に以下の記述を追加する
-
-    `jar { baseName = 'hoge' version =  '0.1.0' }`
-    
-    `defaultTasks "clean", "build"`
-
-    * `jar`を記述するとビルド時に、実行可能jarである`build/libs/hoge-0.1.0.jar`が生成される（ファイル名は`baseName`と`version`より決められる）
-    * Herokuへのデプロイ時にtaskの指定がない`./gradlew`が実行される。そのため`defaultTasks`を記述してディフォルトタスクを指定する
-
-2. `gradle/wrapper/gradle-wrapper.jar`と`gradle/wrapper/gradle-wrapper.properties`ファイルが必要である。ない場合`gradle wrapper`コマンドで生成する
-
-3. `./gradlew build`コマンド（windowsは`gradlew.bat build`）でビルドを実行し、生成された実行可能jarが問題なく実行できるか確認する
-
-4. Heroku標準のbuildpackでは、SpringBootアプリを`gradle wrapper`でうまくビルドできない。そのためカスタムのbuildpackを利用する。`heroku config:set BUILDPACK_URL=https://github.com/marcoVermeulen/heroku-buildpack-gradlew.git`コマンドを実行すればよい
-
-5. Herokuでアプリを起動する際に参照されるファイル`Procfile`を作成する。ビルド時に作成される実行可能jarを起動するよう記述する。ルートに`Procfile`を作成し、`web: java -jar build/libs/hoge-0.1.0.jar --server.port=$PORT`を記述する
-
-
-- 参考
     * [Deploying Gradle Apps on Heroku](https://devcenter.heroku.com/articles/deploying-gradle-apps-on-heroku)
     * [herokuでspring-bootをgradleを使ってデプロイするときのコツ](http://qiita.com/gosshys/items/fa02b390b60ee3001dae)
 
