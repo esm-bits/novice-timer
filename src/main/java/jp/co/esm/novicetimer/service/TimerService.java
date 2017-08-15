@@ -107,7 +107,8 @@ public class TimerService {
                 sendMessage(new IdobataMessage.Builder("終了時間です。").users(idobataUser).build());
             } else if (elapsedSeconds > endSeconds && count % 2 == 0) {
                 // 1分超過ごとの通知
-                sendMessage(new IdobataMessage.Builder(((elapsedSeconds - endSeconds) / 60) + "分超過しました。").users(idobataUser).build());
+                sendMessage(new IdobataMessage.Builder(((elapsedSeconds - endSeconds) / 60) + "分超過しました。")
+                    .users(idobataUser).build());
             }
 
             count++;
@@ -116,10 +117,15 @@ public class TimerService {
         /**
          * idobataへメッセージを送る。<br>
          * <p>
-         * 送り先のURLを.ymlファイルに記述している必要がある
+         * 送り先のURLを.ymlファイルに記述している必要がある。
+         * 送り先のURLが空文字だった場合、標準出力される
          * @param message idobataへ送信するメッセージ{@link IdobataMessage}
          */
         private void sendMessage(IdobataMessage message) {
+            if (message.getSource().length() != 0) {
+                System.out.println(message.getSource());
+                return;
+            }
             new RestTemplate().postForObject(
                 hookUrl,
                 message,
