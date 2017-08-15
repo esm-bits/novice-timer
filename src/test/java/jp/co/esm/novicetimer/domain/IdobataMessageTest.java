@@ -5,6 +5,9 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import jp.co.esm.novicetimer.domain.IdobataMessage;
+import jp.co.esm.novicetimer.domain.IdobataMessage.Builder;
+
 public class IdobataMessageTest {
 
     @Test
