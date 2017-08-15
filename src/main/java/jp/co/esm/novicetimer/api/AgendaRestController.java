@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import jp.co.esm.novicetimer.domain.Agenda;
+import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.domain.TimerState;
 import jp.co.esm.novicetimer.service.AgendaService;
 
@@ -66,6 +67,39 @@ public class AgendaRestController {
     }
 
     /**
+     * PUTリクエストを受けてアジェンダを更新する。
+     * <p>
+     * idに対応するアジェンダを、リクエストボディに渡されたアジェンダに変更する。<br>
+     * HTTPステータスは、更新された場合は201を返す。idが不正の場合は404を返す。
+     * @param agenda 更新するアジェンダの内容
+     * @param id 更新されるアジェンダのid
+     * @return 更新後のアジェンダ
+     */
+    @PutMapping("{id}")
+    public Agenda editAgenda(@PathVariable Integer id, @RequestBody Agenda agenda) {
+        agenda.setId(id);
+        return agendaService.update(agenda);
+    }
+
+    /**
+     * PUTリクエストを受けてアジェンダのサブジェクトを1つ更新する。
+     * <p>
+     * idに対応するアジェンダのnumber番目のサブジェクトを、リクエストボディに渡されたサブジェクトに変更する。<br>
+     * HTTPステータスは、更新された場合は201を返す。idが不正の場合と、numberが不正の場合は404を返す。
+     * @param subject 更新するサブジェクトの内容
+     * @param id 更新されるアジェンダのid
+     * @param number 更新されるサブジェクトの番目
+     * @return 更新後のアジェンダ
+     */
+    @PutMapping("{id}/subjects/{number}")
+    public Agenda editSubject(@PathVariable Integer id,
+        @PathVariable Integer number,
+        @RequestBody Subject subject) {
+
+        return agendaService.updateSubject(id, number, subject);
+    }
+
+    /**
      * タイマーの操作。
      * <p>
      * アジェンダに登録したデータを使ってタイマーを開始・停止する
@@ -76,7 +110,7 @@ public class AgendaRestController {
      * アジェンダの情報が無かったりtimerStateの内容が不正だった場合は400を返す。
      * subjectの値が登録されている範囲外の場合は404を返す。
      */
-    @PutMapping("{id}/subjects/{number}")
+    @PutMapping("{id}/subjects/{number}/timers")
     public ResponseEntity<String> operateTimer(@PathVariable Integer id,
         @PathVariable Integer number,
         @RequestBody TimerState timerState) {

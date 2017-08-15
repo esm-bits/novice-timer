@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jp.co.esm.novicetimer.domain.Agenda;
+import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.domain.TimerStateCode;
 import jp.co.esm.novicetimer.repository.AgendaRepository;
 
@@ -39,7 +40,7 @@ public class AgendaService {
      * @param id 検索したいアジェンダのid
      * @return idと対応したアジェンダ
      * @throws java.lang.IllegalArgumentException 対応したアジェンダが無かった場合に投げられる。
-     *  */
+     */
     public Agenda findOne(Integer id) throws IllegalArgumentException {
         Agenda agenda = agendaRepository.getAgenda(id);
         if (agenda == null) {
@@ -60,6 +61,42 @@ public class AgendaService {
     }
 
     /**
+     * アジェンダの更新を行う。
+     * <p>
+     * アジェンダをagendaRepositoryに登録することで置き換え、置き換えた後のagendaを返す。
+     * @param agenda 更新するアジェンダ
+     * @return 更新された後のアジェンダ
+     * @throws IllegalArgumentException 更新されるアジェンダが無い場合に投げられます
+     */
+    public Agenda update(Agenda agenda) throws IllegalArgumentException {
+        if (!agendaRepository.isExist(agenda.getId())) {
+            throw new IllegalArgumentException();
+        }
+
+        return agendaRepository.save(agenda);
+    }
+
+    /**
+     * サブジェクトの更新を行う。
+     * <p>
+     * idが対応するアジェンダのnumber番目のサブジェクトを置き換え、置き換えた後のagendaを返す。
+     * @param id サブジェクトの更新を行うアジェンダのid
+     * @param number 更新されるサブジェクトの番目
+     * @param subject 更新するサブジェクト
+     * @return サブジェクトを更新した後のアジェンダ
+     * @throws IllegalArgumentException idが対応するアジェンダがない場合、number番目のサブジェクトがない場合に投げられます
+     */
+    public Agenda updateSubject(int id, int number, Subject subject) throws IllegalArgumentException {
+        Agenda agenda = findOne(id);
+        if (number < 0 || agenda.getSubjects().size() <= number) {
+            throw new IllegalArgumentException();
+        }
+
+        agenda.getSubjects().set(number, subject);
+        return agendaRepository.save(agenda);
+    }
+
+    /**
      * タイマーの状態を変更する。
      * <p>
      * アジェンダのid,Subjectのindex,タイマーのstateを指定して
@@ -72,7 +109,7 @@ public class AgendaService {
      * @throws java.lang.IndexOutOfBoundsException subjectが見つからないかnumberが範囲外だった場合に投げられる
      * @throws java.lang.Exception 上記以外の例外だった場合に投げられる
      * @return true
-     * */
+     */
     public boolean changeTimerState(int id, int number, TimerStateCode state) throws Exception {
         Agenda agenda = agendaRepository.getAgenda(id);
         if (agenda == null) {

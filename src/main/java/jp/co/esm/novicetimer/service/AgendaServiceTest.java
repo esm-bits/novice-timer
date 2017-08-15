@@ -1,6 +1,6 @@
 package jp.co.esm.novicetimer.service;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -19,14 +19,14 @@ import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.domain.TimerStateCode;
 
 @RunWith(Enclosed.class)
-@SpringBootTest
 public class AgendaServiceTest {
-
     @RunWith(SpringRunner.class)
     @SpringBootTest
-    public static class changeTimerStateのテスト {
+    public static class changeTimerStateメソッドのテスト {
         @Autowired
         AgendaService agendaService;
+
+        int setupAgendaId;
 
         @Before
         public void setup() {
@@ -35,17 +35,19 @@ public class AgendaServiceTest {
             Agenda agenda = new Agenda();
             agenda.setSubjects(subjects);
             agendaService.create(agenda);
+
+            setupAgendaId = agenda.getId();
         }
 
         @Test
         public void タイマーが正常にstartするとtrueが返ってくる() throws Exception {
-            assertTrue(agendaService.changeTimerState(1, 0, TimerStateCode.START));
+            assertTrue(agendaService.changeTimerState(setupAgendaId, 0, TimerStateCode.START));
         }
 
         @Test
         public void タイマーを正常にstopするとtrueが返ってくる() throws Exception {
-            agendaService.changeTimerState(1, 0, TimerStateCode.START);
-            assertTrue(agendaService.changeTimerState(1, 0, TimerStateCode.STOP));
+            agendaService.changeTimerState(setupAgendaId, 0, TimerStateCode.START);
+            assertTrue(agendaService.changeTimerState(setupAgendaId, 0, TimerStateCode.STOP));
         }
 
         @Test(expected = IllegalArgumentException.class)
@@ -54,8 +56,92 @@ public class AgendaServiceTest {
         }
 
         @Test(expected = IndexOutOfBoundsException.class)
-        public void 登録されていないsubjectを渡すとIndexOutOfBoundsExceptionがスローされる() throws Exception {
-            agendaService.changeTimerState(1, 1, TimerStateCode.START);
+        public void 登録されていないsubjectを渡すとIllegalArgumentExceptionがスローされる() throws Exception {
+            agendaService.changeTimerState(setupAgendaId, 1, TimerStateCode.START);
+        }
+    }
+
+    @RunWith(SpringRunner.class)
+    @SpringBootTest
+    public static class updateメソッドのテスト {
+        @Autowired
+        AgendaService agendaService;
+
+        Agenda newAgenda;
+
+        int setupAgendaId;
+
+        @Before
+        public void setup() {
+            List<Subject> subjects = new ArrayList<>();
+            subjects.add(new Subject("test", 1, "user"));
+            Agenda agenda = new Agenda();
+            agenda.setSubjects(subjects);
+            agendaService.create(agenda);
+
+            setupAgendaId = agenda.getId();
+
+            List<Subject> newSubjects = new ArrayList<>();
+            newSubjects.add(new Subject("new_test", 3, "new_user"));
+            newAgenda = new Agenda();
+            newAgenda.setSubjects(newSubjects);
+        }
+
+        @Test
+        public void updateを呼び出した場合_idに対応するアジェンダの内容が更新され_更新後のアジェンダが返される() {
+            newAgenda.setId(setupAgendaId);
+            assertThat(agendaService.update(newAgenda), is(newAgenda));
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void updateを呼び出し_idに対応するアジェンダがない場合_IllegalArgumentExceptionがスローされる() throws Exception {
+            newAgenda.setId(0);
+            agendaService.update(newAgenda);
+        }
+    }
+
+    @RunWith(SpringRunner.class)
+    @SpringBootTest
+    public static class updateSubjectメソッドのテスト {
+        @Autowired
+        AgendaService agendaService;
+
+        Subject newSubjects;
+
+        int setupAgendaId;
+
+        @Before
+        public void setup() {
+            List<Subject> subjects = new ArrayList<>();
+            subjects.add(new Subject("test", 1, "user"));
+            Agenda agenda = new Agenda();
+            agenda.setSubjects(subjects);
+            agendaService.create(agenda);
+
+            setupAgendaId = agenda.getId();
+
+            newSubjects = new Subject("new_test", 3, "new_user");
+        }
+
+        @Test
+        public void updateSubjectを呼び出した場合_idに対応するアジェンダのnumber番目のサブジェクトが更新され_更新後のアジェンダが返される() {
+            List<Subject> subjects = new ArrayList<>();
+            subjects.add(newSubjects);
+            Agenda agenda = new Agenda();
+            agenda.setSubjects(subjects);
+            agenda.setId(setupAgendaId);
+
+            assertThat(agendaService.updateSubject(setupAgendaId, 0, newSubjects), is(agenda));
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void updateSubjectを呼び出し_idに対応するアジェンダがない場合_IllegalArgumentExceptionがスローされる() throws Exception {
+            agendaService.updateSubject(0, 0, newSubjects);
+        }
+
+        @Test(expected = IllegalArgumentException.class)
+        public void updateSubjectを呼び出し_numberが不適切な場合_IllegalArgumentExceptionがスローされる() throws Exception {
+            agendaService.updateSubject(setupAgendaId, 1, newSubjects);
         }
     }
 
@@ -65,6 +151,8 @@ public class AgendaServiceTest {
         @Autowired
         AgendaService agendaService;
 
+        int setupAgendaId;
+
         @Before
         public void setup() {
             List<Subject> subjects = new ArrayList<>();
@@ -72,11 +160,13 @@ public class AgendaServiceTest {
             Agenda agenda = new Agenda();
             agenda.setSubjects(subjects);
             agendaService.create(agenda);
+
+            setupAgendaId = agenda.getId();
         }
 
         @Test
         public void id指定でアジェンダを削除できたときtrueが返ってくる() {
-            assertThat(agendaService.deleteAgendaProcess(1), is(true));
+            assertThat(agendaService.deleteAgendaProcess(setupAgendaId), is(true));
         }
 
         @Test
@@ -84,5 +174,4 @@ public class AgendaServiceTest {
             assertThat(agendaService.deleteAgendaProcess(0), is(false));
         }
     }
-
 }
