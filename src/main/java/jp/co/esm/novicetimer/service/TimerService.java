@@ -68,8 +68,9 @@ public class TimerService {
      * TimerServiceの内部クラス
      */
     public static class NoticeTimerTask extends TimerTask {
-        private String hookUrl;
         private int count;
+        private Messenger messenger;
+        private Factory factory = new MessengerFactory();
 
         private String idobataUser;
         private String title;
@@ -77,8 +78,8 @@ public class TimerService {
         private int endSeconds;
 
         public NoticeTimerTask(Subject subject, String hookUrl) {
-            this.hookUrl = hookUrl;
             this.count = 0;
+            messenger = factory.createMessenger(hookUrl);
 
             this.idobataUser = subject.getIdobataUser();
             this.title = subject.getTitle();
@@ -92,44 +93,135 @@ public class TimerService {
 
             if (elapsedSeconds == 0) {
                 // 開始時の通知
-                sendMessage(new IdobataMessage.Builder(
+                messenger.sendMessage(new IdobataMessage.Builder(
                     "タイトル：" + title + "\n発表者：" + idobataUser + "\n予定時間：" + endMinutes + "分").build());
             } else if (elapsedSeconds == endSeconds / 2) {
                 // 終了時間半分の通知
-                sendMessage(new IdobataMessage.Builder("予定時間の半分が経過しました。").users(idobataUser).build());
+                messenger.sendMessage(new IdobataMessage.Builder("予定時間の半分が経過しました。").users(idobataUser).build());
             } else if (elapsedSeconds == endSeconds - 60) {
                 // 終了1分前の通知
                 if (endMinutes > 2) { // 1分は開始時、2分は半分経過、の通知と重なるので除外する
-                    sendMessage(new IdobataMessage.Builder("残り1分です。").users(idobataUser).build());
+                    messenger.sendMessage(new IdobataMessage.Builder("残り1分です。").users(idobataUser).build());
                 }
             } else if (elapsedSeconds == endSeconds) {
                 // 終了時間の通知
-                sendMessage(new IdobataMessage.Builder("終了時間です。").users(idobataUser).build());
+                messenger.sendMessage(new IdobataMessage.Builder("終了時間です。").users(idobataUser).build());
             } else if (elapsedSeconds > endSeconds && count % 2 == 0) {
                 // 1分超過ごとの通知
-                sendMessage(new IdobataMessage.Builder(((elapsedSeconds - endSeconds) / 60) + "分超過しました。")
+                messenger.sendMessage(new IdobataMessage.Builder(((elapsedSeconds - endSeconds) / 60) + "分超過しました。")
                     .users(idobataUser).build());
             }
-
             count++;
         }
+    }
+}
 
-        /**
-         * メッセージを出力する。<br>
-         * <p>
-         * 送り先のURLを.ymlファイルに記述している必要がある。
-         * 送り先のURLの文字列の長さが0だった場合、標準出力に出力される
-         * @param message 出力するメッセージ{@link IdobataMessage}
-         */
-        private void sendMessage(IdobataMessage message) {
-            if (hookUrl.isEmpty()) {
-                System.out.println(message.getSource());
-                return;
-            }
-            new RestTemplate().postForObject(
-                hookUrl,
-                message,
-                String.class);
+/**
+ * FactoryMethodパターンのProductの抽象クラス。
+ */
+abstract class Messenger {
+    public abstract void sendMessage(IdobataMessage message);
+}
+
+/**
+ * FactoryMethodパターンのFactoryの抽象クラス。生成処理を切り替える場合のために一応用意。
+ * <p>
+ */
+abstract class Factory {
+    /**
+     * 出力先を決め、必要な処理を行うメソッド。
+     * <p>
+     * 通知先を決めたときに処理が必要ならここに記述すること。
+     * @param url 出力先URL
+     * @return 出力用インスタンス
+     */
+    public final Messenger create(String url) {
+        return createMessenger(url);
+    }
+
+    /**
+     * 引数として受け取った文字列によって出力先を決める抽象メソッド。
+     * <p>
+     * @param url 出力先URL
+     * @return 出力用インスタンス
+     */
+    protected abstract Messenger createMessenger(String url);
+}
+
+/**
+ * FactoryMethodパターンのFactoryの具象クラス。
+ * <p>
+ * このFactoryクラスでは、
+ * 標準出力に出力するインスタンス、
+ * idobataに出力するインスタンスが生成できる。
+ */
+class MessengerFactory extends Factory {
+
+    /**
+     * URLによって出力先の違うインスタンスを生成するメソッド。
+     * URLが記述されていたらidobataに出力する。
+     * 文字列の長さが0だった場合は標準出力に出力する。
+     * nullだった場合は例外になる。
+     * @param url 出力先URL
+     * return 出力用インスタンス
+     */
+    @Override
+    protected Messenger createMessenger(String url) {
+        if (url.isEmpty()) {
+            return new StandardOutMessenger();
         }
+        return new IdobataMessenger(url);
+    }
+}
+
+/**
+ * FactoryMethodパターンのProductの具象クラス。出力先はidobata。
+ * <p>
+ * idobataに出力するクラス。
+ */
+class IdobataMessenger extends Messenger {
+    String hookUrl;
+
+    /**
+     * コンストラクタ。
+     * 出力先に対する設定を行う。
+     * @param url 出力先のURL
+     */
+    IdobataMessenger(String url) {
+        hookUrl = url;
+    }
+
+    /**
+     * idobataに出力するメソッド。
+     * @param message 出力するデータ
+     */
+    @Override
+    public void sendMessage(IdobataMessage message) {
+        new RestTemplate().postForObject(
+            hookUrl,
+            message,
+            String.class);
+    }
+}
+
+/**
+ * FactoryMethodパターンのProductの具象クラス。出力先は標準出力。
+ * <p>
+ * 標準出力に出力するクラス。
+ */
+class StandardOutMessenger extends Messenger {
+    /**
+     * 空のコンストラクタ。
+     * 一応明示化した。
+     */
+    StandardOutMessenger() {
+    }
+
+    /**
+     * 標準出力に出力するメソッド。
+     * @param message 出力するデータ
+     */
+    public void sendMessage(IdobataMessage message) {
+        System.out.println(message.getSource());
     }
 }
