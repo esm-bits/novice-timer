@@ -115,14 +115,14 @@ public class TimerService {
         }
 
         /**
-         * idobataへメッセージを送る。<br>
+         * メッセージを出力する。<br>
          * <p>
          * 送り先のURLを.ymlファイルに記述している必要がある。
-         * 送り先のURLが空文字だった場合、標準出力される
-         * @param message idobataへ送信するメッセージ{@link IdobataMessage}
+         * 送り先のURLの文字列の長さが0だった場合、標準出力に出力される
+         * @param message 出力するメッセージ{@link IdobataMessage}
          */
         private void sendMessage(IdobataMessage message) {
-            if (message.getSource().length() != 0) {
+            if (hookUrl.isEmpty()) {
                 System.out.println(message.getSource());
                 return;
             }
