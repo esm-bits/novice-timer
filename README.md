@@ -49,11 +49,99 @@
 - 通知を送りたくない場合、`TimerService.NoticeTimerTask`の`sendMessageメソッド`の処理を`System.out.println`に変更するとよい
 
 ### 操作方法
-- 現在Viewを作成していないためRESTクライアントツールを使用して操作する
+- アジェンダの全取得
+    * パス: GET api/agendas
+    
+- 特定アジェンダの取得
+    * パス: GET api/agendas/{id}
 
-- 使用しているツール
-    * curlコマンド
-    * [Restlet Client - REST API Testing](https://chrome.google.com/webstore/detail/restlet-client-rest-api-t/aejoelaoggembcahagimdiliamlcdmfm)
+- アジェンダの登録
+    * パス: POST api/agendas
+    * リクエストボディ:
+    
+        ```json
+        {
+            "subjects": [
+                {
+                    "title": "title1",
+                    "minutes": 5,
+                    "idobata_user": "user1"
+                },
+                {
+                    "title": "title2",
+                    "minutes": 5,
+                    "idobata_user": "user2"
+                }
+            ]
+        }
+        ```
+
+- アジェンダの更新
+    * パス: PUT api/agendas/{id}
+    * リクエストボディ:
+
+        ```json
+        {
+            "subjects": [
+                {
+                    "title": "new_title1",
+                    "minutes": 10,
+                    "idobata_user": "new_user1"
+                },
+                {
+                    "title": "new_title2",
+                    "minutes": 10,
+                    "idobata_user": "new_user2"
+                }
+            ]
+        }
+        ```
+
+- サブジェクトの更新
+    * パス: PUT api/agendas/{id}/subjects/{number}
+    * リクエストボディ:
+    
+        ```json
+        {
+            "title": "new_title",
+            "minutes": 10,
+            "idobata_user": "new_user"
+        }
+        ```
+        
+- アジェンダの全削除
+    * パス: DELETE api/agendas
+
+- 特定アジェンダの削除
+    * パス: DELETE api/agendas/{id}
+
+- タイマーの開始
+    * パス: PUT api/agendas/{id}/subjects/{number}/timers
+    * リクエストボディ:
+    
+        ```json
+        {
+            "state": "start"
+        }
+        ```
+
+    * 備考: タイマーの実行は同時に1つのみ、実行中のタイマーがある場合は開始されない
+
+- タイマーの終了
+    * パス: PUT api/agendas/{id}/subjects/{number}/timers
+    * リクエストボディ:
+
+        ```json
+        {
+            "state": "end"
+        }
+        ```
+
+- 備考
+    * 現在Viewを作成していないためRESTクライアントツールを使用して操作する
+    * 使用しているツール
+        * curlコマンド
+        * [Restlet Client - REST API Testing](https://chrome.google.com/webstore/detail/restlet-client-rest-api-t/aejoelaoggembcahagimdiliamlcdmfm)
 
 ### Herokuへのデプロイ方法
 
