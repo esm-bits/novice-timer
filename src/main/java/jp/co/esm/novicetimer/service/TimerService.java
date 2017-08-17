@@ -174,7 +174,7 @@ public class TimerService {
          */
         private class IdobataMessenger implements Messenger {
             private final String hookUrl;
-            private final RestOperations restTemplate;
+            private final RestOperations restOperations;
 
             /**
              * コンストラクタ。
@@ -183,7 +183,7 @@ public class TimerService {
              */
             IdobataMessenger(String url) {
                 hookUrl = url;
-                restTemplate = new RestTemplate();
+                restOperations = new RestTemplate();
             }
 
             /**
@@ -192,7 +192,7 @@ public class TimerService {
              */
             @Override
             public void sendMessage(MessageSerializable message) {
-                restTemplate.postForObject(
+                restOperations.postForObject(
                     hookUrl,
                     message,
                     String.class);

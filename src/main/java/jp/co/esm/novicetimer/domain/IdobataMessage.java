@@ -19,8 +19,8 @@ public class IdobataMessage implements MessageSerializable {
     private IdobataMessage(Builder builder) {
         this.source = Stream.concat(
             builder.userList.stream().distinct().map(user -> "@" + user),
-            Stream.of(builder.message))
-            .collect(Collectors.joining(" "));
+            Stream.of(builder.message)
+        ).collect(Collectors.joining(" "));
     }
 
     public static class Builder {
