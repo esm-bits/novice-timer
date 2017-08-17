@@ -13,14 +13,14 @@ import lombok.Data;
  * 使用例:{@code IdobataMessage message = new IdobataMessage.Builder("message").users("user").build();}
  */
 @Data
-public class IdobataMessage implements CreateSource {
+public class IdobataMessage implements MessageSerializable {
     private String source;
 
     private IdobataMessage(Builder builder) {
         this.source = Stream.concat(
             builder.userList.stream().distinct().map(user -> "@" + user),
-            Stream.of(builder.message)
-        ).collect(Collectors.joining(" "));
+            Stream.of(builder.message))
+            .collect(Collectors.joining(" "));
     }
 
     public static class Builder {
@@ -65,5 +65,10 @@ public class IdobataMessage implements CreateSource {
         public IdobataMessage build() {
             return new IdobataMessage(this);
         }
+    }
+
+    @Override
+    public String serialize() {
+        return source;
     }
 }

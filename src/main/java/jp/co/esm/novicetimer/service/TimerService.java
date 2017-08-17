@@ -8,11 +8,12 @@ import javax.naming.ConfigurationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 
 import jp.co.esm.novicetimer.domain.Configs;
-import jp.co.esm.novicetimer.domain.CreateSource;
 import jp.co.esm.novicetimer.domain.IdobataMessage;
+import jp.co.esm.novicetimer.domain.MessageSerializable;
 import jp.co.esm.novicetimer.domain.Subject;
 
 /**
@@ -82,12 +83,7 @@ public class TimerService {
 
         public NoticeTimerTask(Subject subject, String hookUrl) {
             this.count = 0;
-            try {
-                messenger = factory.createMessenger(hookUrl);
-            } catch (ConfigurationException e) {
-                System.err.println("不正な通知先");
-                e.printStackTrace();
-            }
+            messenger = factory.createMessenger(hookUrl);
 
             this.idobataUser = subject.getIdobataUser();
             this.title = subject.getTitle();
@@ -126,7 +122,7 @@ public class TimerService {
          * FactoryMethodパターンのProductのインターフェース。
          */
         private interface Messenger {
-            public abstract void sendMessage(CreateSource message);
+            public abstract void sendMessage(MessageSerializable message);
         }
 
         /**
@@ -141,7 +137,7 @@ public class TimerService {
              * @return 出力用インスタンス
              * @throws ConfigurationException 引数が不正だった場合に投げられる例外
              */
-            protected abstract Messenger createMessenger(String url) throws ConfigurationException;
+            protected abstract Messenger createMessenger(String url);
         }
 
         /**
@@ -162,14 +158,12 @@ public class TimerService {
              * return 出力用インスタンス
              */
             @Override
-            protected Messenger createMessenger(String url) throws ConfigurationException {
-                if(url == null) {
-                    throw new ConfigurationException();
-                }
-                else if (url.isEmpty()) {
+            protected Messenger createMessenger(String url) {
+                if (url == null || url.isEmpty()) {
                     return new StandardOutMessenger();
+                } else {
+                    return new IdobataMessenger(url);
                 }
-                return new IdobataMessenger(url);
             }
         }
 
@@ -180,6 +174,7 @@ public class TimerService {
          */
         private class IdobataMessenger implements Messenger {
             private final String hookUrl;
+            private final RestOperations restTemplate;
 
             /**
              * コンストラクタ。
@@ -188,6 +183,7 @@ public class TimerService {
              */
             IdobataMessenger(String url) {
                 hookUrl = url;
+                restTemplate = new RestTemplate();
             }
 
             /**
@@ -195,8 +191,8 @@ public class TimerService {
              * @param message 出力するデータ
              */
             @Override
-            public void sendMessage(CreateSource message) {
-                new RestTemplate().postForObject(
+            public void sendMessage(MessageSerializable message) {
+                restTemplate.postForObject(
                     hookUrl,
                     message,
                     String.class);
@@ -220,8 +216,8 @@ public class TimerService {
              * 標準出力に出力するメソッド。
              * @param message 出力するデータ
              */
-            public void sendMessage(CreateSource message) {
-                System.out.println(message.getSource());
+            public void sendMessage(MessageSerializable message) {
+                System.out.println(message.serialize());
             }
         }
     }
