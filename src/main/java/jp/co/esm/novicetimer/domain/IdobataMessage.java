@@ -13,7 +13,7 @@ import lombok.Data;
  * 使用例:{@code IdobataMessage message = new IdobataMessage.Builder("message").users("user").build();}
  */
 @Data
-public class IdobataMessage {
+public class IdobataMessage implements CreateSource {
     private String source;
 
     private IdobataMessage(Builder builder) {

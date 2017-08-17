@@ -4,11 +4,14 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import javax.naming.ConfigurationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import jp.co.esm.novicetimer.domain.Configs;
+import jp.co.esm.novicetimer.domain.CreateSource;
 import jp.co.esm.novicetimer.domain.IdobataMessage;
 import jp.co.esm.novicetimer.domain.Subject;
 
@@ -79,7 +82,12 @@ public class TimerService {
 
         public NoticeTimerTask(Subject subject, String hookUrl) {
             this.count = 0;
-            messenger = factory.createMessenger(hookUrl);
+            try {
+                messenger = factory.createMessenger(hookUrl);
+            } catch (ConfigurationException e) {
+                System.err.println("不正な通知先");
+                e.printStackTrace();
+            }
 
             this.idobataUser = subject.getIdobataUser();
             this.title = subject.getTitle();
@@ -113,115 +121,108 @@ public class TimerService {
             }
             count++;
         }
-    }
-}
 
-/**
- * FactoryMethodパターンのProductの抽象クラス。
- */
-abstract class Messenger {
-    public abstract void sendMessage(IdobataMessage message);
-}
-
-/**
- * FactoryMethodパターンのFactoryの抽象クラス。生成処理を切り替える場合のために一応用意。
- * <p>
- */
-abstract class Factory {
-    /**
-     * 出力先を決め、必要な処理を行うメソッド。
-     * <p>
-     * 通知先を決めたときに処理が必要ならここに記述すること。
-     * @param url 出力先URL
-     * @return 出力用インスタンス
-     */
-    public final Messenger create(String url) {
-        return createMessenger(url);
-    }
-
-    /**
-     * 引数として受け取った文字列によって出力先を決める抽象メソッド。
-     * <p>
-     * @param url 出力先URL
-     * @return 出力用インスタンス
-     */
-    protected abstract Messenger createMessenger(String url);
-}
-
-/**
- * FactoryMethodパターンのFactoryの具象クラス。
- * <p>
- * このFactoryクラスでは、
- * 標準出力に出力するインスタンス、
- * idobataに出力するインスタンスが生成できる。
- */
-class MessengerFactory extends Factory {
-
-    /**
-     * URLによって出力先の違うインスタンスを生成するメソッド。
-     * URLが記述されていたらidobataに出力する。
-     * 文字列の長さが0だった場合は標準出力に出力する。
-     * nullだった場合は例外になる。
-     * @param url 出力先URL
-     * return 出力用インスタンス
-     */
-    @Override
-    protected Messenger createMessenger(String url) {
-        if (url.isEmpty()) {
-            return new StandardOutMessenger();
+        /**
+         * FactoryMethodパターンのProductのインターフェース。
+         */
+        private interface Messenger {
+            public abstract void sendMessage(CreateSource message);
         }
-        return new IdobataMessenger(url);
-    }
-}
 
-/**
- * FactoryMethodパターンのProductの具象クラス。出力先はidobata。
- * <p>
- * idobataに出力するクラス。
- */
-class IdobataMessenger extends Messenger {
-    String hookUrl;
+        /**
+         * FactoryMethodパターンのFactoryの抽象クラス。生成処理を切り替える場合のために一応用意。
+         * <p>
+         */
+        private abstract class Factory {
+            /**
+             * 引数として受け取った文字列によって出力先を決める抽象メソッド。
+             * <p>
+             * @param url 出力先URL
+             * @return 出力用インスタンス
+             * @throws ConfigurationException 引数が不正だった場合に投げられる例外
+             */
+            protected abstract Messenger createMessenger(String url) throws ConfigurationException;
+        }
 
-    /**
-     * コンストラクタ。
-     * 出力先に対する設定を行う。
-     * @param url 出力先のURL
-     */
-    IdobataMessenger(String url) {
-        hookUrl = url;
-    }
+        /**
+         * FactoryMethodパターンのFactoryの具象クラス。
+         * <p>
+         * このFactoryクラスでは、
+         * 標準出力に出力するインスタンス、
+         * idobataに出力するインスタンスが生成できる。
+         */
+        private class MessengerFactory extends Factory {
 
-    /**
-     * idobataに出力するメソッド。
-     * @param message 出力するデータ
-     */
-    @Override
-    public void sendMessage(IdobataMessage message) {
-        new RestTemplate().postForObject(
-            hookUrl,
-            message,
-            String.class);
-    }
-}
+            /**
+             * URLによって出力先の違うインスタンスを生成するメソッド。
+             * URLが記述されていたらidobataに出力する。
+             * 文字列の長さが0だった場合は標準出力に出力する。
+             * nullだった場合は例外になる。
+             * @param url 出力先URL
+             * return 出力用インスタンス
+             */
+            @Override
+            protected Messenger createMessenger(String url) throws ConfigurationException {
+                if(url == null) {
+                    throw new ConfigurationException();
+                }
+                else if (url.isEmpty()) {
+                    return new StandardOutMessenger();
+                }
+                return new IdobataMessenger(url);
+            }
+        }
 
-/**
- * FactoryMethodパターンのProductの具象クラス。出力先は標準出力。
- * <p>
- * 標準出力に出力するクラス。
- */
-class StandardOutMessenger extends Messenger {
-    /**
-     * 空のコンストラクタ。
-     * 一応明示化した。
-     */
-    StandardOutMessenger() {
-    }
+        /**
+         * FactoryMethodパターンのProductの具象クラス。出力先はidobata。
+         * <p>
+         * idobataに出力するクラス。
+         */
+        private class IdobataMessenger implements Messenger {
+            private final String hookUrl;
 
-    /**
-     * 標準出力に出力するメソッド。
-     * @param message 出力するデータ
-     */
-    public void sendMessage(IdobataMessage message) {
-        System.out.println(message.getSource());
+            /**
+             * コンストラクタ。
+             * 出力先に対する設定を行う。
+             * @param url 出力先のURL
+             */
+            IdobataMessenger(String url) {
+                hookUrl = url;
+            }
+
+            /**
+             * idobataに出力するメソッド。
+             * @param message 出力するデータ
+             */
+            @Override
+            public void sendMessage(CreateSource message) {
+                new RestTemplate().postForObject(
+                    hookUrl,
+                    message,
+                    String.class);
+            }
+        }
+
+        /**
+         * FactoryMethodパターンのProductの具象クラス。出力先は標準出力。
+         * <p>
+         * 標準出力に出力するクラス。
+         */
+        private class StandardOutMessenger implements Messenger {
+            /**
+             * 空のコンストラクタ。
+             * 一応明示化した。
+             */
+            StandardOutMessenger() {
+            }
+
+            /**
+             * 標準出力に出力するメソッド。
+             * @param message 出力するデータ
+             */
+            public void sendMessage(CreateSource message) {
+                System.out.println(message.getSource());
+            }
+        }
     }
 }
