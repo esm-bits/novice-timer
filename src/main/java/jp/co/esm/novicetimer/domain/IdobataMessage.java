@@ -13,7 +13,7 @@ import lombok.Data;
  * 使用例:{@code IdobataMessage message = new IdobataMessage.Builder("message").users("user").build();}
  */
 @Data
-public class IdobataMessage {
+public class IdobataMessage implements MessageSerializable {
     private String source;
 
     private IdobataMessage(Builder builder) {
@@ -65,5 +65,10 @@ public class IdobataMessage {
         public IdobataMessage build() {
             return new IdobataMessage(this);
         }
+    }
+
+    @Override
+    public String serialize() {
+        return source;
     }
 }
