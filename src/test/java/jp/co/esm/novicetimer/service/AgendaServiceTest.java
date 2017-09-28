@@ -24,9 +24,9 @@ public class AgendaServiceTest {
     @SpringBootTest
     public static class changeTimerStateメソッドのテスト {
         @Autowired
-        AgendaService agendaService;
+        private AgendaService agendaService;
 
-        int setupAgendaId;
+        private int setupAgendaId;
 
         @Before
         public void setup() {
@@ -65,11 +65,11 @@ public class AgendaServiceTest {
     @SpringBootTest
     public static class updateメソッドのテスト {
         @Autowired
-        AgendaService agendaService;
+        private AgendaService agendaService;
 
-        Agenda newAgenda;
+        private Agenda newAgenda;
 
-        int setupAgendaId;
+        private int setupAgendaId;
 
         @Before
         public void setup() {
@@ -104,11 +104,11 @@ public class AgendaServiceTest {
     @SpringBootTest
     public static class updateSubjectメソッドのテスト {
         @Autowired
-        AgendaService agendaService;
+        private AgendaService agendaService;
 
-        Subject newSubjects;
+        private Subject newSubjects;
 
-        int setupAgendaId;
+        private int setupAgendaId;
 
         @Before
         public void setup() {
@@ -149,9 +149,9 @@ public class AgendaServiceTest {
     @SpringBootTest
     public static class deleteAgendaProcessのテスト {
         @Autowired
-        AgendaService agendaService;
+        private AgendaService agendaService;
 
-        int setupAgendaId;
+        private int setupAgendaId;
 
         @Before
         public void setup() {
