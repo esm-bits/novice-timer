@@ -39,7 +39,7 @@ public class TimerService {
      * 既にタイマーが動いていた場合は "0" の文字列
      */
     public String startTimer(Subject subject) {
-        if (timer != null) {
+        if (isMoving()) {
             return String.valueOf(0);
         }
 
@@ -59,7 +59,7 @@ public class TimerService {
      * タイマーが動いていなかった場合はfalse<br>
      */
     public boolean stopTimer() {
-        if (timer == null) {
+        if (!isMoving()) {
             return false;
         }
         timer.cancel();
@@ -67,6 +67,9 @@ public class TimerService {
         return true;
     }
 
+    public boolean isMoving(){
+        return timer != null;
+    }
     /**
      * タイマーをThreadとして生成し、指定条件でidobataへメッセージを送信する処理を行うクラス<br>
      * TimerServiceの内部クラス

@@ -155,4 +155,11 @@ public class AgendaRestController {
     @ResponseBody
     public void handleIllegalArgumentException() {
     }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler({ IllegalStateException.class })
+    @ResponseBody
+    public String handleIllegalStateException(IllegalStateException e) {
+        return e.getMessage();
+    }
 }

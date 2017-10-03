@@ -224,4 +224,12 @@ public class AgendaRestControllerTest {
             .andExpect(status().isOk());
     }
 
+    @Test
+    public void Timerが動いている状態でapi_agendas_idにDELETEリクエストした場合_409Conflictが返される() throws Exception {
+        doThrow(new IllegalStateException()).when(this.agendaService).deleteAgendaProcess(1);
+        mvc
+                .perform(delete("/api/agendas/1"))
+                .andExpect(status().isConflict());
+    }
+
 }
