@@ -70,6 +70,7 @@ public class TimerService {
     public boolean isMoving(){
         return timer != null;
     }
+
     /**
      * タイマーをThreadとして生成し、指定条件でidobataへメッセージを送信する処理を行うクラス<br>
      * TimerServiceの内部クラス
