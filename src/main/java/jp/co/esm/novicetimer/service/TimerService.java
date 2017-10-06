@@ -30,6 +30,14 @@ public class TimerService {
     private Timer timer;
 
     /**
+     * Timerが作動中かを判定するメソッド
+     * @return boolean 動いていればtrueを返す。
+     */
+    public boolean isMoving(){
+        return timer != null;
+    }
+
+    /**
      * タイマーを開始するメソッド。
      * <p>
      * 与えられたSubject情報に沿った設定のタイマーを開始する。
@@ -65,10 +73,6 @@ public class TimerService {
         timer.cancel();
         timer = null;
         return true;
-    }
-
-    public boolean isMoving(){
-        return timer != null;
     }
 
     /**
