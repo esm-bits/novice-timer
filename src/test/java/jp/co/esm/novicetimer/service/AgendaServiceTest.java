@@ -188,11 +188,11 @@ public class AgendaServiceTest {
         }
 
         @After
-        public void closing(){
+        public void closing() throws Exception{
             try {
                 agendaService.changeTimerState(setupAgendaId, 0, TimerStateCode.STOP);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+            } catch (IllegalArgumentException e){
+                //アジェンダ削除のテストの場合、タイマーストップ時にエラー発生の為
             }
         }
     }

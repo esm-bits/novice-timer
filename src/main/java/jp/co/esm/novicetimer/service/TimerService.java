@@ -33,7 +33,7 @@ public class TimerService {
      * Timerが作動中かを判定するメソッド
      * @return boolean 動いていればtrueを返す。
      */
-    public boolean isMoving(){
+    public boolean isRunning(){
         return timer != null;
     }
 
@@ -47,7 +47,7 @@ public class TimerService {
      * 既にタイマーが動いていた場合は "0" の文字列
      */
     public String startTimer(Subject subject) {
-        if (isMoving()) {
+        if (isRunning()) {
             return String.valueOf(0);
         }
 
@@ -67,7 +67,7 @@ public class TimerService {
      * タイマーが動いていなかった場合はfalse<br>
      */
     public boolean stopTimer() {
-        if (!isMoving()) {
+        if (!isRunning()) {
             return false;
         }
         timer.cancel();

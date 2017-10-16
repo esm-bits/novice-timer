@@ -140,7 +140,7 @@ public class AgendaService {
      * @throws IllegalStateException アジェンダのタイマーが作動中の場合にthrowします
      */
     public boolean deleteAgendaProcess(int id) {
-        if(timerService.isMoving()){
+        if(timerService.isRunning()){
             throw new IllegalStateException("タイマーが作動中です。");
         }
         return agendaRepository.deleteAgenda(id);
@@ -153,7 +153,7 @@ public class AgendaService {
      * @throws IllegalStateException アジェンダのタイマーが作動中の場合にthrowします
      */
     public void deleteAgendasProcess() {
-        if(timerService.isMoving()){
+        if(timerService.isRunning()){
             throw new IllegalStateException("タイマーが作動中です。");
         }
         agendaRepository.deleteAgendas();
