@@ -155,9 +155,6 @@ public class AgendaServiceTest {
         @Autowired
         private AgendaService agendaService;
 
-        @Mock
-        private TimerService timerService;
-
         private int setupAgendaId;
 
         @Before
@@ -192,7 +189,7 @@ public class AgendaServiceTest {
             try {
                 agendaService.changeTimerState(setupAgendaId, 0, TimerStateCode.STOP);
             } catch (IllegalArgumentException e){
-                //アジェンダ削除のテストの場合、タイマーストップ時にエラー発生の為
+                //アジェンダ削除のテストの場合、タイマーストップ時にエラー発生の為、握りつぶす。
             }
         }
     }
