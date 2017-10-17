@@ -116,6 +116,9 @@
     * パス: DELETE api/agendas/{id}
 
 - タイマーの開始
+    * パス: GET api/agendas/{id}/timer/start
+
+- タイマーの開始(サブジェクト指定)
     * パス: PUT api/agendas/{id}/subjects/{number}/timers
     * リクエストボディ:
     
@@ -128,6 +131,9 @@
     * 備考: タイマーの実行は同時に1つのみ、実行中のタイマーがある場合は開始されない
 
 - タイマーの終了
+    * パス: GET api/agendas/{id}/timer/stop
+
+- タイマーの終了(サブジェクト指定)
     * パス: PUT api/agendas/{id}/subjects/{number}/timers
     * リクエストボディ:
 

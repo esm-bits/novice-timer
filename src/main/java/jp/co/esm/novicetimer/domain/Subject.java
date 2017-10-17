@@ -17,4 +17,9 @@ public class Subject {
 
     @JsonProperty("idobata_user")
     private String idobataUser; // idobataのアカウント名
+
+    @Override
+    public String toString(){
+        return "Title:" + this.getTitle() + ", IdobataUser:" + this.getIdobataUser() + ", Minutes:" + this.getMinutes();
+    }
 }
