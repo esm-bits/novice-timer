@@ -163,7 +163,7 @@ public class AgendaService {
         if (timerService.stopTimer()) {
             agenda.incrementPointer();
         }
-        return "Next Subject Title:" + agenda.getSubject().getTitle() + ", Operator" + agenda.getSubject().getIdobataUser();
+        return "Next Subject:" + agenda.getSubject().toString();
     }
 
     /**
