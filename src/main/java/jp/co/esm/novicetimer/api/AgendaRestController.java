@@ -32,6 +32,7 @@ public class AgendaRestController {
      * GETリクエストを受けて登録されているアジェンダを全て取得する。
      * <p>
      * 登録されているアジェンダを全て取得する。
+     *
      * @return List型で全アジェンダを返す
      */
     @GetMapping
@@ -43,6 +44,7 @@ public class AgendaRestController {
      * GETリクエストを受けて登録されているアジェンダを取得する。
      * <p>
      * パス変数から受け取ったidのアジェンダを取得する。
+     *
      * @param id 探すアジェンダのid
      * @return アジェンダがあった場合はアジェンダを
      * 無かった場合はnullを返す
@@ -57,6 +59,7 @@ public class AgendaRestController {
      * <p>
      * POSTリクエストを受けてリクエストボディに渡されたデータを登録する。<br>
      * HTTPステータスは、登録された場合は201を返す。
+     *
      * @param agenda 登録するアジェンダのデータ
      * @return idを割り振られたアジェンダ
      */
@@ -71,8 +74,9 @@ public class AgendaRestController {
      * <p>
      * idに対応するアジェンダを、リクエストボディに渡されたアジェンダに変更する。<br>
      * HTTPステータスは、更新された場合は201を返す。idが不正の場合は404を返す。
+     *
      * @param agenda 更新するアジェンダの内容
-     * @param id 更新されるアジェンダのid
+     * @param id     更新されるアジェンダのid
      * @return 更新後のアジェンダ
      */
     @PutMapping("{id}")
@@ -86,15 +90,16 @@ public class AgendaRestController {
      * <p>
      * idに対応するアジェンダのnumber番目のサブジェクトを、リクエストボディに渡されたサブジェクトに変更する。<br>
      * HTTPステータスは、更新された場合は201を返す。idが不正の場合と、numberが不正の場合は404を返す。
+     *
      * @param subject 更新するサブジェクトの内容
-     * @param id 更新されるアジェンダのid
-     * @param number 更新されるサブジェクトの番目
+     * @param id      更新されるアジェンダのid
+     * @param number  更新されるサブジェクトの番目
      * @return 更新後のアジェンダ
      */
     @PutMapping("{id}/subjects/{number}")
     public Agenda editSubject(@PathVariable Integer id,
-        @PathVariable Integer number,
-        @RequestBody Subject subject) {
+                              @PathVariable Integer number,
+                              @RequestBody Subject subject) {
 
         return agendaService.updateSubject(id, number, subject);
     }
@@ -103,8 +108,9 @@ public class AgendaRestController {
      * タイマーの操作。
      * <p>
      * アジェンダに登録したデータを使ってタイマーを開始・停止する
-     * @param id 使用するアジェンダのid
-     * @param number 使用するsubjectの番号
+     *
+     * @param id         使用するアジェンダのid
+     * @param number     使用するsubjectの番号
      * @param timerState 遷移させたいタイマーの状態
      * @return タイマーの状態を正しく変更できた場合はHTTPステータスの200を返す。
      * アジェンダの情報が無かったりtimerStateの内容が不正だった場合は400を返す。
@@ -112,8 +118,8 @@ public class AgendaRestController {
      */
     @PutMapping("{id}/subjects/{number}/timers")
     public ResponseEntity<String> operateTimer(@PathVariable Integer id,
-        @PathVariable Integer number,
-        @RequestBody TimerState timerState) {
+                                               @PathVariable Integer number,
+                                               @RequestBody TimerState timerState) {
 
         try {
             agendaService.changeTimerState(id, number, timerState.getState());
@@ -126,10 +132,50 @@ public class AgendaRestController {
     }
 
     /**
+     * 指定したAgendaのpointerが指すSubjectのTimerを開始します。
+     * <p>
+     * 指定したAgendaのpointerが指すSubjectのTimerを開始します。
+     *
+     * @param id
+     * @return タイマーの状態を正しく変更できた場合はHTTPステータスの200を返す。
+     * アジェンダの情報が無かったりtimerStateの内容が不正だった場合は400を返す。
+     */
+    @GetMapping("{id}/timer/start")
+    public ResponseEntity<String> startSubject(@PathVariable Integer id) {
+        try {
+            agendaService.startSubject(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    /**
+     * 指定したAgendaのTimerを止め、pointerを一つ繰上げます。
+     * <p>
+     * 指定したAgendaのTimerを止め、pointerを一つ繰上げます。
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("{id}/timer/stop")
+    public ResponseEntity<String> endSbject(@PathVariable Integer id) {
+        try {
+            String nextSubject = agendaService.endSubject(id);
+            return new ResponseEntity<>(nextSubject, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    /**
      * アジェンダを1つ削除する。
      * <p>
      * パス変数から受け取ったidのアジェンダを削除する。
      * HTTPステータスは削除できた場合に200、削除できなかった場合に404が返される
+     *
      * @param id 削除するアジェンダのid
      * @return HTTPステータス
      */
@@ -151,7 +197,7 @@ public class AgendaRestController {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler({ IllegalArgumentException.class })
+    @ExceptionHandler({IllegalArgumentException.class})
     @ResponseBody
     public void handleIllegalArgumentException() {
     }
