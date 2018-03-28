@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
  * アジェンダ内のLTの情報を保持するクラス
  */
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 public class Subject {
