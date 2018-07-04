@@ -3,6 +3,7 @@ package jp.co.esm.novicetimer.service;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,7 +125,7 @@ public class AgendaServiceTest {
         }
 
         @Test
-        public void updateSubjectを呼び出した場合_idに対応するアジェンダのnumber番目のサブジェクトが更新され_更新後のアジェンダが返される() {
+        public void updateSubjectを呼び出した場合_idに対応するアジェンダのnumber番目のサブジェクトが更新され_更新後のアジェンダが返される() throws IllegalArgumentException, SQLException {
             List<Subject> subjects = new ArrayList<>();
             subjects.add(newSubjects);
             Agenda agenda = new Agenda();

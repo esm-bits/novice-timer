@@ -48,7 +48,7 @@ public class AgendaRestController {
      * 無かった場合はnullを返す
      */
     @GetMapping("{id}")
-    public Agenda getAgenda(@PathVariable Integer id) {
+    public Agenda getAgenda(@PathVariable Integer id) throws Exception {
         return agendaService.findOne(id);
     }
 
@@ -94,7 +94,7 @@ public class AgendaRestController {
     @PutMapping("{id}/subjects/{number}")
     public Agenda editSubject(@PathVariable Integer id,
         @PathVariable Integer number,
-        @RequestBody Subject subject) {
+        @RequestBody Subject subject) throws Exception{
 
         return agendaService.updateSubject(id, number, subject);
     }

@@ -1,10 +1,12 @@
 package jp.co.esm.novicetimer.repository;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import jp.co.esm.novicetimer.domain.Agenda;
@@ -18,6 +20,8 @@ import jp.co.esm.novicetimer.domain.Agenda;
 public class AgendaRepository {
     private Map<Integer, Agenda> agendaMap = new ConcurrentHashMap<>();
     private int id;
+    @Autowired
+    private SubjectRepository sr;
 
     AgendaRepository() {
         resetId();
@@ -60,9 +64,10 @@ public class AgendaRepository {
      * 引数で受け取ったidがMapにあるかを走査して返す。
      * @param id 取得したいアジェンダのid
      * @return idと一致したアジェンダor無かった場合はnull
+     * @throws SQLException
      */
-    public Agenda getAgenda(int id) {
-        return agendaMap.get(id);
+    public Agenda getAgenda(int id) throws SQLException {
+        return new Agenda(id, sr.findSubjectsInAgenda(id));
     }
 
     /**
