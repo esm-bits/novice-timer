@@ -3,8 +3,6 @@ package jp.co.esm.novicetimer.repository;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -18,7 +16,6 @@ import jp.co.esm.novicetimer.domain.Agenda;
  */
 @Repository
 public class AgendaRepository {
-    private Map<Integer, Agenda> agendaMap = new ConcurrentHashMap<>();
     private int id;
     @Autowired
     private SubjectRepository sr;
@@ -30,17 +27,21 @@ public class AgendaRepository {
     /**
      * アジェンダの登録。
      * <p>
-     * 登録したいアジェンダを受け取り、インスタンスの保持するMapに登録する。その際、idをkeyとします。<br>
+     * 登録したいアジェンダを受け取り、インスタンスの保持するMapに登録します。その際、idをkeyとします。<br>
      * アジェンダのidが自動的に初期化されている場合は、idを割り振ります。
      * @param agenda 登録したいアジェンダ
      * @return 登録されたagenda
+     * @throws SQLException
      */
-    public Agenda save(Agenda agenda) {
+    public Agenda save(Agenda agenda) throws SQLException {
         if (agenda.getId() == 0) {
             agenda.setId(id++);
         }
+        else if(sr.findSubjectsInAgenda(agenda.getId()).size() != 0) {
+            sr.deleteOneAgenda(agenda.getId());
+        }
 
-        agendaMap.put(agenda.getId(), agenda);
+        sr.insertSubjectList(agenda.getId(), agenda.getSubjects());
         return agenda;
     }
 
@@ -53,9 +54,10 @@ public class AgendaRepository {
      * @param id 確認したいアジェンダのid
      * @return true:存在する場合
      * false:存在しない場合
+     * @throws SQLException
      */
-    public boolean isExist(int id) {
-        return agendaMap.containsKey(id);
+    public boolean isExist(int id) throws SQLException {
+        return sr.findSubjectsInAgenda(id).size() > 0 ? true : false;
     }
 
     /**
@@ -75,9 +77,14 @@ public class AgendaRepository {
      * <p>
      * 登録されているアジェンダを全て取得する。
      * @return List型で全アジェンダを返す
+     * @throws SQLException
      */
-    public List<Agenda> getAgendas() {
-        return new ArrayList<>(agendaMap.values());
+    public List<Agenda> getAgendas() throws SQLException {
+        List<Agenda> allAgendas = new ArrayList<Agenda>();
+        for (int i = 0; i > id; i++) {
+            allAgendas.add(new Agenda(i, sr.findSubjectsInAgenda(i)));
+        }
+        return allAgendas;
     }
 
     /**
@@ -87,7 +94,7 @@ public class AgendaRepository {
      * false:削除できなかった場合
      */
     public boolean deleteAgenda(int id) {
-        return agendaMap.remove(id) != null;
+        return sr.deleteOneAgenda(id);
     }
 
     /**
@@ -96,7 +103,8 @@ public class AgendaRepository {
      * 全てのアジェンダを削除する。
      */
     public void deleteAgendas() {
-        agendaMap.clear();
-        resetId();
+        if (sr.deleteAllAgendas()) {
+            resetId();
+        }
     }
 }

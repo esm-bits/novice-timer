@@ -28,8 +28,9 @@ public class AgendaService {
      * <p>
      * 登録されているアジェンダを全て取得する。
      * @return List型で全アジェンダを返す
+     * @throws Exception
      */
-    public List<Agenda> findAll() {
+    public List<Agenda> findAll() throws Exception {
         return agendaRepository.getAgendas();
     }
 
@@ -45,7 +46,7 @@ public class AgendaService {
      */
     public Agenda findOne(Integer id) throws IllegalArgumentException, SQLException {
         Agenda agenda = agendaRepository.getAgenda(id);
-        if (agenda == null) {
+        if (agenda.getSubjects().size() == 0) {
             throw new IllegalArgumentException();
         }
         return agenda;
@@ -57,20 +58,23 @@ public class AgendaService {
      * アジェンダをagendaRepositoryに登録し、登録されたagendaを返す。
      * @param agenda 登録したいアジェンダ
      * @return idを割り振られたagenda
+     * @throws Exception
      * */
-    public Agenda create(Agenda agenda) {
+    public Agenda create(Agenda agenda) throws Exception {
         return agendaRepository.save(agenda);
     }
 
     /**
+     * @throws SQLException
      * アジェンダの更新を行う。
      * <p>
      * アジェンダをagendaRepositoryに登録することで置き換え、置き換えた後のagendaを返す。
      * @param agenda 更新するアジェンダ
      * @return 更新された後のアジェンダ
      * @throws IllegalArgumentException 更新されるアジェンダが無い場合に投げられます
+     * @throws
      */
-    public Agenda update(Agenda agenda) throws IllegalArgumentException {
+    public Agenda update(Agenda agenda) throws IllegalArgumentException, SQLException {
         if (!agendaRepository.isExist(agenda.getId())) {
             throw new IllegalArgumentException();
         }

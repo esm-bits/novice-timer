@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import jp.co.esm.novicetimer.domain.Agenda;
 import jp.co.esm.novicetimer.domain.Subject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -56,10 +55,6 @@ public class SubjectRepository {
         return result;
     }
 
-    public List<Agenda> findAllAgenda() {
-        return null;
-    }
-
     /**
      * @param agendaId サブジェクトを登録するアジェンダのID
      * @param subject 登録するサブジェクト
@@ -101,7 +96,7 @@ public class SubjectRepository {
         });
         sql.delete(sql.length() - 1, sql.length());
         SqlParameterSource param = new MapSqlParameterSource();
-        return jdbcTemplate.update(sql.toString(),  param) != 0 ? true : false; // subjects.size()
+        return jdbcTemplate.update(sql.toString(),  param) != 0 ? true : false;
     }
 
     /**

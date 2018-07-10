@@ -30,7 +30,7 @@ public class AgendaServiceTest {
         private int setupAgendaId;
 
         @Before
-        public void setup() {
+        public void setup() throws Exception {
             List<Subject> subjects = new ArrayList<>();
             subjects.add(new Subject("test", 1, "user"));
             Agenda agenda = new Agenda();
@@ -73,7 +73,7 @@ public class AgendaServiceTest {
         private int setupAgendaId;
 
         @Before
-        public void setup() {
+        public void setup() throws Exception {
             List<Subject> subjects = new ArrayList<>();
             subjects.add(new Subject("test", 1, "user"));
             Agenda agenda = new Agenda();
@@ -89,7 +89,7 @@ public class AgendaServiceTest {
         }
 
         @Test
-        public void updateを呼び出した場合_idに対応するアジェンダの内容が更新され_更新後のアジェンダが返される() {
+        public void updateを呼び出した場合_idに対応するアジェンダの内容が更新され_更新後のアジェンダが返される() throws Exception {
             newAgenda.setId(setupAgendaId);
             assertThat(agendaService.update(newAgenda), is(newAgenda));
         }
@@ -112,7 +112,7 @@ public class AgendaServiceTest {
         private int setupAgendaId;
 
         @Before
-        public void setup() {
+        public void setup() throws Exception {
             List<Subject> subjects = new ArrayList<>();
             subjects.add(new Subject("test", 1, "user"));
             Agenda agenda = new Agenda();
@@ -155,7 +155,7 @@ public class AgendaServiceTest {
         private int setupAgendaId;
 
         @Before
-        public void setup() {
+        public void setup() throws Exception {
             List<Subject> subjects = new ArrayList<>();
             subjects.add(new Subject("test", 1, "user"));
             Agenda agenda = new Agenda();
