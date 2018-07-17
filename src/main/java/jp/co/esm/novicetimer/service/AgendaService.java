@@ -1,5 +1,6 @@
 package jp.co.esm.novicetimer.service;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,9 @@ public class AgendaService {
      * <p>
      * 登録されているアジェンダを全て取得する。
      * @return List型で全アジェンダを返す
+     * @throws Exception
      */
-    public List<Agenda> findAll() {
+    public List<Agenda> findAll() throws Exception {
         return agendaRepository.getAgendas();
     }
 
@@ -40,10 +42,11 @@ public class AgendaService {
      * @param id 検索したいアジェンダのid
      * @return idと対応したアジェンダ
      * @throws java.lang.IllegalArgumentException 対応したアジェンダが無かった場合に投げられる。
+     * @throws java.sql.SQLException DBからのデータ取得に失敗した場合に投げられる
      */
-    public Agenda findOne(Integer id) throws IllegalArgumentException {
+    public Agenda findOne(Integer id) throws IllegalArgumentException, SQLException {
         Agenda agenda = agendaRepository.getAgenda(id);
-        if (agenda == null) {
+        if (agenda.getSubjects().size() == 0) {
             throw new IllegalArgumentException();
         }
         return agenda;
@@ -55,20 +58,23 @@ public class AgendaService {
      * アジェンダをagendaRepositoryに登録し、登録されたagendaを返す。
      * @param agenda 登録したいアジェンダ
      * @return idを割り振られたagenda
+     * @throws Exception
      * */
-    public Agenda create(Agenda agenda) {
+    public Agenda create(Agenda agenda) throws Exception {
         return agendaRepository.save(agenda);
     }
 
     /**
+     * @throws SQLException
      * アジェンダの更新を行う。
      * <p>
      * アジェンダをagendaRepositoryに登録することで置き換え、置き換えた後のagendaを返す。
      * @param agenda 更新するアジェンダ
      * @return 更新された後のアジェンダ
      * @throws IllegalArgumentException 更新されるアジェンダが無い場合に投げられます
+     * @throws
      */
-    public Agenda update(Agenda agenda) throws IllegalArgumentException {
+    public Agenda update(Agenda agenda) throws IllegalArgumentException, SQLException {
         if (!agendaRepository.isExist(agenda.getId())) {
             throw new IllegalArgumentException();
         }
@@ -86,7 +92,7 @@ public class AgendaService {
      * @return サブジェクトを更新した後のアジェンダ
      * @throws IllegalArgumentException idが対応するアジェンダがない場合、number番目のサブジェクトがない場合に投げられます
      */
-    public Agenda updateSubject(int id, int number, Subject subject) throws IllegalArgumentException {
+    public Agenda updateSubject(int id, int number, Subject subject) throws IllegalArgumentException, SQLException {
         Agenda agenda = findOne(id);
         if (number < 0 || agenda.getSubjects().size() <= number) {
             throw new IllegalArgumentException();

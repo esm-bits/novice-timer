@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * アジェンダ内のLTの情報を保持するクラス
  */
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Subject {
     private String title;
 

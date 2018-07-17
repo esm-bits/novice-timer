@@ -33,9 +33,10 @@ public class AgendaRestController {
      * <p>
      * 登録されているアジェンダを全て取得する。
      * @return List型で全アジェンダを返す
+     * @throws Exception
      */
     @GetMapping
-    public List<Agenda> getAgendas() {
+    public List<Agenda> getAgendas() throws Exception {
         return agendaService.findAll();
     }
 
@@ -48,7 +49,7 @@ public class AgendaRestController {
      * 無かった場合はnullを返す
      */
     @GetMapping("{id}")
-    public Agenda getAgenda(@PathVariable Integer id) {
+    public Agenda getAgenda(@PathVariable Integer id) throws Exception {
         return agendaService.findOne(id);
     }
 
@@ -59,10 +60,11 @@ public class AgendaRestController {
      * HTTPステータスは、登録された場合は201を返す。
      * @param agenda 登録するアジェンダのデータ
      * @return idを割り振られたアジェンダ
+     * @throws Exception
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Agenda creatAgenda(@RequestBody Agenda agenda) {
+    public Agenda creatAgenda(@RequestBody Agenda agenda) throws Exception {
         return agendaService.create(agenda);
     }
 
@@ -74,9 +76,10 @@ public class AgendaRestController {
      * @param agenda 更新するアジェンダの内容
      * @param id 更新されるアジェンダのid
      * @return 更新後のアジェンダ
+     * @throws Exception
      */
     @PutMapping("{id}")
-    public Agenda editAgenda(@PathVariable Integer id, @RequestBody Agenda agenda) {
+    public Agenda editAgenda(@PathVariable Integer id, @RequestBody Agenda agenda) throws Exception {
         agenda.setId(id);
         return agendaService.update(agenda);
     }
@@ -94,7 +97,7 @@ public class AgendaRestController {
     @PutMapping("{id}/subjects/{number}")
     public Agenda editSubject(@PathVariable Integer id,
         @PathVariable Integer number,
-        @RequestBody Subject subject) {
+        @RequestBody Subject subject) throws Exception{
 
         return agendaService.updateSubject(id, number, subject);
     }
