@@ -81,7 +81,7 @@ public class AgendaRepository {
      */
     public List<Agenda> getAgendas() throws SQLException {
         List<Agenda> allAgendas = new ArrayList<Agenda>();
-        for (int i = 0; i > id; i++) {
+        for (int i = 0; i < id; i++) {
             allAgendas.add(new Agenda(i, sr.findSubjectsInAgenda(i)));
         }
         return allAgendas;
