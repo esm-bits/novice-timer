@@ -23,7 +23,7 @@ public class AgendaController {
     private AgendaService agendaService;
     
     @GetMapping
-    public String getList(Model model) {
+    public String getList(Model model) throws Exception {
         
         List<Agenda> agendas = agendaService.findAll();
         model.addAttribute("agendas", agendas);
@@ -31,7 +31,7 @@ public class AgendaController {
     }
     
     @GetMapping("/detail")
-    public String getDetail(@RequestParam Integer id, Model model) {
+    public String getDetail(@RequestParam Integer id, Model model) throws Exception {
         
         Agenda agenda = agendaService.findOne(id);
         model.addAttribute("agenda", agenda);
@@ -39,13 +39,13 @@ public class AgendaController {
     }
     
     @GetMapping("/create")
-    public String getCreate(Model model) {
+    public String getCreate() {
         
         return "agendaCreate";
     }
     
     @PostMapping("/create")
-    public String postCreate(AgendaForm form, Model model) {
+    public String postCreate(AgendaForm form) throws Exception {
         
         Agenda agenda = convertAgendaFrom(form);
         agendaService.create(agenda);
@@ -53,14 +53,14 @@ public class AgendaController {
     }
     
     @GetMapping("/edit")
-    public String getEdit(@RequestParam Integer id, Model model) {
+    public String getEdit(@RequestParam Integer id, Model model) throws Exception {
         
         model.addAttribute("agenda", agendaService.findOne(id));
         return "agendaEdit";
     }
     
     @PostMapping("/edit")
-    public String postEdit(AgendaForm form, Model model) {
+    public String postEdit(AgendaForm form) throws Exception {
         
         Agenda agenda = convertAgendaFrom(form);
         agendaService.update(agenda);
@@ -68,7 +68,7 @@ public class AgendaController {
     }
     
     @PostMapping("/delete")
-    public String postDelete(String selectAgenda, Model model) {
+    public String postDelete(String selectAgenda) throws Exception {
         
         boolean result = agendaService.deleteAgendaProcess(Integer.valueOf(selectAgenda));
         return result ? "redirect:/agendas" : "削除に失敗しました";
