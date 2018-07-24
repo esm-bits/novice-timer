@@ -70,8 +70,8 @@ public class AgendaController {
     @PostMapping("/delete")
     public String postDelete(String selectAgenda) throws Exception {
         
-        boolean result = agendaService.deleteAgendaProcess(Integer.valueOf(selectAgenda));
-        return result ? "redirect:/agendas" : "削除に失敗しました";
+        return agendaService.deleteAgendaProcess(Integer.valueOf(selectAgenda))
+            ? "redirect:/agendas" : "削除に失敗しました";
     }
     
     private Agenda convertAgendaFrom(AgendaForm form) {
