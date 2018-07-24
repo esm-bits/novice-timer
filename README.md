@@ -49,6 +49,23 @@
 - 通知を送りたくない場合、`TimerService.NoticeTimerTask`の`sendMessageメソッド`の処理を`System.out.println`に変更するとよい
 
 ### 操作方法
+
+UI
+
+- アジェンダ一覧画面
+    * パス: GET /agendas
+
+- アジェンダ作成画面
+    * パス: GET /agendas/create
+
+- アジェンダ編集画面
+    * パス: GET /agendas/edit?id={agendaId}
+
+- アジェンダ詳細画面
+    * パス: GET /agendas/detail?id={agendaId}
+
+API
+
 - アジェンダの全取得
     * パス: GET api/agendas
     
@@ -138,8 +155,7 @@
         ```
 
 - 備考
-    * 現在Viewを作成していないためRESTクライアントツールを使用して操作する
-    * 使用しているツール
+    * APIを実行できるツール
         * curlコマンド
         * [Restlet Client - REST API Testing](https://chrome.google.com/webstore/detail/restlet-client-rest-api-t/aejoelaoggembcahagimdiliamlcdmfm)
 
