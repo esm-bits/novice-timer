@@ -30,7 +30,9 @@ dependencies {
 	compileOnly('org.projectlombok:lombok')
 	compile('org.springframework:spring-jdbc')
 	compile('com.h2database:h2')
-
+	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+	compile('org.webjars:jquery:3.3.1')
+	compile('org.webjars:bootstrap:4.0.0')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 

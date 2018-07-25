@@ -1,0 +1,33 @@
+.main-area {
+    width: 100%;
+    height: 100%;
+    padding: 10px 10px 10px 10px;
+}
+
+.title {
+    white-space: nowrap;
+    font-size: xx-large;
+    font-weight: bold
+}
+
+.text {
+    white-space: nowrap;
+    font-size: medium;
+}
+
+.invisible {
+    opacity: 0;
+}
+
+.button-group {
+    margin-top: 15px;
+}
+
+.buttom-left {
+    float: left;
+    margin-right: 10px;
+}
+
+.buttom-right {
+    float: right;
+}
