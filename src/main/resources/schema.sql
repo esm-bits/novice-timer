@@ -4,3 +4,6 @@ CREATE TABLE subjects (
 	minutes INT,
 	idobataUser VARCHAR(30),
 	agendaId INT);
+
+CREATE TABLE agendas (
+	id INT PRIMARY KEY AUTO_INCREMENT);
