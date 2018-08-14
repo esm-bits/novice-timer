@@ -2,15 +2,19 @@ package jp.co.esm.novicetimer.service;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.co.esm.novicetimer.domain.TimerState;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -173,6 +177,21 @@ public class AgendaServiceTest {
         @Test
         public void id指定でidのアジェンダがなかったときfalseが返ってくる() {
             assertThat(agendaService.deleteAgendaProcess(0), is(false));
+        }
+
+        @Test(expected = IllegalStateException.class)
+        public void Timer作動中にid指定の削除が来た場合IllegalStateExceptionが投げられる() throws Exception{
+            agendaService.changeTimerState(setupAgendaId,0, TimerStateCode.START);
+            agendaService.deleteAgendaProcess(setupAgendaId);
+        }
+
+        @After
+        public void closing() throws Exception{
+            try {
+                agendaService.changeTimerState(setupAgendaId, 0, TimerStateCode.STOP);
+            } catch (IllegalArgumentException e){
+                //アジェンダ削除のテストの場合、タイマーストップ時にエラー発生の為、握りつぶす。
+            }
         }
     }
 }

@@ -147,7 +147,7 @@ public class AgendaRestControllerTest {
 
     @Test
     public void api_agendas_id_subjects_numberにPUTリクエストし_ボディにSubjectを持たせ_アジェンダが返された場合_200OKと更新されたアジェンダが返される() throws Exception {
-        Subject newSubject =  new Subject("title", 5, "user");
+        Subject newSubject = new Subject("title", 5, "user");
 
         Agenda newAgenda = new Agenda();
         newAgenda.setId(1);
@@ -222,6 +222,14 @@ public class AgendaRestControllerTest {
         mvc
             .perform(delete("/api/agendas"))
             .andExpect(status().isOk());
+    }
+
+    @Test
+    public void Timerが動いている状態でapi_agendas_idにDELETEリクエストした場合_409Conflictが返される() throws Exception {
+        doThrow(new IllegalStateException()).when(this.agendaService).deleteAgendaProcess(1);
+        mvc
+            .perform(delete("/api/agendas/1"))
+            .andExpect(status().isConflict());
     }
 
 }

@@ -143,9 +143,12 @@ public class AgendaService {
      * @param id 削除するアジェンダ
      * @return true:削除できた場合
      * false:削除できなかった場合
+     * @throws IllegalStateException アジェンダのタイマーが作動中の場合にthrowします
      */
     public boolean deleteAgendaProcess(int id) {
-        timerService.stopTimer();
+        if(timerService.isRunning()){
+            throw new IllegalStateException("タイマーが作動中です。");
+        }
         return agendaRepository.deleteAgenda(id);
     }
 
@@ -153,9 +156,12 @@ public class AgendaService {
      * 全てのアジェンダを削除する。
      * <p>
      * 全てのアジェンダを削除する。
+     * @throws IllegalStateException アジェンダのタイマーが作動中の場合にthrowします
      */
     public void deleteAgendasProcess() {
-        timerService.stopTimer();
+        if(timerService.isRunning()){
+            throw new IllegalStateException("タイマーが作動中です。");
+        }
         agendaRepository.deleteAgendas();
     }
 
