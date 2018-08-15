@@ -41,7 +41,7 @@ public class SubjectRepository {
      *          引数に紐づくアジェンダが無い場合は空のリストを返す
      * @throws SQLException DBアクセスに失敗した場合に投げられる
      */
-    public List<Subject> findSubjectsInAgenda(int agendaId) throws SQLException {
+    public List<Subject> findSubjectsInAgenda(int agendaId) {
         String sql = "SELECT title, minutes, idobataUser FROM subjects WHERE agendaId = :id"; // SQL文
         SqlParameterSource param = new MapSqlParameterSource()
             .addValue("id", agendaId); // SQL引数の設定
@@ -57,27 +57,10 @@ public class SubjectRepository {
 
     /**
      * @param agendaId サブジェクトを登録するアジェンダのID
-     * @param subject 登録するサブジェクト
-     * @return true:登録成功  false:登録失敗
-     */
-    public boolean insertSubject(int agendaId, Subject subject) {
-        String sql = "INSERT INTO subjects (title, minutes, idobataUser, agendaId)"
-            + "VALUES (:subjectTitle, :subjectMinutes, :subjectIdobataUser, :subjectAgendaId)";
-        SqlParameterSource param = new MapSqlParameterSource()
-            .addValue("subjectTitle", subject.getTitle())
-            .addValue("subjectMinutes", subject.getMinutes())
-            .addValue("subjectIdobataUser", subject.getIdobataUser())
-            .addValue("subjectAgendaId",agendaId);
-
-        return jdbcTemplate.update(sql, param) == 1 ? true : false;
-    }
-
-    /**
-     * @param agendaId サブジェクトを登録するアジェンダのID
      * @param subjects 登録するサブジェクトのリスト
      * @return true：登録成功  false：登録失敗
      */
-    public boolean insertSubjectList(int agendaId, List<Subject> subjects) {
+    synchronized public boolean insertSubjectList(int agendaId, List<Subject> subjects) {
         if(subjects.size() < 1) { // リストに要素が無かった場合falseを返す
             return false;
         }

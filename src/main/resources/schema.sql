@@ -1,9 +1,9 @@
-CREATE TABLE subjects (
+CREATE TABLE IF NOT EXISTS subjects (
 	id INT PRIMARY KEY AUTO_INCREMENT,
 	title VARCHAR(100) ,
 	minutes INT,
 	idobataUser VARCHAR(30),
 	agendaId INT);
 
-CREATE TABLE agendas (
+CREATE TABLE IF NOT EXISTS agendas (
 	id INT PRIMARY KEY AUTO_INCREMENT);
