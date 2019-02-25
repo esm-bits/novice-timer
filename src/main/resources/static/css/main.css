@@ -31,3 +31,7 @@
 .buttom-right {
     float: right;
 }
+
+.alert-danger ul {
+    margin-bottom: 0px;
+}

@@ -6,17 +6,20 @@
     <script th:src="@{/webjars/jquery/3.3.1/jquery.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/4.0.0/js/bootstrap.min.js}"></script>
     
-    <script src="/js/agendasCreate.js"></script>
     <link href="/css/main.css" th:href="@{/css/main.css}" rel="stylesheet"></link>
+    <script src="/js/agendasCreate.js"></script>
     <title>アジェンダ新規登録</title>
 </head>
 <body>
     <div class="main-area">
-
         <h1 class="title">アジェンダ新規登録</h1>
-
-        <form method="post">
+        <form method="post" th:object="${agendaForm}">
             <div class="container-fluid">
+            <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+                <ul>
+                <li th:each="e : ${#fields.detailedErrors()}" th:text="${e.message}"></li>
+                </ul>
+            </div>
             <table id="create-table" class="table table-striped table-bordered all-table">
                 <colgroup>
                     <col class="col-title" />
@@ -31,20 +34,10 @@
                 </tr>
                 </thead>
             <tbody>
-                <tr>
-                    <td><input type="text" class="form-control input-normal" th:name="subjectForms[0].title"/></td>
-                    <td><input type="text" class="form-control input-normal" th:name="subjectForms[0].idobataUser"/></td>
-                    <td><input type="text" class="form-control input-normal" th:name="subjectForms[0].minutes"/></td>
-                </tr>
-                <tr>
-                    <td><input type="text" class="form-control input-normal" th:name="subjectForms[1].title"/></td>
-                    <td><input type="text" class="form-control input-normal" th:name="subjectForms[1].idobataUser"/></td>
-                    <td><input type="text" class="form-control input-normal" th:name="subjectForms[1].minutes"/></td>
-                </tr>
-                <tr>
-                    <td><input type="text" class="form-control input-normal" th:name="subjectForms[2].title"/></td>
-                    <td><input type="text" class="form-control input-normal" th:name="subjectForms[2].idobataUser"/></td>
-                    <td><input type="text" class="form-control input-normal" th:name="subjectForms[2].minutes"/></td>
+                <tr th:each="item, stat : ${agendaForm.getSubjectForms()}">
+                    <td><input type="text" class="form-control input-normal" th:name="|subjectForms[${stat.index}].title|"  th:value="${item.getTitle()}"/></td>
+                    <td><input type="text" class="form-control input-normal" th:name="|subjectForms[${stat.index}].idobataUser|" th:value="${item.getIdobataUser()}"/></td>
+                    <td><input type="text" class="form-control input-normal" th:name="|subjectForms[${stat.index}].minutes|" th:value="${item.getMinutes()}"/></td>
                 </tr>
             </tbody>
             </table>
