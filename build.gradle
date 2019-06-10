@@ -1,13 +1,13 @@
 buildscript {
-	ext {
-		springBootVersion = '1.5.4.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+    ext {
+        springBootVersion = '1.5.4.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
 apply plugin: 'java'
@@ -15,29 +15,37 @@ apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
 
 jar {
-	baseName = 'novice-timer'
-	version = '0.0.1-SNAPSHOT'
+    baseName = 'novice-timer'
+    version = '0.0.1-SNAPSHOT'
 }
 
 sourceCompatibility = 1.8
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-web')
-	compileOnly('org.projectlombok:lombok')
-	compile('org.springframework:spring-jdbc')
-	compile('com.h2database:h2')
-	compile("org.springframework.boot:spring-boot-starter-thymeleaf")
-	compile('org.webjars:jquery:3.3.1')
-	compile('org.webjars:bootstrap:4.0.0')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compileOnly('org.projectlombok:lombok')
+    compile('org.springframework.boot:spring-boot-starter-jdbc')
+    compile('com.h2database:h2')
+    compile('org.postgresql:postgresql')
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile('org.webjars:jquery:3.3.1')
+    compile('org.webjars:bootstrap:4.0.0')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
-task stage {
-  dependsOn build
+test {
+    // testで行うテスト対象から、すべてのテストクラスを除外する（テストを行わない）
+    exclude '**/*'
 }
 
-defaultTasks "clean", "build"
+// herokuにpushしたときに実行されるタスク
+task stage (
+    // clean は書かない、build→cleanの順に実行されてしまうため（名前順?）
+    dependsOn : ['build']
+)
+
+defaultTasks 'clean', 'build'

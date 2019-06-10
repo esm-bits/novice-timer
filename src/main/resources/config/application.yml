@@ -1,2 +1,26 @@
 configs:
-    hookUrl: ""
+    hookUrl: ${HOOK_URL:}
+
+---
+spring:
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:production}
+
+---
+spring:
+  profiles: production
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driverClassName: org.h2.Driver
+
+---
+spring:
+  profiles: heroku
+  datasource:
+    url: ${DATABASE_URL}
+    username:
+    password:
+    driverClassName: org.postgresql.Driver
+    initialize: false

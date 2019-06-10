@@ -21,7 +21,7 @@ import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.service.TimerService;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TimerRestControllerTest {
 
     private MockMvc mvc;
