@@ -1,6 +1,10 @@
 $(function() {
     $("#for-back").on("click", function() {
-        location.href = "/agendas";
+        if(confirm('戻ります。よろしいですか？')){
+            location.href = "/agendas";
+        }else{
+            return false;
+        }
     });
     
     $("#for-edit").on("click", function() {

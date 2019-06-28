@@ -16,13 +16,18 @@ import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.service.AgendaService;
 
 @Controller
-@RequestMapping("agendas")
+@RequestMapping
 public class AgendaController {
     
     @Autowired
     private AgendaService agendaService;
-    
+
     @GetMapping
+    public String getRoot() {
+        return "redirect:/agendas";
+    }
+
+    @GetMapping("/agendas")
     public String getList(Model model) throws Exception {
         
         List<Agenda> agendas = agendaService.findAll();
@@ -30,7 +35,7 @@ public class AgendaController {
         return "agendas";
     }
     
-    @GetMapping("/detail")
+    @GetMapping("/agendas/detail")
     public String getDetail(@RequestParam Integer id, Model model) throws Exception {
         
         Agenda agenda = agendaService.findOne(id);
@@ -38,13 +43,13 @@ public class AgendaController {
         return "agenda";
     }
     
-    @GetMapping("/create")
+    @GetMapping("/agendas/create")
     public String getCreate() {
         
         return "agendaCreate";
     }
     
-    @PostMapping("/create")
+    @PostMapping("/agendas/create")
     public String postCreate(AgendaForm form) throws Exception {
         
         Agenda agenda = convertAgendaFrom(form);
@@ -52,14 +57,14 @@ public class AgendaController {
         return "redirect:/agendas";
     }
     
-    @GetMapping("/edit")
+    @GetMapping("/agendas/edit")
     public String getEdit(@RequestParam Integer id, Model model) throws Exception {
         
         model.addAttribute("agenda", agendaService.findOne(id));
         return "agendaEdit";
     }
     
-    @PostMapping("/edit")
+    @PostMapping("/agendas/edit")
     public String postEdit(AgendaForm form) throws Exception {
         
         Agenda agenda = convertAgendaFrom(form);
@@ -67,7 +72,7 @@ public class AgendaController {
         return "redirect:/agendas";
     }
     
-    @PostMapping("/delete")
+    @PostMapping("/agendas/delete")
     public String postDelete(String selectAgenda) throws Exception {
         
         return agendaService.deleteAgendaProcess(Integer.valueOf(selectAgenda))

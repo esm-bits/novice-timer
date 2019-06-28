@@ -12,66 +12,92 @@
     <title>アジェンダ</title>
 </head>
 <body>
-
     <div class="main-area">
 
         <h1 class="title">アジェンダ</h1>
 
-            <div class="container-fluid">
-                <div class="table-responsive row">
-                    <table class="table table-striped table-bordered all-table">
-                        <colgroup>
-                            <col class="col-id col-xs-1" />
-                            <col class="col-title col-xs-6" />
-                            <col class="col-user col-xs-3" />
-                            <col class="col-minutes col-xs-1" />
-                            <col class="col-start-button col-xs-1" />
-                        </colgroup>
-                        <thead>
-                            <tr>
-                                <th scope="col"></th>
-                                <th scope="col" class="text">タイトル</th>
-                                <th scope="col" class="text">ユーザ</th>
-                                <th scope="col" class="text">時間(分)</th>
-                                <th scope="col" class="text">タイマー</th>
-                            </tr>
-                        </thead>
-                        <tbody th:remove="all-but-first">
-                        <tr th:each="subject, stat : ${agenda.getSubjects()}">
-                            <td>
-                                <div class="text" th:text="${stat.count}">1</div>
-                            </td>
-                            <td>
-                                <div class="text" th:text="${subject.getTitle()}">タイトル</div>
-                            </td>
-                            <td>
-                                <div class="text" th:text="${subject.getIdobataUser()}">ユーザ</div>
-                            </td>
-                            <td>
-                                <div class="text" th:text="${subject.getMinutes()}">時間</div>
-                            </td>
-                            <td>
-                                <div class="text">
-                                    <button type="button" class="btn btn-secondary for-start" th:value="${stat.index}">開始</button>
-                                    <span th:id="|message-for-start-${stat.index}|" class="h4 text-danger"></span>
-                                </div>
-                            </td>
-                        </tr>
-                        
-                        </tbody>
-                    </table>
-                </div>
-                <div class="button-group">
-                    <button type="button" id="for-stop" class="btn btn-secondary buttom-left">タイマー停止</button>
-                    <span id="message-for-stop" class="h4 text-danger"></span>
-                    <button type="button" id="for-back" class="btn btn-success buttom-right">戻る</button>
-                </div>
-                <div class="invisible">
-                    <span id="agenda-id" th:text="${agenda.getId()}"></span>   
-                </div>
-            
-        </div>
-    </div>
+        <div class="container-fluid">
+            <div class="table-responsive row">
+                <table id="table" class="table table-striped table-bordered all-table">
+                    <colgroup>
+                        <col class="col-radio col-xs-1" />
+                        <col class="col-no col-xs-1" />
+                        <col class="col-title col-xs-6" />
+                        <col class="col-user col-xs-3" />
+                        <col class="col-minutes col-xs-1" />
+                    </colgroup>
+                    <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                        <th scope="col" class="text">タイトル</th>
+                        <th scope="col" class="text">ユーザ</th>
+                        <th scope="col" class="text">時間(分)</th>
+                    </tr>
+                    </thead>
+                    <tbody th:remove="all-but-first">
+                    <tr th:each="subject, stat : ${agenda.getSubjects()}">
+                        <td>
+                            <input type="radio" th:id="|radios${stat.index}|" th:name="radios" th:value="${stat.index}" th:checked="${stat.first}"/>
+                        </td>
+                        <td>
+                            <div class="text" th:text="${stat.count}">1</div>
+                        </td>
+                        <td>
+                            <div class="text" th:text="${subject.getTitle()}">タイトル</div>
+                        </td>
+                        <td>
+                            <div class="text" th:text="${subject.getIdobataUser()}">ユーザ</div>
+                        </td>
+                        <td>
+                            <div class="text" th:text="${subject.getMinutes()}" th:id="|minutes-${stat.index}|">時間</div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="button-group">
+                <button type="button" id="for-start-stop" class="btn btn-primary buttom-left">開始</button>
 
+                <button type="button" id="for-reset" class="btn btn-primary buttom-left">リセット</button>
+
+                <div class="square buttom-left">
+                    <div class="square-parts">タイマーサイズ</div>
+                    <input id="timer-range" class="square-parts" type="range" value="1" min="1" max="20" step="1"/>
+                </div>
+
+                <div class="square buttom-left">
+                    <div class="square-parts">中間音</div>
+                    <div class="square-parts">
+                        <img id="for-play-half" class="sound-img" th:src="@{/image/play.png}" alt="再生"/>
+                    </div>
+                    <div class="square-parts">
+                        <img id="for-onoff-half" class="sound-img" th:src="@{/image/on.png}" alt="on_off"/>
+                    </div>
+                </div>
+
+                <div class="square buttom-left">
+                    <div class="square-parts">終了音</div>
+                    <div class="square-parts">
+                        <img id="for-play-end" class="sound-img" th:src="@{/image/play.png}" alt="再生"/>
+                    </div>
+                    <div class="square-parts">
+                        <img id="for-onoff-end" class="sound-img" th:src="@{/image/on.png}" alt="on_off"/>
+                    </div>
+                </div>
+
+                <button type="button" id="for-back" class="btn btn-success buttom-right">戻る</button>
+            </div>
+            <div id="timer">00:00</div>
+            <div>※タイマーのカウントが半分になると「中間音」が再生されます</div>
+            <div>※タイマーのカウントが終了すると「終了音」が再生されます</div>
+            <div class="invisible">
+                <span id="agenda-id" th:text="${agenda.getId()}"></span>
+            </div>
+            <audio id="audio-half" th:src="@{/audio/tin2.mp3}"></audio>
+            <audio id="audio-end" th:src="@{/audio/ban1.mp3}"></audio>
+        </div>
+
+    </div>
 </body>
 </html>
