@@ -44,7 +44,7 @@ public class AgendaService {
      */
     public Agenda findOne(Integer id) throws IllegalArgumentException {
         Agenda agenda = agendaRepository.getAgenda(id);
-        if (null == agenda || agenda.getSubjects().size() == 0) {
+        if (agenda == null || agenda.getSubjects().size() == 0) {
             throw new IllegalArgumentException();
         }
         return agenda;

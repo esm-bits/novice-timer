@@ -20,6 +20,7 @@ import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.domain.TimerStateCode;
 
 @RunWith(Enclosed.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AgendaServiceTest {
     @RunWith(SpringRunner.class)
     @SpringBootTest

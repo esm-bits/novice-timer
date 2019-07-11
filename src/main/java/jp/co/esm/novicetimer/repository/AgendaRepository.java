@@ -23,12 +23,11 @@ import lombok.Data;
  * アジェンダを登録してidを割り振ったり
  * idからアジェンダを探すメソッドがある
  */
-@Transactional
 @Repository
 public class AgendaRepository {
 
     @Autowired
-    NamedParameterJdbcTemplate jdbcTemplate; // インメモリのDB作成
+    private NamedParameterJdbcTemplate jdbcTemplate; // インメモリのDB作成
 
     @Autowired
     private SubjectRepository sr;
@@ -43,26 +42,27 @@ public class AgendaRepository {
         private String idobataUser;
     }
 
-    AgendaRepository() {
-
-    }
-
     /**
      * アジェンダの登録。
      * <p>
      * 登録したいアジェンダを受け取り、DBに登録します。その際、idをkeyとします。<br>
-     * アジェンダのidが自動的に初期化されている場合は、idを自動採番します。
+     * アジェンダのidが0の場合は、idを自動採番します。<br>
+     * アジェンダのidに0以外が格納されている場合は、そのidと同一のidを持つアジェンダを更新します。
      * @param agenda 登録したいアジェンダ
      * @return 登録されたagenda
-     * @throws SQLException
      */
-    synchronized public Agenda save(Agenda agenda) {
+    @Transactional
+    public Agenda save(Agenda agenda) {
         if (agenda.getId() == 0) {
+            // アジェンダを新規登録する場合
+            
+            // アジェンダテーブルにアジェンダを登録する
             String sql = "INSERT INTO agendas VALUES();";
             SqlParameterSource param = new MapSqlParameterSource();
             jdbcTemplate.update(sql, param);
 
-            String select = "SELECT MAX(id) FROM agendas";
+            // サブジェクトの登録に使うため、新規登録したアジェンダIDを取得する
+            String select = "SELECT MAX(id) FROM agendas"; 
             SqlParameterSource parameter = new MapSqlParameterSource();
             List<Integer> result = jdbcTemplate.query(select, parameter, new RowMapper<Integer>() {
                 @Override
@@ -71,20 +71,22 @@ public class AgendaRepository {
                 }
             });
             agenda.setId(result.get(0));
+            
+            // サブジェクトテーブルにサブジェクトを登録する
+            sr.insertSubjectList(agenda.getId(), agenda.getSubjects());
         } else if (isExist(agenda.getId())) {
+            // アジェンダを更新する場合
+            
+            // 対象アジェンダに紐づくサブジェクトをすべて削除する
             sr.deleteOneAgenda(agenda.getId());
+            
+            // サブジェクトテーブルにサブジェクトを登録する
+            sr.insertSubjectList(agenda.getId(), agenda.getSubjects());
         } else {
             throw new IllegalArgumentException();
         }
-
-        sr.insertSubjectList(agenda.getId(), agenda.getSubjects());
+        
         return agenda;
-    }
-
-    private boolean resetId() {
-        String sql = "DELETE FROM agendas";
-        SqlParameterSource param = new MapSqlParameterSource();
-        return jdbcTemplate.update(sql, param) > 0 ? true : false;
     }
 
     /**
@@ -174,8 +176,10 @@ public class AgendaRepository {
      * 全てのアジェンダを削除する。
      */
     public void deleteAllAgenda() {
-        if (sr.deleteAllAgendas()) {
-            resetId();
+        if (sr.deleteAllSubjects()) {
+            String sql = "DELETE FROM agendas";
+            SqlParameterSource param = new MapSqlParameterSource();
+            jdbcTemplate.update(sql, param);
         }
     }
 }

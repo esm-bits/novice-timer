@@ -179,18 +179,18 @@ public class AgendaRestControllerTest {
             .andExpect(jsonPath("$").doesNotExist());
     }
 
-    @Test
+    @Test // TODO
     public void api_agendas_id_subjects_number_timersにPUTリクエストし_IndexOutOfBoundsExceptionが投げられた場合_404NotFoundが返される() throws Exception {
-        doThrow(new IndexOutOfBoundsException()).when(this.agendaService).changeTimerState(1, 0, TimerStateCode.START);
+        doThrow(new IndexOutOfBoundsException()).when(this.agendaService).changeTimerState(1, 1, TimerStateCode.START);
         mvc
-            .perform(put("/api/agendas/1/subjects/0/timers")
+            .perform(put("/api/agendas/1/subjects/1/timers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"state\": \"start\"}"))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$").doesNotExist());
     }
 
-    @Test
+    @Test // TODO
     public void api_agendas_id_subjects_number_timersにPUTリクエストし_ボディに適切なTimerStateを持たせた場合_200OKが返される() throws Exception {
         when(this.agendaService.changeTimerState(1, 0, TimerStateCode.START)).thenReturn(true);
         mvc

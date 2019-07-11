@@ -27,7 +27,7 @@ public class SubjectRepositoryTest {
 
     @Before
     public void setUp() {
-        db.deleteAllAgendas();
+        db.deleteAllSubjects();
     }
 
     @Test
@@ -36,7 +36,7 @@ public class SubjectRepositoryTest {
         subjects.add(new Subject("inserts1", 1, "inserts1"));
         subjects.add(new Subject("inserts2", 2, "inserts2"));
         Agenda agenda = new Agenda(1, subjects);
-        assertTrue(db.insertSubjectList(agenda.getId(), agenda.getSubjects()));
+        db.insertSubjectList(agenda.getId(), agenda.getSubjects());
         List<Subject> sj = db.findSubjectsInAgenda(agenda.getId());
         assertThat(sj.get(0), is(new Subject("inserts1", 1, "inserts1")));
         assertThat(sj.get(1), is(new Subject("inserts2", 2, "inserts2")));
@@ -66,7 +66,7 @@ public class SubjectRepositoryTest {
         Agenda agenda = new Agenda(1, subjects);
         db.insertSubjectList(agenda.getId(), agenda.getSubjects());
 
-        assertTrue(db.deleteAllAgendas());
+        assertTrue(db.deleteAllSubjects());
         assertThat(db.findSubjectsInAgenda(1).size(), is(0));
         assertThat(db.findSubjectsInAgenda(2).size(), is(0));
     }
