@@ -50,7 +50,7 @@ public class AgendaEditValidatorTest {
     }
 
     @Test
-    public void アジェンダIDが半角数字でないときエラーとなる() {
+    public void アジェンダIDがないときエラーとなる() {
 
         // エラーパターン
 
@@ -202,39 +202,51 @@ public class AgendaEditValidatorTest {
     }
 
     @Test
-    public void 時間分が1から100の半角数字でないときエラーとなる() {
+    public void 時間分が1から100でないときエラーとなる() {
 
         // エラーパターン
-
-        // 全角の１
+        
+        // 全角の０
         BindingResult result = doValidate("1", Collections.singletonList(
-            new SubjectForm("タイトル１", "１", "ユーザ１")));
+            new SubjectForm("タイトル１", "０", "ユーザ１")));
         assertThat(result.getFieldErrors(), hasSize(1));
-        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は半角数字で1～100の値を入力してください。"));
+        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は1～100の値を入力してください。"));
 
-        // 全角の１００
+        // 全角の１０１
         result = doValidate("1", Collections.singletonList(
-            new SubjectForm("タイトル１", "１００", "ユーザ１")));
+            new SubjectForm("タイトル１", "１０１", "ユーザ１")));
         assertThat(result.getFieldErrors(), hasSize(1));
-        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は半角数字で1～100の値を入力してください。"));
+        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は1～100の値を入力してください。"));
 
-        // 半角の0100
+        // 半角の-1
         result = doValidate("1", Collections.singletonList(
-            new SubjectForm("タイトル１", "0100", "ユーザ１")));
+                new SubjectForm("タイトル１", "-1", "ユーザ１")));
         assertThat(result.getFieldErrors(), hasSize(1));
-        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は半角数字で1～100の値を入力してください。"));
+        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は1～100の値を入力してください。"));
 
         // 半角の0
         result = doValidate("1", Collections.singletonList(
             new SubjectForm("タイトル１", "0", "ユーザ１")));
         assertThat(result.getFieldErrors(), hasSize(1));
-        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は半角数字で1～100の値を入力してください。"));
+        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は1～100の値を入力してください。"));
 
         // 半角の101
         result = doValidate("1", Collections.singletonList(
-            new SubjectForm("タイトル１", "101", "ユーザ１")));
+                new SubjectForm("タイトル１", "101", "ユーザ１")));
         assertThat(result.getFieldErrors(), hasSize(1));
-        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は半角数字で1～100の値を入力してください。"));
+        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は1～100の値を入力してください。"));
+
+        // 半角の2147483648
+        result = doValidate("1", Collections.singletonList(
+            new SubjectForm("タイトル１", "2147483648", "ユーザ１")));
+        assertThat(result.getFieldErrors(), hasSize(1));
+        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は1～100の値を入力してください。"));
+
+        // 半角の-2147483649
+        result = doValidate("1", Collections.singletonList(
+                new SubjectForm("タイトル１", "-2147483649", "ユーザ１")));
+        assertThat(result.getFieldErrors(), hasSize(1));
+        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は1～100の値を入力してください。"));
 
         // 複数の時間分がエラー
         result = doValidate("1", Arrays.asList(
@@ -243,23 +255,23 @@ public class AgendaEditValidatorTest {
             new SubjectForm("タイトル３", "一", "ユーザ３"),
             new SubjectForm("タイトル４", "-1", "ユーザ４")));
         assertThat(result.getFieldErrors(), hasSize(1)); // エラーメッセージは１つ
-        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は半角数字で1～100の値を入力してください。"));
+        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は1～100の値を入力してください。"));
 
         // その他
         result = doValidate("1", Collections.singletonList(
             new SubjectForm("タイトル１", "1a0", "ユーザ１")));
         assertThat(result.getFieldErrors(), hasSize(1));
-        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は半角数字で1～100の値を入力してください。"));
+        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は1～100の値を入力してください。"));
 
         result = doValidate("1", Collections.singletonList(
             new SubjectForm("タイトル１", "1a", "ユーザ１")));
         assertThat(result.getFieldErrors(), hasSize(1));
-        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は半角数字で1～100の値を入力してください。"));
+        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は1～100の値を入力してください。"));
 
         result = doValidate("1", Collections.singletonList(
             new SubjectForm("タイトル１", "a9", "ユーザ１")));
         assertThat(result.getFieldErrors(), hasSize(1));
-        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は半角数字で1～100の値を入力してください。"));
+        assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("時間(分)は1～100の値を入力してください。"));
 
         // 正常パターン
 
@@ -274,7 +286,12 @@ public class AgendaEditValidatorTest {
             new SubjectForm("タイトル８", "76", "ユーザ８"),
             new SubjectForm("タイトル９", "87", "ユーザ９"),
             new SubjectForm("タイトルあ", "98", "ユーザあ"),
-            new SubjectForm("タイトルい", "99", "ユーザい")));
+            new SubjectForm("タイトルい", "99", "ユーザい"),
+            new SubjectForm("タイトルう", "１", "ユーザう"),
+            new SubjectForm("タイトルえ", "９９", "ユーザえ"),
+            new SubjectForm("タイトルお", "１００", "ユーザお"),
+            new SubjectForm("タイトルか", "0100", "ユーザか")
+        ));
         assertThat(result.getFieldErrors(), hasSize(0));
     }
 
@@ -340,7 +357,7 @@ public class AgendaEditValidatorTest {
         assertThat(result.getFieldErrors(), hasSize(4));
         assertThat(result.getFieldErrors().get(0).getDefaultMessage(), equalTo("タイトルは100文字以内にしてください。"));
         assertThat(result.getFieldErrors().get(1).getDefaultMessage(), equalTo("ユーザ名は100文字以内にしてください。"));
-        assertThat(result.getFieldErrors().get(2).getDefaultMessage(), equalTo("時間(分)は半角数字で1～100の値を入力してください。"));
+        assertThat(result.getFieldErrors().get(2).getDefaultMessage(), equalTo("時間(分)は1～100の値を入力してください。"));
         assertThat(result.getFieldErrors().get(3).getDefaultMessage(), equalTo("入力途中の行があります。すべて入力するかすべて空にしてください。"));
     }
 

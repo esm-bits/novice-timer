@@ -102,12 +102,12 @@ public class AgendaEditValidator implements SmartValidator {
             if (isNullOrEmpty(minutes)) {
                 subjectFormsError = true;
             } else {
-                // 時間(分)は1～100の半角数字であること
-                if (3 < minutes.length() ||
-                    !Pattern.compile("^[1-9][0-9]*$").matcher(minutes).find() ||
-                    Integer.parseInt(minutes) < 1||
-                    100 < Integer.parseInt(minutes)) {
-
+                // 時間(分)は1～100であること
+                try {
+                    if (9 < minutes.length() || Integer.parseInt(minutes) < 1 || 100 < Integer.parseInt(minutes)) {
+                        minutesError = true;
+                    }
+                } catch (NumberFormatException e) {
                     minutesError = true;
                 }
             }
@@ -122,7 +122,7 @@ public class AgendaEditValidator implements SmartValidator {
             errors.rejectValue("subjectForms[0].idobataUser", null, new Object[] {}, "ユーザ名は100文字以内にしてください。");
         }
         if (minutesError) {
-            errors.rejectValue("subjectForms[0].minutes", null, new Object[] {}, "時間(分)は半角数字で1～100の値を入力してください。");
+            errors.rejectValue("subjectForms[0].minutes", null, new Object[] {}, "時間(分)は1～100の値を入力してください。");
         }
         if (subjectFormsError) {
             errors.rejectValue("subjectForms", null, new Object[] {}, "入力途中の行があります。すべて入力するかすべて空にしてください。");
