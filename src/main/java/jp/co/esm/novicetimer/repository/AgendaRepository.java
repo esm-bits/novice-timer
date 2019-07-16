@@ -4,12 +4,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +27,7 @@ import lombok.Data;
  * idからアジェンダを探すメソッドがある
  */
 @Repository
+@Transactional
 public class AgendaRepository {
 
     @Autowired
@@ -43,7 +47,7 @@ public class AgendaRepository {
     }
 
     /**
-     * アジェンダの登録。
+     * アジェンダの登録または更新を行う。
      * <p>
      * 登録したいアジェンダを受け取り、DBに登録します。その際、idをkeyとします。<br>
      * アジェンダのidが0の場合は、idを自動採番します。<br>
@@ -51,7 +55,6 @@ public class AgendaRepository {
      * @param agenda 登録したいアジェンダ
      * @return 登録されたagenda
      */
-    @Transactional
     public Agenda save(Agenda agenda) {
         if (agenda.getId() == 0) {
             // アジェンダを新規登録する場合
@@ -59,19 +62,12 @@ public class AgendaRepository {
             // アジェンダテーブルにアジェンダを登録する
             String sql = "INSERT INTO agendas VALUES();";
             SqlParameterSource param = new MapSqlParameterSource();
-            jdbcTemplate.update(sql, param);
+            KeyHolder keyHolder = new GeneratedKeyHolder(); // 自動採番されたIDを取得するためのKeyHolder
+            jdbcTemplate.update(sql, param, keyHolder);
 
-            // サブジェクトの登録に使うため、新規登録したアジェンダIDを取得する
-            String select = "SELECT MAX(id) FROM agendas"; 
-            SqlParameterSource parameter = new MapSqlParameterSource();
-            List<Integer> result = jdbcTemplate.query(select, parameter, new RowMapper<Integer>() {
-                @Override
-                public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-                    return new Integer(rs.getInt("MAX(id)"));
-                }
-            });
-            agenda.setId(result.get(0));
-            
+            // 自動採番されたIDをセットする
+            agenda.setId(keyHolder.getKey().intValue());
+
             // サブジェクトテーブルにサブジェクトを登録する
             sr.insertSubjectList(agenda.getId(), agenda.getSubjects());
         } else if (isExist(agenda.getId())) {
@@ -93,8 +89,7 @@ public class AgendaRepository {
      * 特定idのアジェンダが存在するか確認。
      * @param id 確認したいアジェンダのid
      * @return true:存在する場合
-     * false:存在しない場合
-     * @throws SQLException
+     *         false:存在しない場合
      */
     public boolean isExist(int id) {
         String sql = "SELECT id FROM agendas WHERE id=:id";
@@ -105,7 +100,7 @@ public class AgendaRepository {
                 return new Integer(rs.getInt("id"));
             }
         }); // SQL文, パラメータ, 戻り値の型(クラス)
-        return result.size() > 0 ? true : false;
+        return result.size() > 0;
     }
 
     /**
@@ -114,7 +109,6 @@ public class AgendaRepository {
      * 引数で受け取ったidがMapにあるかを走査して返す。
      * @param id 取得したいアジェンダのid
      * @return idと一致したアジェンダor無かった場合はnull
-     * @throws SQLException
      */
     public Agenda getAgenda(int id) {
         return isExist(id) ? new Agenda(id, sr.findSubjectsInAgenda(id)) : null;
@@ -125,7 +119,6 @@ public class AgendaRepository {
      * <p>
      * 登録されているアジェンダを全て取得する。
      * @return List型で全アジェンダを返す
-     * @throws SQLException
      */
     public List<Agenda> getAllAgenda() {
         String sql = "SELECT * FROM agendas INNER JOIN subjects ON agendas.id = subjects.agendaId";
@@ -141,14 +134,11 @@ public class AgendaRepository {
             }
         });
 
-        List<Integer> agendaId = new ArrayList<Integer>();
-        result.stream().filter(agenda -> agendaId.stream().noneMatch(id -> id == agenda.getAgendaId()))
-            .forEach(agenda -> agendaId.add(agenda.getAgendaId()));
+        List<Integer> agendaId = result.stream().map(AllAgendaEntity::getAgendaId).distinct().sorted().collect(Collectors.toList());
 
-        List<Subject> subjects = new ArrayList<Subject>();
-        List<Agenda> agendas = new ArrayList<Agenda>();
+        List<Agenda> agendas = new ArrayList<>();
         for (int id : agendaId) {
-            subjects.clear();
+            List<Subject> subjects = new ArrayList<>();
             result.stream()
                 .filter(agenda -> agenda.getAgendaId() == id)
                 .forEach(agenda -> subjects.add(
@@ -162,7 +152,7 @@ public class AgendaRepository {
      * 1つのアジェンダを削除する
      * @param id 削除するアジェンダのid
      * @return true:削除できた場合
-     * false:削除できなかった場合
+     *         false:削除できなかった場合
      */
     public boolean deleteAgenda(int id) {
         String sql = "DELETE FROM agendas WHERE id=:id";

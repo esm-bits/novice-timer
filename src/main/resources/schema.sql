@@ -1,9 +1,11 @@
 CREATE TABLE IF NOT EXISTS subjects (
-	id INT PRIMARY KEY AUTO_INCREMENT,
+	id SERIAL,
 	title VARCHAR(100) ,
 	minutes INT,
 	idobataUser VARCHAR(30),
-	agendaId INT);
+	agendaId INT
+);
 
 CREATE TABLE IF NOT EXISTS agendas (
-	id INT PRIMARY KEY AUTO_INCREMENT);
+	id SERIAL
+);

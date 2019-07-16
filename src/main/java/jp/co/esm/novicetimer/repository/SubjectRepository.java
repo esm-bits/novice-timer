@@ -38,8 +38,7 @@ public class SubjectRepository {
     /**
      * @param agendaId 取得したいアジェンダのID
      * @return アジェンダに対応するSubjectのリスト
-     *          引数に紐づくアジェンダが無い場合は空のリストを返す
-     * @throws SQLException DBアクセスに失敗した場合に投げられる
+     *         引数に紐づくアジェンダが無い場合は空のリストを返す
      */
     List<Subject> findSubjectsInAgenda(int agendaId) {
         String sql = "SELECT title, minutes, idobataUser FROM subjects WHERE agendaId = :id"; // SQL文
@@ -58,10 +57,9 @@ public class SubjectRepository {
     /**
      * @param agendaId サブジェクトを登録するアジェンダのID
      * @param subjects 登録するサブジェクトのリスト
-     * @return true：登録成功  false：登録失敗
      */
     synchronized void insertSubjectList(int agendaId, List<Subject> subjects) {
-        if(subjects.size() < 1) { // リストに要素が無かった場合falseを返す
+        if(subjects.size() < 1) {
             return;
         }
 
@@ -91,7 +89,7 @@ public class SubjectRepository {
     public boolean deleteOneAgenda(int id) {
         String sql = "DELETE FROM subjects WHERE agendaId=:id";
         SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
-        return jdbcTemplate.update(sql, param) > 0 ? true : false;
+        return jdbcTemplate.update(sql, param) > 0;
     }
 
     /**
@@ -102,6 +100,6 @@ public class SubjectRepository {
     public boolean deleteAllSubjects() {
         String sql = "DELETE FROM subjects";
         SqlParameterSource param = new MapSqlParameterSource();
-        return jdbcTemplate.update(sql, param) > 0 ? true : false;
+        return jdbcTemplate.update(sql, param) > 0;
     }
 }
