@@ -1,7 +1,7 @@
 package jp.co.esm.novicetimer.web;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Component;
@@ -52,20 +52,14 @@ public class AgendaEditValidator implements SmartValidator {
         List<AgendaForm.SubjectForm> subjects = form.getSubjectForms();
 
         // サブジェクトリストが空でないこと
-        boolean subjectsEmptyError = false;
-        if (subjects == null) {
-            subjectsEmptyError = true;
-        } else {
-            // すべての項目がnullまたは空文字のサブジェクトは検証対象外とするため、リストから削除する
-            // FYI：AgendaControllerでAgendaクラスに変換する際に削除される
-            subjects = subjects.stream()
-                .filter(s -> !(isNullOrEmpty(s.getTitle()) && isNullOrEmpty(s.getIdobataUser()) && isNullOrEmpty(s.getMinutes()) ) )
+        // すべての項目がnullまたは空文字のサブジェクトは検証対象外とするため、リストから削除する
+        // // FYI：AgendaControllerでAgendaクラスに変換する際に削除される
+        subjects = subjects == null ?
+                Collections.emptyList() :
+                subjects.stream()
+                        .filter(s -> !(isNullOrEmpty(s.getTitle()) && isNullOrEmpty(s.getIdobataUser()) && isNullOrEmpty(s.getMinutes()) ) )
                 .collect(Collectors.toList());
-            if (subjects.isEmpty()) {
-                subjectsEmptyError = true;
-            }
-        }
-        if (subjectsEmptyError) {
+        if (subjects.isEmpty()) {
             errors.rejectValue("subjectForms", null, new Object[] {}, "入力がありません。");
             return;
         }
