@@ -33,3 +33,7 @@
     float: right;
     margin-top: 5px;
 }
+
+.alert-danger ul {
+    margin-bottom: 0px;
+}

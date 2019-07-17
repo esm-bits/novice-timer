@@ -38,10 +38,9 @@ public class SubjectRepository {
     /**
      * @param agendaId 取得したいアジェンダのID
      * @return アジェンダに対応するSubjectのリスト
-     *          引数に紐づくアジェンダが無い場合は空のリストを返す
-     * @throws SQLException DBアクセスに失敗した場合に投げられる
+     *         引数に紐づくアジェンダが無い場合は空のリストを返す
      */
-    public List<Subject> findSubjectsInAgenda(int agendaId) throws SQLException {
+    List<Subject> findSubjectsInAgenda(int agendaId) {
         String sql = "SELECT title, minutes, idobataUser FROM subjects WHERE agendaId = :id"; // SQL文
         SqlParameterSource param = new MapSqlParameterSource()
             .addValue("id", agendaId); // SQL引数の設定
@@ -57,29 +56,11 @@ public class SubjectRepository {
 
     /**
      * @param agendaId サブジェクトを登録するアジェンダのID
-     * @param subject 登録するサブジェクト
-     * @return true:登録成功  false:登録失敗
-     */
-    public boolean insertSubject(int agendaId, Subject subject) {
-        String sql = "INSERT INTO subjects (title, minutes, idobataUser, agendaId)"
-            + "VALUES (:subjectTitle, :subjectMinutes, :subjectIdobataUser, :subjectAgendaId)";
-        SqlParameterSource param = new MapSqlParameterSource()
-            .addValue("subjectTitle", subject.getTitle())
-            .addValue("subjectMinutes", subject.getMinutes())
-            .addValue("subjectIdobataUser", subject.getIdobataUser())
-            .addValue("subjectAgendaId",agendaId);
-
-        return jdbcTemplate.update(sql, param) == 1 ? true : false;
-    }
-
-    /**
-     * @param agendaId サブジェクトを登録するアジェンダのID
      * @param subjects 登録するサブジェクトのリスト
-     * @return true：登録成功  false：登録失敗
      */
-    public boolean insertSubjectList(int agendaId, List<Subject> subjects) {
-        if(subjects.size() < 1) { // リストに要素が無かった場合falseを返す
-            return false;
+    synchronized void insertSubjectList(int agendaId, List<Subject> subjects) {
+        if(subjects.size() < 1) {
+            return;
         }
 
         StringBuilder sql = new StringBuilder("INSERT INTO subjects (title, minutes, idobataUser, agendaId) VALUES");
@@ -96,7 +77,7 @@ public class SubjectRepository {
         });
         sql.delete(sql.length() - 1, sql.length());
         SqlParameterSource param = new MapSqlParameterSource();
-        return jdbcTemplate.update(sql.toString(),  param) != 0 ? true : false;
+        jdbcTemplate.update(sql.toString(),  param);
     }
 
     /**
@@ -108,7 +89,7 @@ public class SubjectRepository {
     public boolean deleteOneAgenda(int id) {
         String sql = "DELETE FROM subjects WHERE agendaId=:id";
         SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
-        return jdbcTemplate.update(sql, param) > 0 ? true : false;
+        return jdbcTemplate.update(sql, param) > 0;
     }
 
     /**
@@ -116,9 +97,9 @@ public class SubjectRepository {
      * 削除に失敗した場合は、ロールバックされてメソッド呼び出し前と同じ状態になるハズ
      * @return true:削除成功  false:削除失敗
      */
-    public boolean deleteAllAgendas() {
+    public boolean deleteAllSubjects() {
         String sql = "DELETE FROM subjects";
         SqlParameterSource param = new MapSqlParameterSource();
-        return jdbcTemplate.update(sql, param) > 0 ? true : false;
+        return jdbcTemplate.update(sql, param) > 0;
     }
 }
