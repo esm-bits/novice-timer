@@ -41,14 +41,14 @@ public class SubjectRepository {
      *         引数に紐づくアジェンダが無い場合は空のリストを返す
      */
     List<Subject> findSubjectsInAgenda(int agendaId) {
-        String sql = "SELECT title, minutes, idobataUser FROM subjects WHERE agendaId = :id"; // SQL文
+        String sql = "SELECT title, minutes, idobata_user FROM subjects WHERE agenda_id = :id"; // SQL文
         SqlParameterSource param = new MapSqlParameterSource()
             .addValue("id", agendaId); // SQL引数の設定
 
         List<Subject> result = jdbcTemplate.query(sql, param, new RowMapper<Subject>() {
             @Override
             public Subject mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new Subject(rs.getString("title"), rs.getInt("minutes"), rs.getString("idobataUser"));
+                return new Subject(rs.getString("title"), rs.getInt("minutes"), rs.getString("idobata_user"));
             }
         }); // SQL文, パラメータ, 戻り値の型(クラス)
         return result;
@@ -63,7 +63,7 @@ public class SubjectRepository {
             return;
         }
 
-        StringBuilder sql = new StringBuilder("INSERT INTO subjects (title, minutes, idobataUser, agendaId) VALUES");
+        StringBuilder sql = new StringBuilder("INSERT INTO subjects (title, minutes, idobata_user, agenda_id) VALUES");
         subjects.forEach(s -> {
             sql.append(" ('"
             + s.getTitle()
@@ -87,7 +87,7 @@ public class SubjectRepository {
      * @return true:削除成功  false:削除失敗
      */
     public boolean deleteOneAgenda(int id) {
-        String sql = "DELETE FROM subjects WHERE agendaId=:id";
+        String sql = "DELETE FROM subjects WHERE agenda_id=:id";
         SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
         return jdbcTemplate.update(sql, param) > 0;
     }

@@ -60,7 +60,7 @@ public class AgendaRepository {
             // アジェンダを新規登録する場合
             
             // アジェンダテーブルにアジェンダを登録する
-            String sql = "INSERT INTO agendas VALUES();";
+            String sql = "INSERT INTO agendas DEFAULT VALUES;";
             SqlParameterSource param = new MapSqlParameterSource();
             KeyHolder keyHolder = new GeneratedKeyHolder(); // 自動採番されたIDを取得するためのKeyHolder
             jdbcTemplate.update(sql, param, keyHolder);
@@ -92,12 +92,12 @@ public class AgendaRepository {
      *         false:存在しない場合
      */
     public boolean isExist(int id) {
-        String sql = "SELECT id FROM agendas WHERE id=:id";
+        String sql = "SELECT agendas_id FROM agendas WHERE agendas_id=:id";
         SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
         List<Integer> result = jdbcTemplate.query(sql, param, new RowMapper<Integer>() {
             @Override
             public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new Integer(rs.getInt("id"));
+                return new Integer(rs.getInt("agendas_id"));
             }
         }); // SQL文, パラメータ, 戻り値の型(クラス)
         return result.size() > 0;
@@ -121,16 +121,16 @@ public class AgendaRepository {
      * @return List型で全アジェンダを返す
      */
     public List<Agenda> getAllAgenda() {
-        String sql = "SELECT * FROM agendas INNER JOIN subjects ON agendas.id = subjects.agendaId";
+        String sql = "SELECT * FROM agendas INNER JOIN subjects ON agendas.agendas_id = subjects.agenda_id";
         SqlParameterSource param = new MapSqlParameterSource();
         List<AllAgendaEntity> result = jdbcTemplate.query(sql, param, new RowMapper<AllAgendaEntity>() {
             @Override
             public AllAgendaEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new AllAgendaEntity(rs.getInt("agendas.id")
-                    , rs.getInt("subjects.id")
-                    , rs.getString("subjects.title")
-                    , rs.getInt("subjects.minutes")
-                    , rs.getString("subjects.idobataUser"));
+                return new AllAgendaEntity(rs.getInt("agendas_id")
+                    , rs.getInt("subjects_id")
+                    , rs.getString("title")
+                    , rs.getInt("minutes")
+                    , rs.getString("idobata_user"));
             }
         });
 
@@ -155,7 +155,7 @@ public class AgendaRepository {
      *         false:削除できなかった場合
      */
     public boolean deleteAgenda(int id) {
-        String sql = "DELETE FROM agendas WHERE id=:id";
+        String sql = "DELETE FROM agendas WHERE agendas_id=:id";
         SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
         return jdbcTemplate.update(sql, param) > 0 && sr.deleteOneAgenda(id);
     }

@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS subjects (
-	id SERIAL,
+	subjects_id SERIAL,
 	title VARCHAR(100) ,
 	minutes INT,
-	idobataUser VARCHAR(30),
-	agendaId INT
+	idobata_user VARCHAR(30),
+	agenda_id INT
 );
 
 CREATE TABLE IF NOT EXISTS agendas (
-	id SERIAL
+	agendas_id SERIAL
 );
