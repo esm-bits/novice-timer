@@ -20,7 +20,7 @@ import jp.co.esm.novicetimer.service.AgendaService;
 import jp.co.esm.novicetimer.web.AgendaForm.SubjectForm;
 
 @Controller
-@RequestMapping("agendas")
+@RequestMapping
 public class AgendaController {
 
     /**
@@ -41,13 +41,18 @@ public class AgendaController {
     @Autowired
     private AgendaService agendaService;
 
+    @GetMapping
+    public String getRoot() {
+        return "redirect:/agendas";
+    }
+
     /**
      * アジェンダ一覧画面を表示する。
      *
      * @param model Model
      * @return アジェンダ一覧ページ
      */
-    @GetMapping("")
+    @GetMapping("/agendas")
     public String getList(Model model) throws Exception {
 
         List<Agenda> agendas = agendaService.findAll();
@@ -62,7 +67,7 @@ public class AgendaController {
      * @param model Model
      * @return アジェンダ詳細ページ
      */
-    @GetMapping("/detail")
+    @GetMapping("/agendas/detail")
     public String getDetail(@RequestParam Integer id, Model model) throws Exception {
 
         Agenda agenda = agendaService.findOne(id);
@@ -76,7 +81,7 @@ public class AgendaController {
      * @param model Model
      * @return アジェンダ作成画面
      */
-    @GetMapping("/create")
+    @GetMapping("/agendas/create")
     public String getCreate(Model model) {
 
         List<AgendaForm.SubjectForm> subjectForms = new ArrayList<>();
@@ -100,7 +105,7 @@ public class AgendaController {
      * @param model Model
      * @return アジェンダ編集画面
      */
-    @GetMapping("/create/show")
+    @GetMapping("/agendas/create/show")
     public String getCreate(@Validated AgendaForm form, BindingResult result, Model model) throws Exception {
 
         model.addAttribute("agendaForm", form);
@@ -113,7 +118,7 @@ public class AgendaController {
      * @param form フォーム
      * @return アジェンダ一覧画面
      */
-    @PostMapping("/create")
+    @PostMapping("/agendas/create")
     public String postCreate(@Validated AgendaForm form, BindingResult result, Model model) throws Exception {
 
         ValidationUtils.invokeValidator(createValidator, form, result);
@@ -133,7 +138,7 @@ public class AgendaController {
      * @param model Model
      * @return アジェンダ編集画面
      */
-    @GetMapping("/edit")
+    @GetMapping("/agendas/edit")
     public String getEdit(@RequestParam Integer id, Model model) throws Exception {
 
         model.addAttribute("agendaForm", convertAgenda(agendaService.findOne(id)));
@@ -148,7 +153,7 @@ public class AgendaController {
      * @param model Model
      * @return アジェンダ編集画面
      */
-    @GetMapping("/edit/show")
+    @GetMapping("/agendas/edit/show")
     public String getEdit(@Validated AgendaForm form, BindingResult result, Model model) throws Exception {
 
         model.addAttribute("agendaForm", form);
@@ -164,7 +169,7 @@ public class AgendaController {
      * @param model Model
      * @return アジェンダ一覧画面
      */
-    @PostMapping("/edit")
+    @PostMapping("/agendas/edit")
     public String postEdit(@Validated AgendaForm form, BindingResult result, Model model) throws Exception {
 
         ValidationUtils.invokeValidator(editValidator, form, result);
@@ -182,7 +187,7 @@ public class AgendaController {
      * @param selectAgenda 削除するアジェンダのID
      * @return アジェンダ一覧画面
      */
-    @PostMapping("/delete")
+    @PostMapping("/agendas/delete")
     public String postDelete(String selectAgenda) throws Exception {
 
         // 削除の成功有無は無視して一覧画面にリダイレクトする
