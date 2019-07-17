@@ -20,6 +20,7 @@ import jp.co.esm.novicetimer.domain.Subject;
 import jp.co.esm.novicetimer.domain.TimerStateCode;
 
 @RunWith(Enclosed.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AgendaServiceTest {
     @RunWith(SpringRunner.class)
     @SpringBootTest
@@ -115,12 +116,8 @@ public class AgendaServiceTest {
         public void setup() throws Exception {
             List<Subject> subjects = new ArrayList<>();
             subjects.add(new Subject("test", 1, "user"));
-            Agenda agenda = new Agenda();
-            agenda.setSubjects(subjects);
-            agendaService.create(agenda);
-
+            Agenda agenda = agendaService.create(new Agenda(0, subjects));
             setupAgendaId = agenda.getId();
-
             newSubjects = new Subject("new_test", 3, "new_user");
         }
 
@@ -158,11 +155,8 @@ public class AgendaServiceTest {
         public void setup() throws Exception {
             List<Subject> subjects = new ArrayList<>();
             subjects.add(new Subject("test", 1, "user"));
-            Agenda agenda = new Agenda();
-            agenda.setSubjects(subjects);
-            agendaService.create(agenda);
-
-            setupAgendaId = agenda.getId();
+            Agenda agenda = new Agenda(0, subjects);
+            setupAgendaId = agendaService.create(agenda).getId();
         }
 
         @Test
