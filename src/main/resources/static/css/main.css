@@ -20,14 +20,20 @@
 }
 
 .button-group {
-    margin-top: 15px;
+    overflow: auto; /* 子要素がfloatの場合でも、親要素の高さを子要素に合わせて拡張するためのプロパティ */
 }
 
 .buttom-left {
     float: left;
     margin-right: 10px;
+    margin-top: 5px;
 }
 
 .buttom-right {
     float: right;
+    margin-top: 5px;
+}
+
+.alert-danger ul {
+    margin-bottom: 0px;
 }

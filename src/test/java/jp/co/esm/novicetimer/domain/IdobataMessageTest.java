@@ -4,9 +4,11 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import jp.co.esm.novicetimer.domain.IdobataMessage;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class IdobataMessageTest {
 
     @Test

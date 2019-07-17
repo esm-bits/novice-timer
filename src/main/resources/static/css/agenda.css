@@ -1,11 +1,35 @@
-.col-id {
-    width: 70px;
+#timer {
+   margin-top: 20px;
+   font-family: monospace;
+   font-weight: bold;
+   font-size: 80px;
+   line-height: 80px;
 }
 
-.col-minutes {
-    width: 150px;
+.square {
+    display: table;
+    padding-left: 10px;
+    height: 38px;
+    border: 1px solid #333333;
+    border-radius: 10px;
+    border-color: #0000ff;
 }
 
-.col-start-button {
-    width: 150px;
+.square-parts {
+    display: table-cell;
+    vertical-align: middle;
+    height: 38px;
+    padding-right: 10px;
+}
+
+#timer-range {
+    height: 100%;
+    padding-right: 0px;
+    margin-right: 10px;
+}
+
+.sound-img {
+    cursor: pointer;
+    max-height: 90%;
+    width: auto
 }
