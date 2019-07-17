@@ -22,8 +22,9 @@ import jp.co.esm.novicetimer.domain.TimerStateCode;
 @RunWith(Enclosed.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AgendaServiceTest {
+
     @RunWith(SpringRunner.class)
-    @SpringBootTest
+    @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
     public static class changeTimerStateメソッドのテスト {
         @Autowired
         private AgendaService agendaService;
@@ -64,7 +65,7 @@ public class AgendaServiceTest {
     }
 
     @RunWith(SpringRunner.class)
-    @SpringBootTest
+    @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
     public static class updateメソッドのテスト {
         @Autowired
         private AgendaService agendaService;
@@ -103,7 +104,7 @@ public class AgendaServiceTest {
     }
 
     @RunWith(SpringRunner.class)
-    @SpringBootTest
+    @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
     public static class updateSubjectメソッドのテスト {
         @Autowired
         private AgendaService agendaService;
@@ -144,7 +145,7 @@ public class AgendaServiceTest {
     }
 
     @RunWith(SpringRunner.class)
-    @SpringBootTest
+    @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
     public static class deleteAgendaProcessのテスト {
         @Autowired
         private AgendaService agendaService;
