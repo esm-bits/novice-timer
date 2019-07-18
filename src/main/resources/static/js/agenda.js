@@ -109,7 +109,7 @@ $(function() {
     });
 
     $("#timer-range").on("input", function () {
-        const size = $(this).val() * 100;
+        const size = $(this).val() * 50;
     	$("#timer").css("font-size", size + "px");
     	$("#timer").css("line-height", size + "px");
     });
